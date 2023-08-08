@@ -128,12 +128,6 @@ class _SubscribeBottomBarWidgetState extends State<SubscribeBottomBarWidget> {
                         EdgeInsetsDirectional.fromSTEB(0.0, 0.0, 0.0, 16.0),
                     child: FFButtonWidget(
                       onPressed: () async {
-                        setState(() {
-                          FFAppState()
-                              .addToUserSubscriptions(SubscriptionStruct(
-                            accountId: _model.textController.text,
-                          ));
-                        });
                         _model.requestedAccountIdNearSocialInformation =
                             await GetNearSocialInformationCall.call(
                           accountId: _model.textController.text,
@@ -144,38 +138,45 @@ class _SubscribeBottomBarWidgetState extends State<SubscribeBottomBarWidget> {
                                   ''),
                             ) !=
                             '{}') {
-                          await SubscriptionsRecord.createDoc(
-                                  currentUserReference!)
-                              .set({
-                            'subscriptions': getSubscriptionListFirestoreData(
-                              FFAppState().userSubscriptions,
-                            ),
+                          setState(() {
+                            FFAppState()
+                                .addToUserSubscriptions(SubscriptionStruct(
+                              accountId: _model.textController.text,
+                            ));
                           });
                         } else {
+                          ScaffoldMessenger.of(context).clearSnackBars();
                           ScaffoldMessenger.of(context).showSnackBar(
                             SnackBar(
                               content: Text(
                                 'No Account was found',
                                 style: FlutterFlowTheme.of(context)
-                                    .headlineMedium
+                                    .displaySmall
                                     .override(
                                       fontFamily: FlutterFlowTheme.of(context)
-                                          .headlineMediumFamily,
+                                          .displaySmallFamily,
                                       color: FlutterFlowTheme.of(context)
                                           .primaryText,
                                       useGoogleFonts: GoogleFonts.asMap()
                                           .containsKey(
                                               FlutterFlowTheme.of(context)
-                                                  .headlineMediumFamily),
+                                                  .displaySmallFamily),
                                     ),
                               ),
-                              duration: Duration(milliseconds: 450),
+                              duration: Duration(milliseconds: 900),
                               backgroundColor:
                                   FlutterFlowTheme.of(context).secondary,
                             ),
                           );
                         }
 
+                        await SubscriptionsRecord.createDoc(
+                                currentUserReference!)
+                            .set({
+                          'subscriptions': getSubscriptionListFirestoreData(
+                            FFAppState().userSubscriptions,
+                          ),
+                        });
                         Navigator.pop(context);
 
                         setState(() {});
