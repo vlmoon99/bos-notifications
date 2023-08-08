@@ -38,8 +38,10 @@ class _HomePageWidgetState extends State<HomePageWidget> {
       _model.latestBlockHeight = await GetMainNetLatestBlockHeightCall.call();
       if ((_model.latestBlockHeight?.succeeded ?? true)) {
         setState(() {
-          FFAppState().latestBlockHeight =
-              (_model.latestBlockHeight?.jsonBody ?? '');
+          FFAppState().latestBlockHeight = getJsonField(
+            (_model.latestBlockHeight?.jsonBody ?? ''),
+            r'''$.result.sync_info.latest_block_height''',
+          );
         });
       } else {
         ScaffoldMessenger.of(context).clearSnackBars();
