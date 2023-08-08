@@ -6,6 +6,7 @@ import '/components/subscribe_bottom_bar/subscribe_bottom_bar_widget.dart';
 import '/flutter_flow/flutter_flow_icon_button.dart';
 import '/flutter_flow/flutter_flow_theme.dart';
 import '/flutter_flow/flutter_flow_util.dart';
+import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
@@ -112,6 +113,9 @@ class _HomePageWidgetState extends State<HomePageWidget> {
                                     FlutterFlowTheme.of(context).secondary,
                               ),
                             );
+                            setState(() =>
+                                _model.listViewPagingController?.refresh());
+                            await _model.waitForOnePage();
                           },
                           scrollDirection: Axis.horizontal,
                           itemCount: pageViewPages.length,
