@@ -1,6 +1,11 @@
+import '/auth/firebase_auth/auth_util.dart';
+import '/backend/api_requests/api_calls.dart';
+import '/backend/backend.dart';
+import '/backend/schema/structs/index.dart';
 import '/flutter_flow/flutter_flow_theme.dart';
 import '/flutter_flow/flutter_flow_util.dart';
 import '/flutter_flow/flutter_flow_widgets.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
@@ -47,7 +52,7 @@ class _SubscribeBottomBarWidgetState extends State<SubscribeBottomBarWidget> {
     return Align(
       alignment: AlignmentDirectional(0.0, 0.0),
       child: Padding(
-        padding: EdgeInsetsDirectional.fromSTEB(24.0, 24.0, 24.0, 24.0),
+        padding: EdgeInsetsDirectional.fromSTEB(8.0, 8.0, 8.0, 8.0),
         child: Container(
           width: 400.0,
           height: 300.0,
@@ -123,20 +128,57 @@ class _SubscribeBottomBarWidgetState extends State<SubscribeBottomBarWidget> {
                         EdgeInsetsDirectional.fromSTEB(0.0, 0.0, 0.0, 16.0),
                     child: FFButtonWidget(
                       onPressed: () async {
-                        ScaffoldMessenger.of(context).showSnackBar(
-                          SnackBar(
-                            content: Text(
-                              'Subscribe to ${_model.textController.text}',
-                              style: TextStyle(
-                                color: FlutterFlowTheme.of(context).primaryText,
-                              ),
-                            ),
-                            duration: Duration(milliseconds: 4000),
-                            backgroundColor:
-                                FlutterFlowTheme.of(context).secondary,
-                          ),
+                        setState(() {
+                          FFAppState()
+                              .addToUserSubscriptions(SubscriptionStruct(
+                            accountId: _model.textController.text,
+                          ));
+                        });
+                        _model.requestedAccountIdNearSocialInformation =
+                            await GetNearSocialInformationCall.call(
+                          accountId: _model.textController.text,
                         );
+                        if (GetNearSocialInformationCall.all(
+                              (_model.requestedAccountIdNearSocialInformation
+                                      ?.jsonBody ??
+                                  ''),
+                            ) !=
+                            '{}') {
+                          await SubscriptionsRecord.createDoc(
+                                  currentUserReference!)
+                              .set({
+                            'subscriptions': getSubscriptionListFirestoreData(
+                              FFAppState().userSubscriptions,
+                            ),
+                          });
+                        } else {
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            SnackBar(
+                              content: Text(
+                                'No Account was found',
+                                style: FlutterFlowTheme.of(context)
+                                    .headlineMedium
+                                    .override(
+                                      fontFamily: FlutterFlowTheme.of(context)
+                                          .headlineMediumFamily,
+                                      color: FlutterFlowTheme.of(context)
+                                          .primaryText,
+                                      useGoogleFonts: GoogleFonts.asMap()
+                                          .containsKey(
+                                              FlutterFlowTheme.of(context)
+                                                  .headlineMediumFamily),
+                                    ),
+                              ),
+                              duration: Duration(milliseconds: 450),
+                              backgroundColor:
+                                  FlutterFlowTheme.of(context).secondary,
+                            ),
+                          );
+                        }
+
                         Navigator.pop(context);
+
+                        setState(() {});
                       },
                       text: 'Subscribe',
                       options: FFButtonOptions(

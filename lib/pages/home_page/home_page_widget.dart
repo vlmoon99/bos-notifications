@@ -140,7 +140,7 @@ class _HomePageWidgetState extends State<HomePageWidget> {
                                       alignment: AlignmentDirectional(0.0, 0.0),
                                       child: Padding(
                                         padding: EdgeInsetsDirectional.fromSTEB(
-                                            8.0, 90.0, 8.0, 70.0),
+                                            8.0, 90.0, 8.0, 50.0),
                                         child: PagedListView<ApiPagingParams,
                                             dynamic>.separated(
                                           pagingController:
@@ -215,35 +215,42 @@ class _HomePageWidgetState extends State<HomePageWidget> {
                                               final notificationItem = _model
                                                   .listViewPagingController!
                                                   .itemList![notificationIndex];
-                                              return BosNotificationWidget(
-                                                key: Key(
-                                                    'Key525_${notificationIndex}_of_${_model.listViewPagingController!.itemList!.length}'),
-                                                accountName: 'Account Name',
-                                                executorAccountId: getJsonField(
-                                                  notificationItem,
-                                                  r'''$.accountId''',
-                                                ).toString(),
-                                                action: getJsonField(
-                                                  notificationItem,
-                                                  r'''$.value.type''',
-                                                ).toString(),
-                                                targetAccountId:
-                                                    pageViewPagesItem.accountId,
-                                                itemBlockHeight:
-                                                    valueOrDefault<String>(
-                                                  getJsonField(
+                                              return Padding(
+                                                padding: EdgeInsetsDirectional
+                                                    .fromSTEB(
+                                                        8.0, 0.0, 8.0, 0.0),
+                                                child: BosNotificationWidget(
+                                                  key: Key(
+                                                      'Key525_${notificationIndex}_of_${_model.listViewPagingController!.itemList!.length}'),
+                                                  accountName: 'Account Name',
+                                                  executorAccountId:
+                                                      getJsonField(
                                                     notificationItem,
-                                                    r'''$.value.item.blockHeight''',
+                                                    r'''$.accountId''',
                                                   ).toString(),
-                                                  'null',
-                                                ),
-                                                itemPath:
-                                                    valueOrDefault<String>(
-                                                  getJsonField(
+                                                  action: getJsonField(
                                                     notificationItem,
-                                                    r'''$.value.item.path''',
+                                                    r'''$.value.type''',
                                                   ).toString(),
-                                                  'null',
+                                                  targetAccountId:
+                                                      pageViewPagesItem
+                                                          .accountId,
+                                                  itemBlockHeight:
+                                                      valueOrDefault<String>(
+                                                    getJsonField(
+                                                      notificationItem,
+                                                      r'''$.value.item.blockHeight''',
+                                                    ).toString(),
+                                                    'null',
+                                                  ),
+                                                  itemPath:
+                                                      valueOrDefault<String>(
+                                                    getJsonField(
+                                                      notificationItem,
+                                                      r'''$.value.item.path''',
+                                                    ).toString(),
+                                                    'null',
+                                                  ),
                                                 ),
                                               );
                                             },
@@ -257,7 +264,7 @@ class _HomePageWidgetState extends State<HomePageWidget> {
                                   alignment: AlignmentDirectional(0.0, -1.0),
                                   child: Padding(
                                     padding: EdgeInsetsDirectional.fromSTEB(
-                                        0.0, 40.0, 0.0, 0.0),
+                                        0.0, 24.0, 0.0, 0.0),
                                     child: Text(
                                       'Account :${valueOrDefault<String>(
                                         pageViewPagesItem.accountId,

@@ -21,12 +21,7 @@ class FFAppState extends ChangeNotifier {
     notifyListeners();
   }
 
-  List<SubscriptionStruct> _userSubscriptions = [
-    SubscriptionStruct.fromSerializableMap(
-        jsonDecode('{\"accountId\":\"root.near\"}')),
-    SubscriptionStruct.fromSerializableMap(
-        jsonDecode('{\"accountId\":\"vlmoon.near\"}'))
-  ];
+  List<SubscriptionStruct> _userSubscriptions = [];
   List<SubscriptionStruct> get userSubscriptions => _userSubscriptions;
   set userSubscriptions(List<SubscriptionStruct> _value) {
     _userSubscriptions = _value;

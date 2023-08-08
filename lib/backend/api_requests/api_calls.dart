@@ -119,20 +119,35 @@ class GetMainNetLatestBlockHeightCall {
       );
 }
 
-class GggCall {
-  static Future<ApiCallResponse> call() {
+class GetNearSocialInformationCall {
+  static Future<ApiCallResponse> call({
+    String? accountId = 'vlmoon.near',
+  }) {
+    final body = '''
+{
+  "keys": [
+    "${accountId}/profile/**"
+  ]
+}''';
     return ApiManager.instance.makeApiCall(
-      callName: 'ggg',
-      apiUrl: 'https://picsum.photos/v2/list',
-      callType: ApiCallType.GET,
+      callName: 'getNearSocialInformation',
+      apiUrl: 'https://api.near.social/get',
+      callType: ApiCallType.POST,
       headers: {},
       params: {},
+      body: body,
+      bodyType: BodyType.JSON,
       returnBody: true,
       encodeBodyUtf8: false,
       decodeUtf8: false,
       cache: false,
     );
   }
+
+  static dynamic all(dynamic response) => getJsonField(
+        response,
+        r'''$''',
+      );
 }
 
 class ApiPagingParams {
