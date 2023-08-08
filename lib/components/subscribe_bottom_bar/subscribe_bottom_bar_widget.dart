@@ -153,16 +153,15 @@ class _SubscribeBottomBarWidgetState extends State<SubscribeBottomBarWidget> {
                               content: Text(
                                 'Account was not found',
                                 style: FlutterFlowTheme.of(context)
-                                    .displaySmall
+                                    .bodyLarge
                                     .override(
                                       fontFamily: FlutterFlowTheme.of(context)
-                                          .displaySmallFamily,
-                                      color: FlutterFlowTheme.of(context)
-                                          .primaryText,
+                                          .bodyLargeFamily,
+                                      color: FlutterFlowTheme.of(context).info,
                                       useGoogleFonts: GoogleFonts.asMap()
                                           .containsKey(
                                               FlutterFlowTheme.of(context)
-                                                  .displaySmallFamily),
+                                                  .bodyLargeFamily),
                                     ),
                               ),
                               duration: Duration(milliseconds: 600),
