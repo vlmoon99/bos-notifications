@@ -128,10 +128,12 @@ class _SubscribeBottomBarWidgetState extends State<SubscribeBottomBarWidget> {
                         EdgeInsetsDirectional.fromSTEB(0.0, 0.0, 0.0, 16.0),
                     child: FFButtonWidget(
                       onPressed: () async {
+                        var _shouldSetState = false;
                         _model.requestedAccountIdNearSocialInformation =
                             await GetNearSocialInformationCall.call(
                           accountId: _model.textController.text,
                         );
+                        _shouldSetState = true;
                         if (GetNearSocialInformationCall.all(
                               (_model.requestedAccountIdNearSocialInformation
                                       ?.jsonBody ??
@@ -145,11 +147,11 @@ class _SubscribeBottomBarWidgetState extends State<SubscribeBottomBarWidget> {
                             ));
                           });
                         } else {
-                          ScaffoldMessenger.of(context).clearSnackBars();
+                          Navigator.pop(context);
                           ScaffoldMessenger.of(context).showSnackBar(
                             SnackBar(
                               content: Text(
-                                'No Account was found',
+                                'Account was not found',
                                 style: FlutterFlowTheme.of(context)
                                     .displaySmall
                                     .override(
@@ -163,11 +165,13 @@ class _SubscribeBottomBarWidgetState extends State<SubscribeBottomBarWidget> {
                                                   .displaySmallFamily),
                                     ),
                               ),
-                              duration: Duration(milliseconds: 900),
+                              duration: Duration(milliseconds: 600),
                               backgroundColor:
                                   FlutterFlowTheme.of(context).secondary,
                             ),
                           );
+                          if (_shouldSetState) setState(() {});
+                          return;
                         }
 
                         await SubscriptionsRecord.createDoc(
@@ -178,8 +182,7 @@ class _SubscribeBottomBarWidgetState extends State<SubscribeBottomBarWidget> {
                           ),
                         });
                         Navigator.pop(context);
-
-                        setState(() {});
+                        if (_shouldSetState) setState(() {});
                       },
                       text: 'Subscribe',
                       options: FFButtonOptions(
