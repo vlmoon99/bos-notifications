@@ -1,11 +1,11 @@
 import '/auth/firebase_auth/auth_util.dart';
 import '/backend/api_requests/api_calls.dart';
 import '/backend/backend.dart';
-import '/backend/schema/structs/index.dart';
 import '/flutter_flow/flutter_flow_theme.dart';
 import '/flutter_flow/flutter_flow_util.dart';
 import '/flutter_flow/flutter_flow_widgets.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
@@ -123,90 +123,100 @@ class _SubscribeBottomBarWidgetState extends State<SubscribeBottomBarWidget> {
               Flexible(
                 child: Align(
                   alignment: AlignmentDirectional(0.0, 1.0),
-                  child: Padding(
-                    padding:
-                        EdgeInsetsDirectional.fromSTEB(0.0, 0.0, 0.0, 16.0),
-                    child: FFButtonWidget(
-                      onPressed: () async {
-                        var _shouldSetState = false;
-                        _model.requestedAccountIdNearSocialInformation =
-                            await GetNearSocialInformationCall.call(
-                          accountId: _model.textController.text,
-                        );
-                        _shouldSetState = true;
-                        if (GetNearSocialInformationCall.all(
-                              (_model.requestedAccountIdNearSocialInformation
-                                      ?.jsonBody ??
-                                  ''),
-                            ) !=
-                            '{}') {
-                          setState(() {
-                            FFAppState()
-                                .addToUserSubscriptions(SubscriptionStruct(
-                              accountId: _model.textController.text,
-                            ));
-                          });
-                        } else {
-                          Navigator.pop(context);
-                          ScaffoldMessenger.of(context).showSnackBar(
-                            SnackBar(
-                              content: Text(
-                                'Account was not found',
-                                style: FlutterFlowTheme.of(context)
-                                    .bodyLarge
-                                    .override(
-                                      fontFamily: FlutterFlowTheme.of(context)
-                                          .bodyLargeFamily,
-                                      color: FlutterFlowTheme.of(context).info,
-                                      useGoogleFonts: GoogleFonts.asMap()
-                                          .containsKey(
-                                              FlutterFlowTheme.of(context)
-                                                  .bodyLargeFamily),
-                                    ),
-                              ),
-                              duration: Duration(milliseconds: 600),
-                              backgroundColor:
-                                  FlutterFlowTheme.of(context).secondary,
-                            ),
+                  child: Container(
+                    width: 180.0,
+                    height: 70.0,
+                    decoration: BoxDecoration(
+                      color: FlutterFlowTheme.of(context).secondaryBackground,
+                    ),
+                    child: Align(
+                      alignment: AlignmentDirectional(0.0, 0.0),
+                      child: FFButtonWidget(
+                        onPressed: () async {
+                          var _shouldSetState = false;
+                          _model.requestedAccountIdNearSocialInformation =
+                              await GetNearSocialInformationCall.call(
+                            accountId: _model.textController.text,
                           );
-                          if (_shouldSetState) setState(() {});
-                          return;
-                        }
+                          _shouldSetState = true;
+                          if (GetNearSocialInformationCall.all(
+                                (_model.requestedAccountIdNearSocialInformation
+                                        ?.jsonBody ??
+                                    ''),
+                              ) !=
+                              '{}') {
+                            setState(() {
+                              FFAppState().addToSubscriptions(
+                                  _model.textController.text);
+                            });
+                          } else {
+                            Navigator.pop(context);
+                            ScaffoldMessenger.of(context).showSnackBar(
+                              SnackBar(
+                                content: Text(
+                                  'Account was not found',
+                                  style: FlutterFlowTheme.of(context)
+                                      .bodyLarge
+                                      .override(
+                                        fontFamily: FlutterFlowTheme.of(context)
+                                            .bodyLargeFamily,
+                                        color:
+                                            FlutterFlowTheme.of(context).info,
+                                        useGoogleFonts: GoogleFonts.asMap()
+                                            .containsKey(
+                                                FlutterFlowTheme.of(context)
+                                                    .bodyLargeFamily),
+                                      ),
+                                ),
+                                duration: Duration(milliseconds: 600),
+                                backgroundColor:
+                                    FlutterFlowTheme.of(context).secondary,
+                              ),
+                            );
+                            if (_shouldSetState) setState(() {});
+                            return;
+                          }
 
-                        await SubscriptionsRecord.createDoc(
-                                currentUserReference!)
-                            .set({
-                          'subscriptions': getSubscriptionListFirestoreData(
-                            FFAppState().userSubscriptions,
+                          _model.currentUserNotifications =
+                              await querySubscriptionsRecordOnce(
+                            parent: currentUserReference,
+                            singleRecord: true,
+                          ).then((s) => s.firstOrNull);
+                          _shouldSetState = true;
+
+                          await _model.currentUserNotifications!.reference
+                              .update({
+                            'subscriptions': FFAppState().subscriptions,
+                          });
+                          Navigator.pop(context);
+                          if (_shouldSetState) setState(() {});
+                        },
+                        text: 'Subscribe',
+                        options: FFButtonOptions(
+                          width: double.infinity,
+                          height: 40.0,
+                          padding: EdgeInsetsDirectional.fromSTEB(
+                              0.0, 0.0, 0.0, 0.0),
+                          iconPadding: EdgeInsetsDirectional.fromSTEB(
+                              0.0, 0.0, 0.0, 0.0),
+                          color: FlutterFlowTheme.of(context).nEARAqua,
+                          textStyle: FlutterFlowTheme.of(context)
+                              .titleSmall
+                              .override(
+                                fontFamily: FlutterFlowTheme.of(context)
+                                    .titleSmallFamily,
+                                color: Colors.white,
+                                useGoogleFonts: GoogleFonts.asMap().containsKey(
+                                    FlutterFlowTheme.of(context)
+                                        .titleSmallFamily),
+                              ),
+                          elevation: 3.0,
+                          borderSide: BorderSide(
+                            color: Colors.transparent,
+                            width: 1.0,
                           ),
-                        });
-                        Navigator.pop(context);
-                        if (_shouldSetState) setState(() {});
-                      },
-                      text: 'Subscribe',
-                      options: FFButtonOptions(
-                        height: 40.0,
-                        padding: EdgeInsetsDirectional.fromSTEB(
-                            50.0, 0.0, 50.0, 0.0),
-                        iconPadding:
-                            EdgeInsetsDirectional.fromSTEB(0.0, 0.0, 0.0, 0.0),
-                        color: FlutterFlowTheme.of(context).nEARAqua,
-                        textStyle: FlutterFlowTheme.of(context)
-                            .titleSmall
-                            .override(
-                              fontFamily:
-                                  FlutterFlowTheme.of(context).titleSmallFamily,
-                              color: Colors.white,
-                              useGoogleFonts: GoogleFonts.asMap().containsKey(
-                                  FlutterFlowTheme.of(context)
-                                      .titleSmallFamily),
-                            ),
-                        elevation: 3.0,
-                        borderSide: BorderSide(
-                          color: Colors.transparent,
-                          width: 1.0,
+                          borderRadius: BorderRadius.circular(8.0),
                         ),
-                        borderRadius: BorderRadius.circular(8.0),
                       ),
                     ),
                   ),

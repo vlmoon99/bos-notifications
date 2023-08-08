@@ -2,6 +2,7 @@ import '/components/account_id_search_card/account_id_search_card_widget.dart';
 import '/flutter_flow/flutter_flow_icon_button.dart';
 import '/flutter_flow/flutter_flow_theme.dart';
 import '/flutter_flow/flutter_flow_util.dart';
+import 'package:easy_debounce/easy_debounce.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
@@ -57,48 +58,27 @@ class _AccountIdSearchWidgetState extends State<AccountIdSearchWidget> {
           children: [
             Padding(
               padding: EdgeInsetsDirectional.fromSTEB(8.0, 160.0, 8.0, 0.0),
-              child: SingleChildScrollView(
-                child: Column(
-                  mainAxisSize: MainAxisSize.max,
-                  mainAxisAlignment: MainAxisAlignment.start,
-                  children: [
-                    wrapWithModel(
-                      model: _model.accountIdSearchCardModel1,
-                      updateCallback: () => setState(() {}),
-                      child: AccountIdSearchCardWidget(),
-                    ),
-                    wrapWithModel(
-                      model: _model.accountIdSearchCardModel2,
-                      updateCallback: () => setState(() {}),
-                      child: AccountIdSearchCardWidget(),
-                    ),
-                    wrapWithModel(
-                      model: _model.accountIdSearchCardModel3,
-                      updateCallback: () => setState(() {}),
-                      child: AccountIdSearchCardWidget(),
-                    ),
-                    wrapWithModel(
-                      model: _model.accountIdSearchCardModel4,
-                      updateCallback: () => setState(() {}),
-                      child: AccountIdSearchCardWidget(),
-                    ),
-                    wrapWithModel(
-                      model: _model.accountIdSearchCardModel5,
-                      updateCallback: () => setState(() {}),
-                      child: AccountIdSearchCardWidget(),
-                    ),
-                    wrapWithModel(
-                      model: _model.accountIdSearchCardModel6,
-                      updateCallback: () => setState(() {}),
-                      child: AccountIdSearchCardWidget(),
-                    ),
-                    wrapWithModel(
-                      model: _model.accountIdSearchCardModel7,
-                      updateCallback: () => setState(() {}),
-                      child: AccountIdSearchCardWidget(),
-                    ),
-                  ],
-                ),
+              child: Builder(
+                builder: (context) {
+                  final userSubscriptions = FFAppState().subscriptions.toList();
+                  return ListView.builder(
+                    padding: EdgeInsets.zero,
+                    scrollDirection: Axis.vertical,
+                    itemCount: userSubscriptions.length,
+                    itemBuilder: (context, userSubscriptionsIndex) {
+                      final userSubscriptionsItem =
+                          userSubscriptions[userSubscriptionsIndex];
+                      return AccountIdSearchCardWidget(
+                        key: Key(
+                            'Keydo4_${userSubscriptionsIndex}_of_${userSubscriptions.length}'),
+                        accountId: userSubscriptionsItem,
+                        imagePath:
+                            'https://cdn.pixabay.com/photo/2023/05/28/09/37/pelican-8023249_640.jpg',
+                        index: userSubscriptionsIndex,
+                      );
+                    },
+                  );
+                },
               ),
             ),
             Align(
@@ -109,6 +89,13 @@ class _AccountIdSearchWidgetState extends State<AccountIdSearchWidget> {
                   width: 350.0,
                   child: TextFormField(
                     controller: _model.textController,
+                    onChanged: (_) => EasyDebounce.debounce(
+                      '_model.textController',
+                      Duration(milliseconds: 2000),
+                      () async {
+                        await Future.delayed(const Duration(milliseconds: 200));
+                      },
+                    ),
                     autofocus: true,
                     textCapitalization: TextCapitalization.none,
                     obscureText: false,

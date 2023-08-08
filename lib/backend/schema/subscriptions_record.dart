@@ -17,17 +17,14 @@ class SubscriptionsRecord extends FirestoreRecord {
   }
 
   // "subscriptions" field.
-  List<SubscriptionStruct>? _subscriptions;
-  List<SubscriptionStruct> get subscriptions => _subscriptions ?? const [];
+  List<String>? _subscriptions;
+  List<String> get subscriptions => _subscriptions ?? const [];
   bool hasSubscriptions() => _subscriptions != null;
 
   DocumentReference get parentReference => reference.parent.parent!;
 
   void _initializeFields() {
-    _subscriptions = getStructList(
-      snapshotData['subscriptions'],
-      SubscriptionStruct.fromMap,
-    );
+    _subscriptions = getDataList(snapshotData['subscriptions']);
   }
 
   static Query<Map<String, dynamic>> collection([DocumentReference? parent]) =>

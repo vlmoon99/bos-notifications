@@ -21,35 +21,35 @@ class FFAppState extends ChangeNotifier {
     notifyListeners();
   }
 
-  List<SubscriptionStruct> _userSubscriptions = [];
-  List<SubscriptionStruct> get userSubscriptions => _userSubscriptions;
-  set userSubscriptions(List<SubscriptionStruct> _value) {
-    _userSubscriptions = _value;
-  }
-
-  void addToUserSubscriptions(SubscriptionStruct _value) {
-    _userSubscriptions.add(_value);
-  }
-
-  void removeFromUserSubscriptions(SubscriptionStruct _value) {
-    _userSubscriptions.remove(_value);
-  }
-
-  void removeAtIndexFromUserSubscriptions(int _index) {
-    _userSubscriptions.removeAt(_index);
-  }
-
-  void updateUserSubscriptionsAtIndex(
-    int _index,
-    SubscriptionStruct Function(SubscriptionStruct) updateFn,
-  ) {
-    _userSubscriptions[_index] = updateFn(_userSubscriptions[_index]);
-  }
-
   int _latestBlockHeight = 0;
   int get latestBlockHeight => _latestBlockHeight;
   set latestBlockHeight(int _value) {
     _latestBlockHeight = _value;
+  }
+
+  List<String> _subscriptions = [];
+  List<String> get subscriptions => _subscriptions;
+  set subscriptions(List<String> _value) {
+    _subscriptions = _value;
+  }
+
+  void addToSubscriptions(String _value) {
+    _subscriptions.add(_value);
+  }
+
+  void removeFromSubscriptions(String _value) {
+    _subscriptions.remove(_value);
+  }
+
+  void removeAtIndexFromSubscriptions(int _index) {
+    _subscriptions.removeAt(_index);
+  }
+
+  void updateSubscriptionsAtIndex(
+    int _index,
+    String Function(String) updateFn,
+  ) {
+    _subscriptions[_index] = updateFn(_subscriptions[_index]);
   }
 }
 

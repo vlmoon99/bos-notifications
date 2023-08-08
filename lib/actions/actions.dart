@@ -15,8 +15,7 @@ Future fetchUserSubscriptions(BuildContext context) async {
     singleRecord: true,
   ).then((s) => s.firstOrNull);
   FFAppState().update(() {
-    FFAppState().userSubscriptions = queriedUserSubscriptions!.subscriptions
-        .toList()
-        .cast<SubscriptionStruct>();
+    FFAppState().subscriptions =
+        queriedUserSubscriptions!.subscriptions.toList().cast<String>();
   });
 }

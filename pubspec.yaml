@@ -33,6 +33,7 @@ dependencies:
   cloud_functions: 4.3.2
   cloud_functions_platform_interface: 5.4.2
   cloud_functions_web: 4.5.2
+  easy_debounce: 2.0.1
   equatable: 2.0.5
   firebase_auth: 4.6.2
   firebase_auth_platform_interface: 6.15.2

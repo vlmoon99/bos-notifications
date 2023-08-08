@@ -1,5 +1,6 @@
 import '/auth/firebase_auth/auth_util.dart';
 import '/backend/api_requests/api_calls.dart';
+import '/backend/backend.dart';
 import '/components/account_id_search/account_id_search_widget.dart';
 import '/components/bos_notification/bos_notification_widget.dart';
 import '/components/subscribe_bottom_bar/subscribe_bottom_bar_widget.dart';
@@ -7,6 +8,8 @@ import '/flutter_flow/flutter_flow_icon_button.dart';
 import '/flutter_flow/flutter_flow_theme.dart';
 import '/flutter_flow/flutter_flow_util.dart';
 import 'dart:async';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
@@ -43,6 +46,10 @@ class _HomePageWidgetState extends State<HomePageWidget> {
             r'''$.result.sync_info.latest_block_height''',
           );
         });
+        _model.userSubscriptions = await querySubscriptionsRecordOnce(
+          parent: currentUserReference,
+          singleRecord: true,
+        ).then((s) => s.firstOrNull);
       } else {
         ScaffoldMessenger.of(context).clearSnackBars();
         ScaffoldMessenger.of(context).showSnackBar(
@@ -57,7 +64,13 @@ class _HomePageWidgetState extends State<HomePageWidget> {
             backgroundColor: FlutterFlowTheme.of(context).secondary,
           ),
         );
+        return;
       }
+
+      setState(() {
+        FFAppState().subscriptions =
+            _model.userSubscriptions!.subscriptions.toList().cast<String>();
+      });
     });
 
     WidgetsBinding.instance.addPostFrameCallback((_) => setState(() {}));
@@ -83,11 +96,10 @@ class _HomePageWidgetState extends State<HomePageWidget> {
           top: true,
           child: Stack(
             children: [
-              if (FFAppState().userSubscriptions.length > 0)
+              if (FFAppState().subscriptions.length > 0)
                 Builder(
                   builder: (context) {
-                    final pageViewPages =
-                        FFAppState().userSubscriptions.toList();
+                    final pageViewPages = FFAppState().subscriptions.toList();
                     return Container(
                       width: double.infinity,
                       height: MediaQuery.sizeOf(context).height * 1.0,
@@ -148,10 +160,7 @@ class _HomePageWidgetState extends State<HomePageWidget> {
                                             (nextPageMarker) =>
                                                 GetNotificationsByUserIdCall
                                                     .call(
-                                              accountId: valueOrDefault<String>(
-                                                pageViewPagesItem.accountId,
-                                                'vlmoon.near',
-                                              ),
+                                              accountId: pageViewPagesItem,
                                               from: getJsonField(
                                                 (nextPageMarker.lastResponse ??
                                                         ApiCallResponse(
@@ -233,8 +242,7 @@ class _HomePageWidgetState extends State<HomePageWidget> {
                                                     r'''$.value.type''',
                                                   ).toString(),
                                                   targetAccountId:
-                                                      pageViewPagesItem
-                                                          .accountId,
+                                                      pageViewPagesItem,
                                                   itemBlockHeight:
                                                       valueOrDefault<String>(
                                                     getJsonField(
@@ -267,7 +275,7 @@ class _HomePageWidgetState extends State<HomePageWidget> {
                                         0.0, 24.0, 0.0, 0.0),
                                     child: Text(
                                       'Account :${valueOrDefault<String>(
-                                        pageViewPagesItem.accountId,
+                                        pageViewPagesItem,
                                         'noneaccount.near',
                                       )}',
                                       style: FlutterFlowTheme.of(context)
@@ -417,6 +425,7 @@ class _HomePageWidgetState extends State<HomePageWidget> {
                                   isScrollControlled: true,
                                   backgroundColor: Color(0x00FFFFFF),
                                   barrierColor: Color(0x00FFFFFF),
+                                  isDismissible: false,
                                   enableDrag: false,
                                   useSafeArea: true,
                                   context: context,
@@ -446,7 +455,7 @@ class _HomePageWidgetState extends State<HomePageWidget> {
                   ),
                 ),
               ),
-              if (FFAppState().userSubscriptions.length == 0)
+              if (FFAppState().subscriptions.length == 0)
                 Align(
                   alignment: AlignmentDirectional(0.0, -0.1),
                   child: Padding(
