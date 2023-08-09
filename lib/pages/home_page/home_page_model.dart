@@ -24,7 +24,7 @@ class HomePageModel extends FlutterFlowModel {
   // Stores action output result for [Backend Call - API (getMainNetLatestBlockHeight)] action in HomePage widget.
   ApiCallResponse? latestBlockHeight;
   // Stores action output result for [Firestore Query - Query a collection] action in HomePage widget.
-  SubscriptionsRecord? userSubscriptions;
+  List<SubscriptionsRecord>? userSubscriptions;
   // State field(s) for PageView widget.
   PageController? pageViewController;
 
