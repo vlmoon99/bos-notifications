@@ -48,7 +48,8 @@ class _HomePageWidgetState extends State<HomePageWidget> {
         });
         _model.userSubscriptions = await querySubscriptionsRecordOnce(
           parent: currentUserReference,
-        );
+          singleRecord: true,
+        ).then((s) => s.firstOrNull);
       } else {
         ScaffoldMessenger.of(context).clearSnackBars();
         ScaffoldMessenger.of(context).showSnackBar(
@@ -67,11 +68,8 @@ class _HomePageWidgetState extends State<HomePageWidget> {
       }
 
       setState(() {
-        FFAppState().subscriptions = _model.userSubscriptions!
-            .map((e) => e.subscriptions.first)
-            .toList()
-            .toList()
-            .cast<String>();
+        FFAppState().subscriptions =
+            _model.userSubscriptions!.subscriptions.toList().cast<String>();
       });
     });
 

@@ -217,7 +217,9 @@ class _SubscribeBottomBarWidgetState extends State<SubscribeBottomBarWidget> {
                           } else {
                             await SubscriptionsRecord.createDoc(
                                     currentUserReference!)
-                                .set(createSubscriptionsRecordData());
+                                .set({
+                              'subscriptions': FFAppState().subscriptions,
+                            });
                           }
 
                           Navigator.pop(context);
