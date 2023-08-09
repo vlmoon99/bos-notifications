@@ -134,11 +134,35 @@ class _SubscribeBottomBarWidgetState extends State<SubscribeBottomBarWidget> {
                       child: FFButtonWidget(
                         onPressed: () async {
                           var _shouldSetState = false;
-                          _model.requestedAccountIdNearSocialInformation =
-                              await GetNearSocialInformationCall.call(
-                            accountId: _model.textController.text,
-                          );
-                          _shouldSetState = true;
+                          if (FFAppState()
+                                  .subscriptions
+                                  .contains(_model.textController.text) ==
+                              false) {
+                            _model.requestedAccountIdNearSocialInformation =
+                                await GetNearSocialInformationCall.call(
+                              accountId: _model.textController.text,
+                            );
+                            _shouldSetState = true;
+                          } else {
+                            ScaffoldMessenger.of(context).clearSnackBars();
+                            ScaffoldMessenger.of(context).showSnackBar(
+                              SnackBar(
+                                content: Text(
+                                  'This accountId already in you subscriptions',
+                                  style: TextStyle(
+                                    color: FlutterFlowTheme.of(context)
+                                        .primaryText,
+                                  ),
+                                ),
+                                duration: Duration(milliseconds: 300),
+                                backgroundColor:
+                                    FlutterFlowTheme.of(context).secondary,
+                              ),
+                            );
+                            if (_shouldSetState) setState(() {});
+                            return;
+                          }
+
                           if (GetNearSocialInformationCall.all(
                                 (_model.requestedAccountIdNearSocialInformation
                                         ?.jsonBody ??
@@ -183,11 +207,19 @@ class _SubscribeBottomBarWidgetState extends State<SubscribeBottomBarWidget> {
                             singleRecord: true,
                           ).then((s) => s.firstOrNull);
                           _shouldSetState = true;
+                          if (_model.currentUserNotifications
+                                  ?.hasSubscriptions() ==
+                              true) {
+                            await _model.currentUserNotifications!.reference
+                                .update({
+                              'subscriptions': FFAppState().subscriptions,
+                            });
+                          } else {
+                            await SubscriptionsRecord.createDoc(
+                                    currentUserReference!)
+                                .set(createSubscriptionsRecordData());
+                          }
 
-                          await _model.currentUserNotifications!.reference
-                              .update({
-                            'subscriptions': FFAppState().subscriptions,
-                          });
                           Navigator.pop(context);
                           if (_shouldSetState) setState(() {});
                         },
