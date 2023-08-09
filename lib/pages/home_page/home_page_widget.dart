@@ -157,7 +157,7 @@ class _HomePageWidgetState extends State<HomePageWidget> {
                                     alignment: AlignmentDirectional(0.0, 0.0),
                                     child: Padding(
                                       padding: EdgeInsetsDirectional.fromSTEB(
-                                          8.0, 65.0, 8.0, 90.0),
+                                          8.0, 65.0, 8.0, 0.0),
                                       child: PagedListView<ApiPagingParams,
                                           dynamic>.separated(
                                         pagingController:
@@ -179,7 +179,7 @@ class _HomePageWidgetState extends State<HomePageWidget> {
                                           0,
                                           0.0,
                                           0,
-                                          0.0,
+                                          100.0,
                                         ),
                                         reverse: false,
                                         scrollDirection: Axis.vertical,
@@ -328,136 +328,164 @@ class _HomePageWidgetState extends State<HomePageWidget> {
               ),
               Align(
                 alignment: AlignmentDirectional(0.0, 1.0),
-                child: Container(
-                  height: 100.0,
-                  decoration: BoxDecoration(
-                    color: Color(0x00FFFFFF),
-                  ),
-                  child: Align(
-                    alignment: AlignmentDirectional(0.0, -1.0),
-                    child: Row(
-                      mainAxisSize: MainAxisSize.max,
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      crossAxisAlignment: CrossAxisAlignment.center,
-                      children: [
-                        Align(
-                          alignment: AlignmentDirectional(0.0, 0.0),
-                          child: Padding(
-                            padding: EdgeInsetsDirectional.fromSTEB(
-                                16.0, 0.0, 16.0, 0.0),
-                            child: FlutterFlowIconButton(
-                              borderColor: Color(0x00FFFFFF),
-                              borderRadius: 50.0,
-                              borderWidth: 0.0,
-                              buttonSize: 60.0,
-                              fillColor: FlutterFlowTheme.of(context).nEARAqua,
-                              icon: Icon(
-                                Icons.logout,
-                                color: FlutterFlowTheme.of(context).accent4,
-                                size: 24.0,
-                              ),
-                              onPressed: () async {
-                                GoRouter.of(context).prepareAuthEvent();
-                                await authManager.signOut();
-                                GoRouter.of(context).clearRedirectLocation();
-
-                                context.pushNamedAuth(
-                                    'LoginPage', context.mounted);
-                              },
-                            ),
-                          ),
-                        ),
-                        Align(
-                          alignment: AlignmentDirectional(0.0, 0.0),
-                          child: Padding(
-                            padding: EdgeInsetsDirectional.fromSTEB(
-                                16.0, 0.0, 16.0, 0.0),
-                            child: FlutterFlowIconButton(
-                              borderColor: Color(0x00FFFFFF),
-                              borderRadius: 50.0,
-                              borderWidth: 0.0,
-                              buttonSize: 60.0,
-                              fillColor: FlutterFlowTheme.of(context).nEARAqua,
-                              icon: Icon(
-                                Icons.person_add_alt_1_sharp,
-                                color: FlutterFlowTheme.of(context).info,
-                                size: 24.0,
-                              ),
-                              showLoadingIndicator: true,
-                              onPressed: () async {
-                                await showModalBottomSheet(
-                                  isScrollControlled: true,
-                                  backgroundColor: Color(0x00FFFFFF),
-                                  barrierColor: Color(0x00FFFFFF),
-                                  enableDrag: false,
-                                  useSafeArea: true,
-                                  context: context,
-                                  builder: (context) {
-                                    return GestureDetector(
-                                      onTap: () => FocusScope.of(context)
-                                          .requestFocus(_model.unfocusNode),
-                                      child: Padding(
-                                        padding:
-                                            MediaQuery.viewInsetsOf(context),
-                                        child: Container(
-                                          height: 400.0,
-                                          child: SubscribeBottomBarWidget(),
-                                        ),
-                                      ),
-                                    );
-                                  },
-                                ).then((value) => setState(() {}));
-                              },
-                            ),
-                          ),
-                        ),
-                        Align(
-                          alignment: AlignmentDirectional(0.0, 0.0),
-                          child: Padding(
-                            padding: EdgeInsetsDirectional.fromSTEB(
-                                16.0, 0.0, 16.0, 0.0),
-                            child: FlutterFlowIconButton(
-                              borderColor: Color(0x00FFFFFF),
-                              borderRadius: 50.0,
-                              borderWidth: 0.0,
-                              buttonSize: 60.0,
-                              fillColor: Color(0xFF4FD1D9),
-                              icon: FaIcon(
-                                FontAwesomeIcons.search,
-                                color: FlutterFlowTheme.of(context).info,
-                                size: 24.0,
-                              ),
-                              onPressed: () async {
-                                await showModalBottomSheet(
-                                  isScrollControlled: true,
-                                  backgroundColor: Color(0x00FFFFFF),
-                                  barrierColor: Color(0x00FFFFFF),
-                                  isDismissible: false,
-                                  enableDrag: false,
-                                  useSafeArea: true,
-                                  context: context,
-                                  builder: (context) {
-                                    return GestureDetector(
-                                      onTap: () => FocusScope.of(context)
-                                          .requestFocus(_model.unfocusNode),
-                                      child: Padding(
-                                        padding:
-                                            MediaQuery.viewInsetsOf(context),
-                                        child: Container(
-                                          height: MediaQuery.sizeOf(context)
-                                                  .height *
-                                              1.0,
-                                          child: AccountIdSearchWidget(),
-                                        ),
-                                      ),
-                                    );
-                                  },
-                                ).then((value) => setState(() {}));
-                              },
-                            ),
-                          ),
-                        ),
+                child: Padding(
+                  padding: EdgeInsetsDirectional.fromSTEB(0.0, 0.0, 0.0, 24.0),
+                  child: Container(
+                    width: () {
+                      if (MediaQuery.sizeOf(context).width < kBreakpointSmall) {
+                        return 300.0;
+                      } else if (MediaQuery.sizeOf(context).width <
+                          kBreakpointMedium) {
+                        return 350.0;
+                      } else if (MediaQuery.sizeOf(context).width <
+                          kBreakpointLarge) {
+                        return 400.0;
+                      } else {
+                        return 300.0;
+                      }
+                    }(),
+                    height: 100.0,
+                    constraints: BoxConstraints(
+                      maxWidth: 400.0,
+                    ),
+                    decoration: BoxDecoration(
+                      color: FlutterFlowTheme.of(context).info,
+                      boxShadow: [
+                        BoxShadow(
+                          blurRadius: 4.0,
+                          color: Color(0x33000000),
+                          offset: Offset(0.0, 2.0),
+                        )
                       ],
+                      borderRadius: BorderRadius.circular(30.0),
+                    ),
+                    child: Align(
+                      alignment: AlignmentDirectional(0.0, -1.0),
+                      child: Row(
+                        mainAxisSize: MainAxisSize.max,
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        children: [
+                          Align(
+                            alignment: AlignmentDirectional(0.0, 0.0),
+                            child: Padding(
+                              padding: EdgeInsetsDirectional.fromSTEB(
+                                  16.0, 0.0, 16.0, 0.0),
+                              child: FlutterFlowIconButton(
+                                borderColor: Color(0x00FFFFFF),
+                                borderRadius: 50.0,
+                                borderWidth: 0.0,
+                                buttonSize: 60.0,
+                                fillColor:
+                                    FlutterFlowTheme.of(context).nEARAqua,
+                                icon: Icon(
+                                  Icons.logout,
+                                  color: FlutterFlowTheme.of(context).accent4,
+                                  size: 24.0,
+                                ),
+                                onPressed: () async {
+                                  GoRouter.of(context).prepareAuthEvent();
+                                  await authManager.signOut();
+                                  GoRouter.of(context).clearRedirectLocation();
+
+                                  context.pushNamedAuth(
+                                      'LoginPage', context.mounted);
+                                },
+                              ),
+                            ),
+                          ),
+                          Align(
+                            alignment: AlignmentDirectional(0.0, 0.0),
+                            child: Padding(
+                              padding: EdgeInsetsDirectional.fromSTEB(
+                                  16.0, 0.0, 16.0, 0.0),
+                              child: FlutterFlowIconButton(
+                                borderColor: Color(0x00FFFFFF),
+                                borderRadius: 50.0,
+                                borderWidth: 0.0,
+                                buttonSize: 60.0,
+                                fillColor:
+                                    FlutterFlowTheme.of(context).nEARAqua,
+                                icon: Icon(
+                                  Icons.person_add_alt_1_sharp,
+                                  color: FlutterFlowTheme.of(context).info,
+                                  size: 24.0,
+                                ),
+                                onPressed: () async {
+                                  await showModalBottomSheet(
+                                    isScrollControlled: true,
+                                    backgroundColor: Color(0x00FFFFFF),
+                                    barrierColor: Color(0x00FFFFFF),
+                                    enableDrag: false,
+                                    useSafeArea: true,
+                                    context: context,
+                                    builder: (context) {
+                                      return GestureDetector(
+                                        onTap: () => FocusScope.of(context)
+                                            .requestFocus(_model.unfocusNode),
+                                        child: Padding(
+                                          padding:
+                                              MediaQuery.viewInsetsOf(context),
+                                          child: Container(
+                                            height: 400.0,
+                                            child: SubscribeBottomBarWidget(),
+                                          ),
+                                        ),
+                                      );
+                                    },
+                                  ).then((value) => setState(() {}));
+                                },
+                              ),
+                            ),
+                          ),
+                          Align(
+                            alignment: AlignmentDirectional(0.0, 0.0),
+                            child: Padding(
+                              padding: EdgeInsetsDirectional.fromSTEB(
+                                  16.0, 0.0, 16.0, 0.0),
+                              child: FlutterFlowIconButton(
+                                borderColor: Color(0x00FFFFFF),
+                                borderRadius: 50.0,
+                                borderWidth: 0.0,
+                                buttonSize: 60.0,
+                                fillColor: Color(0xFF4FD1D9),
+                                icon: FaIcon(
+                                  FontAwesomeIcons.search,
+                                  color: FlutterFlowTheme.of(context).info,
+                                  size: 24.0,
+                                ),
+                                onPressed: () async {
+                                  await showModalBottomSheet(
+                                    isScrollControlled: true,
+                                    backgroundColor: Color(0x00FFFFFF),
+                                    barrierColor: Color(0x00FFFFFF),
+                                    isDismissible: false,
+                                    enableDrag: false,
+                                    useSafeArea: true,
+                                    context: context,
+                                    builder: (context) {
+                                      return GestureDetector(
+                                        onTap: () => FocusScope.of(context)
+                                            .requestFocus(_model.unfocusNode),
+                                        child: Padding(
+                                          padding:
+                                              MediaQuery.viewInsetsOf(context),
+                                          child: Container(
+                                            height: MediaQuery.sizeOf(context)
+                                                    .height *
+                                                1.0,
+                                            child: AccountIdSearchWidget(),
+                                          ),
+                                        ),
+                                      );
+                                    },
+                                  ).then((value) => setState(() {}));
+                                },
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
                     ),
                   ),
                 ),
