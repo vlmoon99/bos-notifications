@@ -3,6 +3,7 @@ import '/backend/api_requests/api_calls.dart';
 import '/backend/backend.dart';
 import '/components/account_id_search/account_id_search_widget.dart';
 import '/components/bos_notification/bos_notification_widget.dart';
+import '/components/not_found_any_accounts/not_found_any_accounts_widget.dart';
 import '/components/subscribe_bottom_bar/subscribe_bottom_bar_widget.dart';
 import '/flutter_flow/flutter_flow_icon_button.dart';
 import '/flutter_flow/flutter_flow_theme.dart';
@@ -97,227 +98,251 @@ class _HomePageWidgetState extends State<HomePageWidget> {
           child: Stack(
             children: [
               if (FFAppState().subscriptions.length > 0)
-                Builder(
-                  builder: (context) {
-                    final pageViewPages = FFAppState().subscriptions.toList();
-                    return Container(
-                      width: double.infinity,
-                      height: MediaQuery.sizeOf(context).height * 1.0,
-                      child: Padding(
-                        padding:
-                            EdgeInsetsDirectional.fromSTEB(0.0, 0.0, 0.0, 40.0),
-                        child: PageView.builder(
-                          controller: _model.pageViewController ??=
-                              PageController(
-                                  initialPage:
-                                      min(0, pageViewPages.length - 1)),
-                          onPageChanged: (_) async {
-                            ScaffoldMessenger.of(context).clearSnackBars();
-                            ScaffoldMessenger.of(context).showSnackBar(
-                              SnackBar(
-                                content: Text(
-                                  _model.pageViewCurrentIndex.toString(),
-                                  style: TextStyle(
-                                    color: FlutterFlowTheme.of(context)
-                                        .primaryText,
-                                  ),
-                                ),
-                                duration: Duration(milliseconds: 300),
-                                backgroundColor:
-                                    FlutterFlowTheme.of(context).secondary,
-                              ),
-                            );
-                            setState(() =>
-                                _model.listViewPagingController?.refresh());
-                            await _model.waitForOnePage();
-                          },
-                          scrollDirection: Axis.horizontal,
-                          itemCount: pageViewPages.length,
-                          itemBuilder: (context, pageViewPagesIndex) {
-                            final pageViewPagesItem =
-                                pageViewPages[pageViewPagesIndex];
-                            return Stack(
-                              children: [
-                                Align(
-                                  alignment: AlignmentDirectional(0.0, 0.0),
-                                  child: Container(
-                                    width: 700.0,
-                                    decoration: BoxDecoration(
-                                      color: Color(0x00FFFFFF),
-                                      border: Border.all(
-                                        color: Color(0x00FFFFFF),
-                                      ),
+                Align(
+                  alignment: AlignmentDirectional(0.0, 0.0),
+                  child: Builder(
+                    builder: (context) {
+                      final pageViewPages = FFAppState().subscriptions.toList();
+                      if (pageViewPages.isEmpty) {
+                        return Container(
+                          width: MediaQuery.sizeOf(context).width * 1.0,
+                          height: MediaQuery.sizeOf(context).height * 0.3,
+                          child: NotFoundAnyAccountsWidget(),
+                        );
+                      }
+                      return Container(
+                        width: double.infinity,
+                        height: MediaQuery.sizeOf(context).height * 1.0,
+                        child: Padding(
+                          padding: EdgeInsetsDirectional.fromSTEB(
+                              0.0, 0.0, 0.0, 40.0),
+                          child: PageView.builder(
+                            controller: _model.pageViewController ??=
+                                PageController(
+                                    initialPage:
+                                        min(0, pageViewPages.length - 1)),
+                            onPageChanged: (_) async {
+                              ScaffoldMessenger.of(context).clearSnackBars();
+                              ScaffoldMessenger.of(context).showSnackBar(
+                                SnackBar(
+                                  content: Text(
+                                    _model.pageViewCurrentIndex.toString(),
+                                    style: TextStyle(
+                                      color: FlutterFlowTheme.of(context)
+                                          .primaryText,
                                     ),
-                                    child: Align(
-                                      alignment: AlignmentDirectional(0.0, 0.0),
-                                      child: Padding(
-                                        padding: EdgeInsetsDirectional.fromSTEB(
-                                            8.0, 90.0, 8.0, 50.0),
-                                        child: PagedListView<ApiPagingParams,
-                                            dynamic>.separated(
-                                          pagingController:
-                                              _model.setListViewController(
-                                            (nextPageMarker) =>
-                                                GetNotificationsByUserIdCall
-                                                    .call(
-                                              accountId: pageViewPagesItem,
-                                              from: getJsonField(
-                                                (nextPageMarker.lastResponse ??
-                                                        ApiCallResponse(
-                                                            {}, {}, 200))
-                                                    .jsonBody,
-                                                r'''$[19].blockHeight''',
+                                  ),
+                                  duration: Duration(milliseconds: 300),
+                                  backgroundColor:
+                                      FlutterFlowTheme.of(context).secondary,
+                                ),
+                              );
+                              setState(() =>
+                                  _model.listViewPagingController?.refresh());
+                              await _model.waitForOnePage();
+                            },
+                            scrollDirection: Axis.horizontal,
+                            itemCount: pageViewPages.length,
+                            itemBuilder: (context, pageViewPagesIndex) {
+                              final pageViewPagesItem =
+                                  pageViewPages[pageViewPagesIndex];
+                              return Stack(
+                                children: [
+                                  Align(
+                                    alignment: AlignmentDirectional(0.0, 0.0),
+                                    child: Container(
+                                      width: 700.0,
+                                      decoration: BoxDecoration(
+                                        color: Color(0x00FFFFFF),
+                                        border: Border.all(
+                                          color: Color(0x00FFFFFF),
+                                        ),
+                                      ),
+                                      child: Align(
+                                        alignment:
+                                            AlignmentDirectional(0.0, 0.0),
+                                        child: Padding(
+                                          padding:
+                                              EdgeInsetsDirectional.fromSTEB(
+                                                  8.0, 80.0, 8.0, 50.0),
+                                          child: PagedListView<ApiPagingParams,
+                                              dynamic>.separated(
+                                            pagingController:
+                                                _model.setListViewController(
+                                              (nextPageMarker) =>
+                                                  GetNotificationsByUserIdCall
+                                                      .call(
+                                                accountId: pageViewPagesItem,
+                                                from: getJsonField(
+                                                  (nextPageMarker
+                                                              .lastResponse ??
+                                                          ApiCallResponse(
+                                                              {}, {}, 200))
+                                                      .jsonBody,
+                                                  r'''$[19].blockHeight''',
+                                                ),
+                                                limit: 20,
                                               ),
-                                              limit: 20,
                                             ),
-                                          ),
-                                          padding: EdgeInsets.fromLTRB(
-                                            0,
-                                            0.0,
-                                            0,
-                                            0.0,
-                                          ),
-                                          reverse: false,
-                                          scrollDirection: Axis.vertical,
-                                          separatorBuilder: (_, __) =>
-                                              SizedBox(height: 16.0),
-                                          builderDelegate:
-                                              PagedChildBuilderDelegate<
-                                                  dynamic>(
-                                            // Customize what your widget looks like when it's loading the first page.
-                                            firstPageProgressIndicatorBuilder:
-                                                (_) => Center(
-                                              child: SizedBox(
-                                                width: 50.0,
-                                                height: 50.0,
-                                                child:
-                                                    CircularProgressIndicator(
-                                                  valueColor:
-                                                      AlwaysStoppedAnimation<
-                                                          Color>(
-                                                    FlutterFlowTheme.of(context)
-                                                        .primary,
+                                            padding: EdgeInsets.fromLTRB(
+                                              0,
+                                              0.0,
+                                              0,
+                                              0.0,
+                                            ),
+                                            reverse: false,
+                                            scrollDirection: Axis.vertical,
+                                            separatorBuilder: (_, __) =>
+                                                SizedBox(height: 16.0),
+                                            builderDelegate:
+                                                PagedChildBuilderDelegate<
+                                                    dynamic>(
+                                              // Customize what your widget looks like when it's loading the first page.
+                                              firstPageProgressIndicatorBuilder:
+                                                  (_) => Center(
+                                                child: SizedBox(
+                                                  width: 50.0,
+                                                  height: 50.0,
+                                                  child:
+                                                      CircularProgressIndicator(
+                                                    valueColor:
+                                                        AlwaysStoppedAnimation<
+                                                            Color>(
+                                                      FlutterFlowTheme.of(
+                                                              context)
+                                                          .primary,
+                                                    ),
                                                   ),
                                                 ),
                                               ),
-                                            ),
-                                            // Customize what your widget looks like when it's loading another page.
-                                            newPageProgressIndicatorBuilder:
-                                                (_) => Center(
-                                              child: SizedBox(
-                                                width: 50.0,
-                                                height: 50.0,
-                                                child:
-                                                    CircularProgressIndicator(
-                                                  valueColor:
-                                                      AlwaysStoppedAnimation<
-                                                          Color>(
-                                                    FlutterFlowTheme.of(context)
-                                                        .primary,
+                                              // Customize what your widget looks like when it's loading another page.
+                                              newPageProgressIndicatorBuilder:
+                                                  (_) => Center(
+                                                child: SizedBox(
+                                                  width: 50.0,
+                                                  height: 50.0,
+                                                  child:
+                                                      CircularProgressIndicator(
+                                                    valueColor:
+                                                        AlwaysStoppedAnimation<
+                                                            Color>(
+                                                      FlutterFlowTheme.of(
+                                                              context)
+                                                          .primary,
+                                                    ),
                                                   ),
                                                 ),
                                               ),
-                                            ),
 
-                                            itemBuilder: (context, _,
-                                                notificationIndex) {
-                                              final notificationItem = _model
-                                                  .listViewPagingController!
-                                                  .itemList![notificationIndex];
-                                              return Padding(
-                                                padding: EdgeInsetsDirectional
-                                                    .fromSTEB(
-                                                        8.0, 0.0, 8.0, 0.0),
-                                                child: BosNotificationWidget(
-                                                  key: Key(
-                                                      'Key525_${notificationIndex}_of_${_model.listViewPagingController!.itemList!.length}'),
-                                                  accountName: 'Account Name',
-                                                  executorAccountId:
+                                              itemBuilder: (context, _,
+                                                  notificationIndex) {
+                                                final notificationItem = _model
+                                                    .listViewPagingController!
+                                                    .itemList![notificationIndex];
+                                                return Padding(
+                                                  padding: EdgeInsetsDirectional
+                                                      .fromSTEB(
+                                                          8.0, 0.0, 8.0, 0.0),
+                                                  child: BosNotificationWidget(
+                                                    key: Key(
+                                                        'Key525_${notificationIndex}_of_${_model.listViewPagingController!.itemList!.length}'),
+                                                    accountName: 'Account Name',
+                                                    executorAccountId:
+                                                        getJsonField(
+                                                      notificationItem,
+                                                      r'''$.accountId''',
+                                                    ).toString(),
+                                                    action: getJsonField(
+                                                      notificationItem,
+                                                      r'''$.value.type''',
+                                                    ).toString(),
+                                                    targetAccountId:
+                                                        pageViewPagesItem,
+                                                    itemBlockHeight:
+                                                        valueOrDefault<String>(
                                                       getJsonField(
-                                                    notificationItem,
-                                                    r'''$.accountId''',
-                                                  ).toString(),
-                                                  action: getJsonField(
-                                                    notificationItem,
-                                                    r'''$.value.type''',
-                                                  ).toString(),
-                                                  targetAccountId:
-                                                      pageViewPagesItem,
-                                                  itemBlockHeight:
-                                                      valueOrDefault<String>(
-                                                    getJsonField(
-                                                      notificationItem,
-                                                      r'''$.value.item.blockHeight''',
-                                                    ).toString(),
-                                                    'null',
+                                                        notificationItem,
+                                                        r'''$.value.item.blockHeight''',
+                                                      ).toString(),
+                                                      'null',
+                                                    ),
+                                                    itemPath:
+                                                        valueOrDefault<String>(
+                                                      getJsonField(
+                                                        notificationItem,
+                                                        r'''$.value.item.path''',
+                                                      ).toString(),
+                                                      'null',
+                                                    ),
                                                   ),
-                                                  itemPath:
-                                                      valueOrDefault<String>(
-                                                    getJsonField(
-                                                      notificationItem,
-                                                      r'''$.value.item.path''',
-                                                    ).toString(),
-                                                    'null',
-                                                  ),
-                                                ),
-                                              );
-                                            },
+                                                );
+                                              },
+                                            ),
                                           ),
                                         ),
                                       ),
                                     ),
                                   ),
-                                ),
-                                Align(
-                                  alignment: AlignmentDirectional(0.0, -1.0),
-                                  child: Padding(
-                                    padding: EdgeInsetsDirectional.fromSTEB(
-                                        0.0, 24.0, 0.0, 0.0),
-                                    child: Text(
-                                      'Account :${valueOrDefault<String>(
-                                        pageViewPagesItem,
-                                        'noneaccount.near',
-                                      )}',
-                                      style: FlutterFlowTheme.of(context)
-                                          .headlineMedium
-                                          .override(
-                                            fontFamily:
-                                                FlutterFlowTheme.of(context)
-                                                    .headlineMediumFamily,
-                                            fontSize: () {
-                                              if (MediaQuery.sizeOf(context)
-                                                      .width <
-                                                  kBreakpointSmall) {
-                                                return 20.0;
-                                              } else if (MediaQuery.sizeOf(
-                                                          context)
-                                                      .width <
-                                                  kBreakpointMedium) {
-                                                return 24.0;
-                                              } else if (MediaQuery.sizeOf(
-                                                          context)
-                                                      .width <
-                                                  kBreakpointLarge) {
-                                                return 35.0;
-                                              } else {
-                                                return 24.0;
-                                              }
-                                            }(),
-                                            useGoogleFonts: GoogleFonts.asMap()
-                                                .containsKey(
-                                                    FlutterFlowTheme.of(context)
-                                                        .headlineMediumFamily),
-                                          ),
+                                  Align(
+                                    alignment: AlignmentDirectional(0.0, -1.0),
+                                    child: Padding(
+                                      padding: EdgeInsetsDirectional.fromSTEB(
+                                          24.0, 16.0, 24.0, 0.0),
+                                      child: SelectionArea(
+                                          child: Text(
+                                        valueOrDefault<String>(
+                                          'Account :${valueOrDefault<String>(
+                                            pageViewPagesItem,
+                                            'noneaccount.near',
+                                          )}',
+                                          'vlmoon.near',
+                                        ).maybeHandleOverflow(
+                                          maxChars: 20,
+                                          replacement: '…',
+                                        ),
+                                        textAlign: TextAlign.center,
+                                        style: FlutterFlowTheme.of(context)
+                                            .headlineMedium
+                                            .override(
+                                              fontFamily:
+                                                  FlutterFlowTheme.of(context)
+                                                      .headlineMediumFamily,
+                                              fontSize: () {
+                                                if (MediaQuery.sizeOf(context)
+                                                        .width <
+                                                    kBreakpointSmall) {
+                                                  return 20.0;
+                                                } else if (MediaQuery.sizeOf(
+                                                            context)
+                                                        .width <
+                                                    kBreakpointMedium) {
+                                                  return 24.0;
+                                                } else if (MediaQuery.sizeOf(
+                                                            context)
+                                                        .width <
+                                                    kBreakpointLarge) {
+                                                  return 35.0;
+                                                } else {
+                                                  return 24.0;
+                                                }
+                                              }(),
+                                              useGoogleFonts: GoogleFonts
+                                                      .asMap()
+                                                  .containsKey(FlutterFlowTheme
+                                                          .of(context)
+                                                      .headlineMediumFamily),
+                                            ),
+                                      )),
                                     ),
                                   ),
-                                ),
-                              ],
-                            );
-                          },
+                                ],
+                              );
+                            },
+                          ),
                         ),
-                      ),
-                    );
-                  },
+                      );
+                    },
+                  ),
                 ),
               Align(
                 alignment: AlignmentDirectional(0.0, 1.0),
@@ -455,19 +480,6 @@ class _HomePageWidgetState extends State<HomePageWidget> {
                   ),
                 ),
               ),
-              if (FFAppState().subscriptions.length == 0)
-                Align(
-                  alignment: AlignmentDirectional(0.0, -0.1),
-                  child: Padding(
-                    padding:
-                        EdgeInsetsDirectional.fromSTEB(20.0, 0.0, 20.0, 0.0),
-                    child: Text(
-                      'You dont have any subscriptions , please add some account ID to track',
-                      textAlign: TextAlign.center,
-                      style: FlutterFlowTheme.of(context).displaySmall,
-                    ),
-                  ),
-                ),
             ],
           ),
         ),
