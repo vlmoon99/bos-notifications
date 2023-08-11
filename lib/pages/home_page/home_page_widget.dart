@@ -1,7 +1,6 @@
 import '/auth/firebase_auth/auth_util.dart';
 import '/backend/api_requests/api_calls.dart';
 import '/backend/backend.dart';
-import '/components/account_id_search/account_id_search_widget.dart';
 import '/components/not_found_any_accounts/not_found_any_accounts_widget.dart';
 import '/components/subscribe_bottom_bar/subscribe_bottom_bar_widget.dart';
 import '/flutter_flow/flutter_flow_icon_button.dart';
@@ -12,7 +11,6 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
-import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
 import 'home_page_model.dart';
@@ -155,13 +153,13 @@ class _HomePageWidgetState extends State<HomePageWidget> {
                                     ),
                                     child: FlutterFlowWebView(
                                       content:
-                                          'https://near.social/vlmoon.near/widget/NotificationFeed?accountId=r${FFAppState().subscriptions[pageViewPagesIndex]}',
-                                      bypass: false,
+                                          'https://near.social/vlmoon.near/widget/NotificationFeed?accountId=${FFAppState().subscriptions[pageViewPagesIndex]}',
+                                      bypass: true,
                                       height:
                                           MediaQuery.sizeOf(context).height *
                                               1.0,
-                                      verticalScroll: false,
-                                      horizontalScroll: false,
+                                      verticalScroll: true,
+                                      horizontalScroll: true,
                                     ),
                                   ),
                                 ),
@@ -337,50 +335,36 @@ class _HomePageWidgetState extends State<HomePageWidget> {
                               ),
                             ),
                           ),
-                          Align(
-                            alignment: AlignmentDirectional(0.0, 0.0),
-                            child: Padding(
-                              padding: EdgeInsetsDirectional.fromSTEB(
-                                  16.0, 0.0, 16.0, 0.0),
-                              child: FlutterFlowIconButton(
-                                borderColor: Color(0x00FFFFFF),
-                                borderRadius: 50.0,
-                                borderWidth: 0.0,
-                                buttonSize: 60.0,
-                                fillColor: Color(0xFF4FD1D9),
-                                icon: FaIcon(
-                                  FontAwesomeIcons.search,
-                                  color: FlutterFlowTheme.of(context).info,
-                                  size: 24.0,
-                                ),
-                                onPressed: () async {
-                                  await showModalBottomSheet(
-                                    isScrollControlled: true,
-                                    backgroundColor: Color(0x00FFFFFF),
-                                    barrierColor: Color(0x00FFFFFF),
-                                    isDismissible: false,
-                                    enableDrag: false,
-                                    useSafeArea: true,
-                                    context: context,
-                                    builder: (context) {
-                                      return GestureDetector(
-                                        onTap: () => FocusScope.of(context)
-                                            .requestFocus(_model.unfocusNode),
-                                        child: Padding(
-                                          padding:
-                                              MediaQuery.viewInsetsOf(context),
-                                          child: Container(
-                                            height: MediaQuery.sizeOf(context)
-                                                    .height *
-                                                1.0,
-                                            child: AccountIdSearchWidget(),
-                                          ),
-                                        ),
-                                      );
-                                    },
-                                  ).then((value) => setState(() {}));
-                                },
+                          Padding(
+                            padding: EdgeInsetsDirectional.fromSTEB(
+                                16.0, 0.0, 16.0, 0.0),
+                            child: FlutterFlowIconButton(
+                              borderColor: Color(0x00FFFFFF),
+                              borderRadius: 50.0,
+                              borderWidth: 0.0,
+                              buttonSize: 60.0,
+                              fillColor: FlutterFlowTheme.of(context).nEARAqua,
+                              icon: Icon(
+                                Icons.arrow_back,
+                                color: FlutterFlowTheme.of(context).info,
+                                size: 30.0,
                               ),
+                              onPressed: () async {
+                                ScaffoldMessenger.of(context).showSnackBar(
+                                  SnackBar(
+                                    content: Text(
+                                      'Webview go back',
+                                      style: TextStyle(
+                                        color: FlutterFlowTheme.of(context)
+                                            .primaryText,
+                                      ),
+                                    ),
+                                    duration: Duration(milliseconds: 550),
+                                    backgroundColor:
+                                        FlutterFlowTheme.of(context).secondary,
+                                  ),
+                                );
+                              },
                             ),
                           ),
                         ],

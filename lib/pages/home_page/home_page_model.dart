@@ -1,7 +1,6 @@
 import '/auth/firebase_auth/auth_util.dart';
 import '/backend/api_requests/api_calls.dart';
 import '/backend/backend.dart';
-import '/components/account_id_search/account_id_search_widget.dart';
 import '/components/not_found_any_accounts/not_found_any_accounts_widget.dart';
 import '/components/subscribe_bottom_bar/subscribe_bottom_bar_widget.dart';
 import '/flutter_flow/flutter_flow_icon_button.dart';
@@ -12,7 +11,6 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
-import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
 
