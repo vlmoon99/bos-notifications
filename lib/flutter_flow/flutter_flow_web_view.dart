@@ -7,7 +7,7 @@ import 'package:url_launcher/url_launcher.dart';
 import 'flutter_flow_util.dart';
 
 class FlutterFlowWebView extends StatefulWidget {
-  const FlutterFlowWebView({
+  FlutterFlowWebView({
     Key? key,
     required this.content,
     this.width,
@@ -16,6 +16,7 @@ class FlutterFlowWebView extends StatefulWidget {
     this.horizontalScroll = false,
     this.verticalScroll = false,
     this.html = false,
+    required this.onCreated,
   }) : super(key: key);
 
   final String content;
@@ -25,12 +26,14 @@ class FlutterFlowWebView extends StatefulWidget {
   final bool horizontalScroll;
   final bool verticalScroll;
   final bool html;
-
+  final Function(WebViewXController controller) onCreated;
   @override
   _FlutterFlowWebViewState createState() => _FlutterFlowWebViewState();
 }
 
 class _FlutterFlowWebViewState extends State<FlutterFlowWebView> {
+  late WebViewXController webviewController;
+
   @override
   Widget build(BuildContext context) => WebViewX(
         key: webviewKey,
@@ -46,6 +49,25 @@ class _FlutterFlowWebViewState extends State<FlutterFlowWebView> {
                 ? SourceType.urlBypass
                 : SourceType.url,
         javascriptMode: JavascriptMode.unrestricted,
+        onWebViewCreated: (controller) {
+          webviewController = controller;
+          widget.onCreated(controller);
+        },
+        onPageFinished: (src) {
+          webviewController.evalRawJavascript("""
+        var elementsToRemove = document.querySelectorAll('.sc-ftTHYK');
+
+        elementsToRemove.forEach(function(element) {
+          element.parentNode.removeChild(element);
+        });
+
+        const newHexColorCode = "#FFF"; 
+
+        var root = document.documentElement;
+
+        root.style.setProperty('--bs-body-bg', newHexColorCode);
+        """);
+        },
         navigationDelegate: (request) async {
           if (isAndroid) {
             if (request.content.source
