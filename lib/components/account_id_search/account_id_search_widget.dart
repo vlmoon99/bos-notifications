@@ -89,33 +89,35 @@ class _AccountIdSearchWidgetState extends State<AccountIdSearchWidget> {
                   width: 350.0,
                   child: TextFormField(
                     controller: _model.textController,
-                    onChanged: (_) => EasyDebounce.debounce(
-                      '_model.textController',
-                      Duration(milliseconds: 2000),
-                      () async {
-                        ScaffoldMessenger.of(context).showSnackBar(
-                          SnackBar(
-                            content: Text(
-                              _model.textController.text,
-                              style: FlutterFlowTheme.of(context)
-                                  .labelMedium
-                                  .override(
-                                    fontFamily: FlutterFlowTheme.of(context)
-                                        .labelMediumFamily,
-                                    color: FlutterFlowTheme.of(context).info,
-                                    useGoogleFonts: GoogleFonts.asMap()
-                                        .containsKey(
-                                            FlutterFlowTheme.of(context)
-                                                .labelMediumFamily),
-                                  ),
-                            ),
-                            duration: Duration(milliseconds: 350),
-                            backgroundColor:
-                                FlutterFlowTheme.of(context).secondary,
-                          ),
-                        );
-                      },
-                    ),
+
+                    // onChanged: (_) => EasyDebounce.debounce(
+                    //   '_model.textController',
+                    //   Duration(milliseconds: 2000),
+                    //   () async {
+                    //     ScaffoldMessenger.of(context).showSnackBar(
+                    //       SnackBar(
+                    //         content: Text(
+                    //           _model.textController.text,
+                    //           style: FlutterFlowTheme.of(context)
+                    //               .labelMedium
+                    //               .override(
+                    //                 fontFamily: FlutterFlowTheme.of(context)
+                    //                     .labelMediumFamily,
+                    //                 color: FlutterFlowTheme.of(context).info,
+                    //                 useGoogleFonts: GoogleFonts.asMap()
+                    //                     .containsKey(
+                    //                         FlutterFlowTheme.of(context)
+                    //                             .labelMediumFamily),
+                    //               ),
+                    //         ),
+                    //         duration: Duration(milliseconds: 350),
+                    //         backgroundColor:
+                    //             FlutterFlowTheme.of(context).secondary,
+                    //       ),
+                    //     );
+                    //   },
+                    // ),
+
                     autofocus: true,
                     textCapitalization: TextCapitalization.none,
                     obscureText: false,
