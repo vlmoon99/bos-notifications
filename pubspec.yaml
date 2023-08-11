@@ -56,10 +56,6 @@ dependencies:
   google_sign_in_ios: 5.6.1
   google_sign_in_platform_interface: 2.4.0
   google_sign_in_web: 0.11.0+2
-  infinite_scroll_pagination: 
-    git:
-      url: https://github.com/FlutterFlow/infinite_scroll_pagination.git
-      ref: develop
   intl: 0.18.0
   json_path: 0.4.1
   mime_type: 1.0.0
@@ -86,6 +82,11 @@ dependencies:
   url_launcher_android: 6.0.27
   url_launcher_ios: 6.1.4
   url_launcher_platform_interface: 2.1.2
+  webview_flutter: 4.0.5
+  webview_flutter_android: 3.3.1
+  webview_flutter_platform_interface: 2.0.2
+  webview_flutter_wkwebview: 3.1.1
+  webviewx_plus: 0.3.3
 
 
   # The following adds the Cupertino Icons font to your application.
