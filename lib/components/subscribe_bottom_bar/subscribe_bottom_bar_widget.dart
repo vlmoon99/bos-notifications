@@ -161,13 +161,13 @@ class _SubscribeBottomBarWidgetState extends State<SubscribeBottomBarWidget> {
                             if (_shouldSetState) setState(() {});
                             return;
                           }
-
-                          if (GetNearSocialInformationCall.all(
-                                (_model.requestedAccountIdNearSocialInformation
-                                        ?.jsonBody ??
-                                    ''),
-                              ) !=
-                              '{}') {
+                          final accountIdNearSocialData =
+                              GetNearSocialInformationCall.all(
+                            (_model.requestedAccountIdNearSocialInformation
+                                    ?.jsonBody ??
+                                ''),
+                          );
+                          if (accountIdNearSocialData.toString() != '{}') {
                             setState(() {
                               FFAppState().addToSubscriptions(
                                   _model.textController.text);
