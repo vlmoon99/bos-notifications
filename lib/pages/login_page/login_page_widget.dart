@@ -2,10 +2,8 @@ import '/auth/firebase_auth/auth_util.dart';
 import '/flutter_flow/flutter_flow_theme.dart';
 import '/flutter_flow/flutter_flow_util.dart';
 import '/flutter_flow/flutter_flow_widgets.dart';
-import '/actions/actions.dart' as action_blocks;
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
 import 'login_page_model.dart';
@@ -94,78 +92,6 @@ class _LoginPageWidgetState extends State<LoginPageWidget> {
                   child: FFButtonWidget(
                     onPressed: () async {
                       GoRouter.of(context).prepareAuthEvent();
-                      final user = await authManager.signInWithGoogle(context);
-                      if (user == null) {
-                        return;
-                      }
-                      await action_blocks.fetchUserSubscriptions(context);
-
-                      context.pushNamedAuth('HomePage', context.mounted);
-                    },
-                    text: 'Continue with Google',
-                    icon: FaIcon(
-                      FontAwesomeIcons.google,
-                      color: FlutterFlowTheme.of(context).primaryText,
-                      size: 24.0,
-                    ),
-                    options: FFButtonOptions(
-                      width: 300.0,
-                      height: 50.0,
-                      padding:
-                          EdgeInsetsDirectional.fromSTEB(0.0, 0.0, 0.0, 0.0),
-                      iconPadding:
-                          EdgeInsetsDirectional.fromSTEB(0.0, 0.0, 0.0, 0.0),
-                      color: FlutterFlowTheme.of(context).secondaryBackground,
-                      textStyle: FlutterFlowTheme.of(context).titleLarge,
-                      elevation: 0.0,
-                      borderRadius: BorderRadius.circular(8.0),
-                    ),
-                  ),
-                ),
-                isAndroid
-                    ? Container()
-                    : Padding(
-                        padding: EdgeInsetsDirectional.fromSTEB(
-                            16.0, 16.0, 16.0, 16.0),
-                        child: FFButtonWidget(
-                          onPressed: () async {
-                            GoRouter.of(context).prepareAuthEvent();
-                            final user =
-                                await authManager.signInWithApple(context);
-                            if (user == null) {
-                              return;
-                            }
-                            await action_blocks.fetchUserSubscriptions(context);
-
-                            context.pushNamedAuth('HomePage', context.mounted);
-                          },
-                          text: 'Continue with Apple',
-                          icon: FaIcon(
-                            FontAwesomeIcons.apple,
-                            color: FlutterFlowTheme.of(context).primaryText,
-                            size: 24.0,
-                          ),
-                          options: FFButtonOptions(
-                            width: 300.0,
-                            height: 50.0,
-                            padding: EdgeInsetsDirectional.fromSTEB(
-                                0.0, 0.0, 0.0, 0.0),
-                            iconPadding: EdgeInsetsDirectional.fromSTEB(
-                                0.0, 0.0, 0.0, 0.0),
-                            color: FlutterFlowTheme.of(context)
-                                .secondaryBackground,
-                            textStyle: FlutterFlowTheme.of(context).titleLarge,
-                            elevation: 0.0,
-                            borderRadius: BorderRadius.circular(8.0),
-                          ),
-                        ),
-                      ),
-                Padding(
-                  padding:
-                      EdgeInsetsDirectional.fromSTEB(16.0, 16.0, 16.0, 16.0),
-                  child: FFButtonWidget(
-                    onPressed: () async {
-                      GoRouter.of(context).prepareAuthEvent();
                       final user = await authManager.signInAnonymously(context);
                       if (user == null) {
                         return;
@@ -173,7 +99,7 @@ class _LoginPageWidgetState extends State<LoginPageWidget> {
 
                       context.pushNamedAuth('HomePage', context.mounted);
                     },
-                    text: 'Continue as Guest',
+                    text: 'Getting Started',
                     options: FFButtonOptions(
                       width: 300.0,
                       height: 50.0,
