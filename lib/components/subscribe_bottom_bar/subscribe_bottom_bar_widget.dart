@@ -200,15 +200,6 @@ class _SubscribeBottomBarWidgetState extends State<SubscribeBottomBarWidget> {
                             return;
                           }
 
-                          await SubscriptionsChannelsRecord.collection
-                              .doc()
-                              .set({
-                            ...createSubscriptionsChannelsRecordData(
-                              accountId: _model.textController.text,
-                            ),
-                            'subscribersFcmTokens': ['token'],
-                          });
-
                           await currentUserReference!.update({
                             'subscriptions': FieldValue.arrayUnion(
                                 [_model.textController.text]),
