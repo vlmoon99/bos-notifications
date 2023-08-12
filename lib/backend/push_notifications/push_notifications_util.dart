@@ -1,3 +1,4 @@
+import 'dart:developer';
 import 'dart:io' show Platform;
 
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -39,12 +40,12 @@ final fcmTokenUserStream = authenticatedUserStream
     .distinct()
     .switchMap(getFcmTokenStream)
     .map(
-      (userTokenInfo) => makeCloudCall(
+      (userTokenInfo) => log({
         'addFcmToken',
         {
           'userDocPath': userTokenInfo.userPath,
           'fcmToken': userTokenInfo.fcmToken,
           'deviceType': Platform.isIOS ? 'iOS' : 'Android',
         },
-      ),
+      }.toString()),
     );
