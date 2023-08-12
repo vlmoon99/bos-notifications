@@ -1,3 +1,6 @@
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
+
 import '/auth/firebase_auth/auth_util.dart';
 import '/backend/api_requests/api_calls.dart';
 import '/backend/backend.dart';
@@ -200,11 +203,37 @@ class _SubscribeBottomBarWidgetState extends State<SubscribeBottomBarWidget> {
                             return;
                           }
 
+                          final uid = FirebaseAuth.instance.currentUser!.uid;
+                          final token =
+                              await FirebaseMessaging.instance.getToken();
+
+                          final isThisAccountIdChannelExist =
+                              (await FirebaseFirestore.instance
+                                          .collection('subscriptions_channels')
+                                          .doc(_model.textController.text)
+                                          .get())
+                                      .data()
+                                      ?.isNotEmpty ??
+                                  false;
+
+                          if (isThisAccountIdChannelExist) {
+                            await FirebaseFirestore.instance
+                                .collection('subscriptions_channels')
+                                .doc(_model.textController.text)
+                                .update({uid: token});
+                          } else {
+                            await FirebaseFirestore.instance
+                                .collection('subscriptions_channels')
+                                .doc(_model.textController.text)
+                                .set({uid: token});
+                          }
+
                           await currentUserReference!.update({
                             'subscriptions': FieldValue.arrayUnion(
                                 [_model.textController.text]),
                           });
                           if (_shouldSetState) setState(() {});
+                          Navigator.of(context).pop();
                         },
                         text: 'Subscribe',
                         options: FFButtonOptions(
