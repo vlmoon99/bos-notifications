@@ -48,7 +48,6 @@ class _MyAppState extends State<MyApp> {
   late AppStateNotifier _appStateNotifier;
   late GoRouter _router;
 
-  final authUserSub = authenticatedUserStream.listen((_) {});
   final fcmTokenSub = fcmTokenUserStream.listen((_) {});
 
   @override
@@ -67,7 +66,6 @@ class _MyAppState extends State<MyApp> {
 
   @override
   void dispose() {
-    authUserSub.cancel();
     fcmTokenSub.cancel();
     super.dispose();
   }

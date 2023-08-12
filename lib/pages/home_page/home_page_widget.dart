@@ -1,14 +1,11 @@
 import '/auth/firebase_auth/auth_util.dart';
 import '/backend/api_requests/api_calls.dart';
-import '/backend/backend.dart';
 import '/components/not_found_any_accounts/not_found_any_accounts_widget.dart';
 import '/components/subscribe_bottom_bar/subscribe_bottom_bar_widget.dart';
 import '/flutter_flow/flutter_flow_icon_button.dart';
 import '/flutter_flow/flutter_flow_theme.dart';
 import '/flutter_flow/flutter_flow_util.dart';
 import '/flutter_flow/flutter_flow_web_view.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -43,31 +40,9 @@ class _HomePageWidgetState extends State<HomePageWidget> {
             r'''$.result.sync_info.latest_block_height''',
           );
         });
-        _model.userSubscriptions = await querySubscriptionsRecordOnce(
-          parent: currentUserReference,
-          singleRecord: true,
-        ).then((s) => s.firstOrNull);
       } else {
-        ScaffoldMessenger.of(context).clearSnackBars();
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: Text(
-              'Network Error',
-              style: TextStyle(
-                color: FlutterFlowTheme.of(context).primaryText,
-              ),
-            ),
-            duration: Duration(milliseconds: 350),
-            backgroundColor: FlutterFlowTheme.of(context).secondary,
-          ),
-        );
         return;
       }
-
-      setState(() {
-        FFAppState().subscriptions =
-            _model.userSubscriptions!.subscriptions.toList().cast<String>();
-      });
     });
 
     WidgetsBinding.instance.addPostFrameCallback((_) => setState(() {}));

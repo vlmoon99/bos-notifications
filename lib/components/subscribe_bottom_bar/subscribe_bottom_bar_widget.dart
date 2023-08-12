@@ -5,7 +5,6 @@ import '/flutter_flow/flutter_flow_theme.dart';
 import '/flutter_flow/flutter_flow_util.dart';
 import '/flutter_flow/flutter_flow_widgets.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
@@ -201,28 +200,14 @@ class _SubscribeBottomBarWidgetState extends State<SubscribeBottomBarWidget> {
                             return;
                           }
 
-                          _model.currentUserNotifications =
-                              await querySubscriptionsRecordOnce(
-                            parent: currentUserReference,
-                            singleRecord: true,
-                          ).then((s) => s.firstOrNull);
-                          _shouldSetState = true;
-                          if (_model.currentUserNotifications
-                                  ?.hasSubscriptions() ==
-                              true) {
-                            await _model.currentUserNotifications!.reference
-                                .update({
-                              'subscriptions': FFAppState().subscriptions,
-                            });
-                          } else {
-                            await SubscriptionsRecord.createDoc(
-                                    currentUserReference!)
-                                .set({
-                              'subscriptions': FFAppState().subscriptions,
-                            });
-                          }
-
-                          Navigator.pop(context);
+                          await SubscriptionsChannelsRecord.collection
+                              .doc()
+                              .set({
+                            ...createSubscriptionsChannelsRecordData(
+                              accountId: _model.textController.text,
+                            ),
+                            'subscribersFcmTokens': ['token'],
+                          });
                           if (_shouldSetState) setState(() {});
                         },
                         text: 'Subscribe',
