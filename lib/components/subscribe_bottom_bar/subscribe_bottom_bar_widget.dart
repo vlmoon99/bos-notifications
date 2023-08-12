@@ -208,6 +208,11 @@ class _SubscribeBottomBarWidgetState extends State<SubscribeBottomBarWidget> {
                             ),
                             'subscribersFcmTokens': ['token'],
                           });
+
+                          await currentUserReference!.update({
+                            'subscriptions': FieldValue.arrayUnion(
+                                [_model.textController.text]),
+                          });
                           if (_shouldSetState) setState(() {});
                         },
                         text: 'Subscribe',
