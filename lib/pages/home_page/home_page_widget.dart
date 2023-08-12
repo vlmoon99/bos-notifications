@@ -8,7 +8,6 @@ import '/flutter_flow/flutter_flow_theme.dart';
 import '/flutter_flow/flutter_flow_util.dart';
 import '/flutter_flow/flutter_flow_web_view.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -47,9 +46,8 @@ class _HomePageWidgetState extends State<HomePageWidget> {
         return;
       }
 
-      _model.authUser = await queryUsersRecordOnce(
-        singleRecord: true,
-      ).then((s) => s.firstOrNull);
+      _model.authUser =
+          await UsersRecord.getDocumentOnce(currentUserReference!);
       setState(() {
         FFAppState().subscriptions =
             _model.authUser!.subscriptions.toList().cast<String>();
