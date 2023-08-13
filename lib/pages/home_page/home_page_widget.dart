@@ -1,3 +1,5 @@
+import 'package:webviewx_plus/webviewx_plus.dart';
+
 import '/auth/firebase_auth/auth_util.dart';
 import '/backend/api_requests/api_calls.dart';
 import '/backend/backend.dart';
@@ -26,7 +28,7 @@ class _HomePageWidgetState extends State<HomePageWidget> {
   late HomePageModel _model;
 
   final scaffoldKey = GlobalKey<ScaffoldState>();
-
+  late final WebViewXController webViewController;
   @override
   void initState() {
     super.initState();
@@ -72,7 +74,7 @@ class _HomePageWidgetState extends State<HomePageWidget> {
       onTap: () => FocusScope.of(context).requestFocus(_model.unfocusNode),
       child: Scaffold(
         key: scaffoldKey,
-        backgroundColor: FlutterFlowTheme.of(context).primaryBackground,
+        backgroundColor: Colors.white,
         body: SafeArea(
           top: true,
           child: Stack(
@@ -144,6 +146,9 @@ class _HomePageWidgetState extends State<HomePageWidget> {
                                               1.0,
                                       verticalScroll: true,
                                       horizontalScroll: true,
+                                      onCreated: (controller) {
+                                        webViewController = controller;
+                                      },
                                     ),
                                   ),
                                 ),
@@ -297,132 +302,149 @@ class _HomePageWidgetState extends State<HomePageWidget> {
                               ),
                             ],
                           ),
-                          Column(
-                            mainAxisSize: MainAxisSize.max,
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: [
-                              Align(
-                                alignment: AlignmentDirectional(0.0, 0.0),
-                                child: Padding(
-                                  padding: EdgeInsetsDirectional.fromSTEB(
-                                      24.0, 0.0, 24.0, 0.0),
-                                  child: FlutterFlowIconButton(
-                                    borderColor: Color(0x00FFFFFF),
-                                    borderRadius: 50.0,
-                                    borderWidth: 0.0,
-                                    buttonSize: 60.0,
-                                    fillColor:
-                                        FlutterFlowTheme.of(context).nEARAqua,
-                                    icon: Icon(
-                                      Icons.person_add_alt_1_sharp,
-                                      color: FlutterFlowTheme.of(context).info,
-                                      size: 24.0,
-                                    ),
-                                    onPressed: () async {
-                                      await showModalBottomSheet(
-                                        isScrollControlled: true,
-                                        backgroundColor: Color(0x00FFFFFF),
-                                        barrierColor: Color(0x00FFFFFF),
-                                        enableDrag: false,
-                                        useSafeArea: true,
-                                        context: context,
-                                        builder: (context) {
-                                          return GestureDetector(
-                                            onTap: () => FocusScope.of(context)
-                                                .requestFocus(
-                                                    _model.unfocusNode),
-                                            child: Padding(
-                                              padding: MediaQuery.viewInsetsOf(
-                                                  context),
-                                              child: Container(
-                                                height: 400.0,
-                                                child:
-                                                    SubscribeBottomBarWidget(),
-                                              ),
-                                            ),
-                                          );
-                                        },
-                                      ).then((value) => setState(() {}));
-                                    },
-                                  ),
-                                ),
-                              ),
-                              Text(
-                                'Subscribe',
-                                textAlign: TextAlign.center,
-                                style: FlutterFlowTheme.of(context)
-                                    .headlineMedium
-                                    .override(
-                                      fontFamily: FlutterFlowTheme.of(context)
-                                          .headlineMediumFamily,
-                                      fontSize: 20.0,
-                                      useGoogleFonts: GoogleFonts.asMap()
-                                          .containsKey(
+                          FFAppState().subscriptions.isNotEmpty
+                              ? const SizedBox()
+                              : Column(
+                                  mainAxisSize: MainAxisSize.max,
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  children: [
+                                    Align(
+                                      alignment: AlignmentDirectional(0.0, 0.0),
+                                      child: Padding(
+                                        padding: EdgeInsetsDirectional.fromSTEB(
+                                            24.0, 0.0, 24.0, 0.0),
+                                        child: FlutterFlowIconButton(
+                                          borderColor: Color(0x00FFFFFF),
+                                          borderRadius: 50.0,
+                                          borderWidth: 0.0,
+                                          buttonSize: 60.0,
+                                          fillColor:
                                               FlutterFlowTheme.of(context)
-                                                  .headlineMediumFamily),
-                                    ),
-                              ),
-                            ],
-                          ),
-                          Column(
-                            mainAxisSize: MainAxisSize.max,
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: [
-                              Align(
-                                alignment: AlignmentDirectional(0.0, 0.0),
-                                child: Padding(
-                                  padding: EdgeInsetsDirectional.fromSTEB(
-                                      24.0, 0.0, 24.0, 0.0),
-                                  child: FlutterFlowIconButton(
-                                    borderColor: Color(0x00FFFFFF),
-                                    borderRadius: 50.0,
-                                    borderWidth: 0.0,
-                                    buttonSize: 60.0,
-                                    fillColor:
-                                        FlutterFlowTheme.of(context).nEARAqua,
-                                    icon: Icon(
-                                      Icons.arrow_back,
-                                      color: FlutterFlowTheme.of(context).info,
-                                      size: 30.0,
-                                    ),
-                                    onPressed: () async {
-                                      ScaffoldMessenger.of(context)
-                                          .showSnackBar(
-                                        SnackBar(
-                                          content: Text(
-                                            'Webview go back',
-                                            style: TextStyle(
-                                              color:
-                                                  FlutterFlowTheme.of(context)
-                                                      .primaryText,
-                                            ),
+                                                  .nEARAqua,
+                                          icon: Icon(
+                                            Icons.person_add_alt_1_sharp,
+                                            color: FlutterFlowTheme.of(context)
+                                                .info,
+                                            size: 24.0,
                                           ),
-                                          duration: Duration(milliseconds: 550),
-                                          backgroundColor:
-                                              FlutterFlowTheme.of(context)
-                                                  .secondary,
+                                          onPressed: () async {
+                                            await showModalBottomSheet(
+                                              isScrollControlled: true,
+                                              backgroundColor:
+                                                  Color(0x00FFFFFF),
+                                              barrierColor: Color(0x00FFFFFF),
+                                              enableDrag: false,
+                                              useSafeArea: true,
+                                              context: context,
+                                              builder: (context) {
+                                                return GestureDetector(
+                                                  onTap: () => FocusScope.of(
+                                                          context)
+                                                      .requestFocus(
+                                                          _model.unfocusNode),
+                                                  child: Padding(
+                                                    padding:
+                                                        MediaQuery.viewInsetsOf(
+                                                            context),
+                                                    child: Container(
+                                                      height: 400.0,
+                                                      child:
+                                                          SubscribeBottomBarWidget(),
+                                                    ),
+                                                  ),
+                                                );
+                                              },
+                                            ).then((value) => setState(() {}));
+                                          },
                                         ),
-                                      );
-                                    },
-                                  ),
-                                ),
-                              ),
-                              Text(
-                                'Back',
-                                style: FlutterFlowTheme.of(context)
-                                    .headlineMedium
-                                    .override(
-                                      fontFamily: FlutterFlowTheme.of(context)
-                                          .headlineMediumFamily,
-                                      fontSize: 20.0,
-                                      useGoogleFonts: GoogleFonts.asMap()
-                                          .containsKey(
-                                              FlutterFlowTheme.of(context)
-                                                  .headlineMediumFamily),
+                                      ),
                                     ),
-                              ),
-                            ],
-                          ),
+                                    Text(
+                                      'Subscribe',
+                                      textAlign: TextAlign.center,
+                                      style: FlutterFlowTheme.of(context)
+                                          .headlineMedium
+                                          .override(
+                                            fontFamily:
+                                                FlutterFlowTheme.of(context)
+                                                    .headlineMediumFamily,
+                                            fontSize: 20.0,
+                                            useGoogleFonts: GoogleFonts.asMap()
+                                                .containsKey(
+                                                    FlutterFlowTheme.of(context)
+                                                        .headlineMediumFamily),
+                                          ),
+                                    ),
+                                  ],
+                                ),
+                          FFAppState().subscriptions.isEmpty
+                              ? const SizedBox()
+                              : Column(
+                                  mainAxisSize: MainAxisSize.max,
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  children: [
+                                    Align(
+                                      alignment: AlignmentDirectional(0.0, 0.0),
+                                      child: Padding(
+                                        padding: EdgeInsetsDirectional.fromSTEB(
+                                            24.0, 0.0, 24.0, 0.0),
+                                        child: FlutterFlowIconButton(
+                                          borderColor: Color(0x00FFFFFF),
+                                          borderRadius: 50.0,
+                                          borderWidth: 0.0,
+                                          buttonSize: 60.0,
+                                          fillColor:
+                                              FlutterFlowTheme.of(context)
+                                                  .nEARAqua,
+                                          icon: Icon(
+                                            Icons.arrow_back,
+                                            color: FlutterFlowTheme.of(context)
+                                                .info,
+                                            size: 30.0,
+                                          ),
+                                          onPressed: () async {
+                                            ScaffoldMessenger.of(context)
+                                                .showSnackBar(
+                                              SnackBar(
+                                                content: Text(
+                                                  'Page go back',
+                                                  style: FlutterFlowTheme.of(
+                                                          context)
+                                                      .bodyMedium
+                                                      .copyWith(
+                                                        fontSize: 20,
+                                                        color: Colors.white,
+                                                      ),
+                                                ),
+                                                duration:
+                                                    Duration(milliseconds: 550),
+                                                backgroundColor:
+                                                    FlutterFlowTheme.of(context)
+                                                        .secondary,
+                                              ),
+                                            );
+                                            webViewController.goBack();
+                                          },
+                                        ),
+                                      ),
+                                    ),
+                                    Text(
+                                      'Back',
+                                      style: FlutterFlowTheme.of(context)
+                                          .headlineMedium
+                                          .override(
+                                            fontFamily:
+                                                FlutterFlowTheme.of(context)
+                                                    .headlineMediumFamily,
+                                            fontSize: 20.0,
+                                            useGoogleFonts: GoogleFonts.asMap()
+                                                .containsKey(
+                                                    FlutterFlowTheme.of(context)
+                                                        .headlineMediumFamily),
+                                          ),
+                                    ),
+                                  ],
+                                ),
                         ],
                       ),
                     ),
