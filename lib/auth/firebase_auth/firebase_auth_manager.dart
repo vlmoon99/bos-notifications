@@ -59,7 +59,16 @@ class FirebaseAuthManager extends AuthManager
   FirebasePhoneAuthManager phoneAuthManager = FirebasePhoneAuthManager();
 
   @override
-  Future signOut() {
+  Future signOut() async {
+    if (FFAppState().subscriptions.isNotEmpty) {
+      final uid = FirebaseAuth.instance.currentUser!.uid;
+
+      await FirebaseFirestore.instance
+          .collection('subscriptions_channels')
+          .doc(FFAppState().subscriptions.first)
+          .update({uid: ""});
+    }
+
     return FirebaseAuth.instance.signOut();
   }
 
