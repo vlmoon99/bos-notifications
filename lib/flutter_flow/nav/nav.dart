@@ -283,7 +283,7 @@ class FFRoute {
                       color: Colors.transparent,
                       child: Image.asset(
                         'assets/images/icon.png',
-                        fit: BoxFit.cover,
+                        fit: BoxFit.contain,
                       ),
                     )
               : PushNotificationsHandler(child: page);
