@@ -28,7 +28,7 @@ class _HomePageWidgetState extends State<HomePageWidget> {
   late HomePageModel _model;
 
   final scaffoldKey = GlobalKey<ScaffoldState>();
-  late final WebViewXController webViewController;
+  WebViewXController? webViewController;
   @override
   void initState() {
     super.initState();
@@ -423,7 +423,7 @@ class _HomePageWidgetState extends State<HomePageWidget> {
                                                         .secondary,
                                               ),
                                             );
-                                            webViewController.goBack();
+                                            webViewController?.goBack();
                                           },
                                         ),
                                       ),
