@@ -247,109 +247,181 @@ class _HomePageWidgetState extends State<HomePageWidget> {
                         mainAxisAlignment: MainAxisAlignment.center,
                         crossAxisAlignment: CrossAxisAlignment.center,
                         children: [
-                          Align(
-                            alignment: AlignmentDirectional(0.0, 0.0),
-                            child: Padding(
-                              padding: EdgeInsetsDirectional.fromSTEB(
-                                  16.0, 0.0, 16.0, 0.0),
-                              child: FlutterFlowIconButton(
-                                borderColor: Color(0x00FFFFFF),
-                                borderRadius: 50.0,
-                                borderWidth: 0.0,
-                                buttonSize: 60.0,
-                                fillColor:
-                                    FlutterFlowTheme.of(context).nEARAqua,
-                                icon: Icon(
-                                  Icons.logout,
-                                  color: FlutterFlowTheme.of(context).accent4,
-                                  size: 24.0,
-                                ),
-                                onPressed: () async {
-                                  GoRouter.of(context).prepareAuthEvent();
-                                  await authManager.signOut();
-                                  GoRouter.of(context).clearRedirectLocation();
+                          Column(
+                            mainAxisSize: MainAxisSize.max,
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              Align(
+                                alignment: AlignmentDirectional(0.0, 0.0),
+                                child: Padding(
+                                  padding: EdgeInsetsDirectional.fromSTEB(
+                                      24.0, 0.0, 24.0, 0.0),
+                                  child: FlutterFlowIconButton(
+                                    borderColor: Color(0x00FFFFFF),
+                                    borderRadius: 50.0,
+                                    borderWidth: 0.0,
+                                    buttonSize: 60.0,
+                                    fillColor:
+                                        FlutterFlowTheme.of(context).nEARAqua,
+                                    icon: Icon(
+                                      Icons.logout,
+                                      color:
+                                          FlutterFlowTheme.of(context).accent4,
+                                      size: 24.0,
+                                    ),
+                                    onPressed: () async {
+                                      GoRouter.of(context).prepareAuthEvent();
+                                      await authManager.signOut();
+                                      GoRouter.of(context)
+                                          .clearRedirectLocation();
 
-                                  context.pushNamedAuth(
-                                      'LoginPage', context.mounted);
-                                },
-                              ),
-                            ),
-                          ),
-                          Align(
-                            alignment: AlignmentDirectional(0.0, 0.0),
-                            child: Padding(
-                              padding: EdgeInsetsDirectional.fromSTEB(
-                                  16.0, 0.0, 16.0, 0.0),
-                              child: FlutterFlowIconButton(
-                                borderColor: Color(0x00FFFFFF),
-                                borderRadius: 50.0,
-                                borderWidth: 0.0,
-                                buttonSize: 60.0,
-                                fillColor:
-                                    FlutterFlowTheme.of(context).nEARAqua,
-                                icon: Icon(
-                                  Icons.person_add_alt_1_sharp,
-                                  color: FlutterFlowTheme.of(context).info,
-                                  size: 24.0,
+                                      context.pushNamedAuth(
+                                          'LoginPage', context.mounted);
+                                    },
+                                  ),
                                 ),
-                                onPressed: () async {
-                                  await showModalBottomSheet(
-                                    isScrollControlled: true,
-                                    backgroundColor: Color(0x00FFFFFF),
-                                    barrierColor: Color(0x00FFFFFF),
-                                    enableDrag: false,
-                                    useSafeArea: true,
-                                    context: context,
-                                    builder: (context) {
-                                      return GestureDetector(
-                                        onTap: () => FocusScope.of(context)
-                                            .requestFocus(_model.unfocusNode),
-                                        child: Padding(
-                                          padding:
-                                              MediaQuery.viewInsetsOf(context),
-                                          child: Container(
-                                            height: 400.0,
-                                            child: SubscribeBottomBarWidget(),
+                              ),
+                              Text(
+                                'Logout',
+                                style: FlutterFlowTheme.of(context)
+                                    .headlineMedium
+                                    .override(
+                                      fontFamily: FlutterFlowTheme.of(context)
+                                          .headlineMediumFamily,
+                                      fontSize: 20.0,
+                                      useGoogleFonts: GoogleFonts.asMap()
+                                          .containsKey(
+                                              FlutterFlowTheme.of(context)
+                                                  .headlineMediumFamily),
+                                    ),
+                              ),
+                            ],
+                          ),
+                          Column(
+                            mainAxisSize: MainAxisSize.max,
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              Align(
+                                alignment: AlignmentDirectional(0.0, 0.0),
+                                child: Padding(
+                                  padding: EdgeInsetsDirectional.fromSTEB(
+                                      24.0, 0.0, 24.0, 0.0),
+                                  child: FlutterFlowIconButton(
+                                    borderColor: Color(0x00FFFFFF),
+                                    borderRadius: 50.0,
+                                    borderWidth: 0.0,
+                                    buttonSize: 60.0,
+                                    fillColor:
+                                        FlutterFlowTheme.of(context).nEARAqua,
+                                    icon: Icon(
+                                      Icons.person_add_alt_1_sharp,
+                                      color: FlutterFlowTheme.of(context).info,
+                                      size: 24.0,
+                                    ),
+                                    onPressed: () async {
+                                      await showModalBottomSheet(
+                                        isScrollControlled: true,
+                                        backgroundColor: Color(0x00FFFFFF),
+                                        barrierColor: Color(0x00FFFFFF),
+                                        enableDrag: false,
+                                        useSafeArea: true,
+                                        context: context,
+                                        builder: (context) {
+                                          return GestureDetector(
+                                            onTap: () => FocusScope.of(context)
+                                                .requestFocus(
+                                                    _model.unfocusNode),
+                                            child: Padding(
+                                              padding: MediaQuery.viewInsetsOf(
+                                                  context),
+                                              child: Container(
+                                                height: 400.0,
+                                                child:
+                                                    SubscribeBottomBarWidget(),
+                                              ),
+                                            ),
+                                          );
+                                        },
+                                      ).then((value) => setState(() {}));
+                                    },
+                                  ),
+                                ),
+                              ),
+                              Text(
+                                'Subscribe',
+                                textAlign: TextAlign.center,
+                                style: FlutterFlowTheme.of(context)
+                                    .headlineMedium
+                                    .override(
+                                      fontFamily: FlutterFlowTheme.of(context)
+                                          .headlineMediumFamily,
+                                      fontSize: 20.0,
+                                      useGoogleFonts: GoogleFonts.asMap()
+                                          .containsKey(
+                                              FlutterFlowTheme.of(context)
+                                                  .headlineMediumFamily),
+                                    ),
+                              ),
+                            ],
+                          ),
+                          Column(
+                            mainAxisSize: MainAxisSize.max,
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              Align(
+                                alignment: AlignmentDirectional(0.0, 0.0),
+                                child: Padding(
+                                  padding: EdgeInsetsDirectional.fromSTEB(
+                                      24.0, 0.0, 24.0, 0.0),
+                                  child: FlutterFlowIconButton(
+                                    borderColor: Color(0x00FFFFFF),
+                                    borderRadius: 50.0,
+                                    borderWidth: 0.0,
+                                    buttonSize: 60.0,
+                                    fillColor:
+                                        FlutterFlowTheme.of(context).nEARAqua,
+                                    icon: Icon(
+                                      Icons.arrow_back,
+                                      color: FlutterFlowTheme.of(context).info,
+                                      size: 30.0,
+                                    ),
+                                    onPressed: () async {
+                                      ScaffoldMessenger.of(context)
+                                          .showSnackBar(
+                                        SnackBar(
+                                          content: Text(
+                                            'Webview go back',
+                                            style: TextStyle(
+                                              color:
+                                                  FlutterFlowTheme.of(context)
+                                                      .primaryText,
+                                            ),
                                           ),
+                                          duration: Duration(milliseconds: 550),
+                                          backgroundColor:
+                                              FlutterFlowTheme.of(context)
+                                                  .secondary,
                                         ),
                                       );
                                     },
-                                  ).then((value) => setState(() {}));
-                                },
-                              ),
-                            ),
-                          ),
-                          Padding(
-                            padding: EdgeInsetsDirectional.fromSTEB(
-                                16.0, 0.0, 16.0, 0.0),
-                            child: FlutterFlowIconButton(
-                              borderColor: Color(0x00FFFFFF),
-                              borderRadius: 50.0,
-                              borderWidth: 0.0,
-                              buttonSize: 60.0,
-                              fillColor: FlutterFlowTheme.of(context).nEARAqua,
-                              icon: Icon(
-                                Icons.arrow_back,
-                                color: FlutterFlowTheme.of(context).info,
-                                size: 30.0,
-                              ),
-                              onPressed: () async {
-                                ScaffoldMessenger.of(context).showSnackBar(
-                                  SnackBar(
-                                    content: Text(
-                                      'Webview go back',
-                                      style: TextStyle(
-                                        color: FlutterFlowTheme.of(context)
-                                            .primaryText,
-                                      ),
-                                    ),
-                                    duration: Duration(milliseconds: 550),
-                                    backgroundColor:
-                                        FlutterFlowTheme.of(context).secondary,
                                   ),
-                                );
-                              },
-                            ),
+                                ),
+                              ),
+                              Text(
+                                'Back',
+                                style: FlutterFlowTheme.of(context)
+                                    .headlineMedium
+                                    .override(
+                                      fontFamily: FlutterFlowTheme.of(context)
+                                          .headlineMediumFamily,
+                                      fontSize: 20.0,
+                                      useGoogleFonts: GoogleFonts.asMap()
+                                          .containsKey(
+                                              FlutterFlowTheme.of(context)
+                                                  .headlineMediumFamily),
+                                    ),
+                              ),
+                            ],
                           ),
                         ],
                       ),
