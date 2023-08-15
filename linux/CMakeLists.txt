@@ -2,7 +2,7 @@ cmake_minimum_required(VERSION 3.10)
 project(runner LANGUAGES CXX)
 
 set(BINARY_NAME "BOS Notifications")
-set(APPLICATION_ID "com.vlmoon.bosnotifications")
+set(APPLICATION_ID "com.vlmoon.bosnotification")
 
 cmake_policy(SET CMP0063 NEW)
 

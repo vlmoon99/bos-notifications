@@ -7,6 +7,50 @@
   "client": [
     {
       "client_info": {
+        "mobilesdk_app_id": "1:1098516707870:android:a1cb8e57077a8d4a2e8c0f",
+        "android_client_info": {
+          "package_name": "com.vlmoon.bosnotification"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "1098516707870-qj4osk1vumqa56ov3pq25epmll9cg13b.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.vlmoon.bosnotification",
+            "certificate_hash": "9bbb3186b2189ef16d8f272bdab59362c395cbb4"
+          }
+        },
+        {
+          "client_id": "1098516707870-1o9q2471te8q2k4nk5dgg92t301dqula.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCDtTMghhLTfLIvy_ga5MC2WtXUjtWOUKE"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "1098516707870-1o9q2471te8q2k4nk5dgg92t301dqula.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "1098516707870-25j1nbbkgqh40gjon85niov76m82qqm9.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.vlmoon.bosnotification"
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
         "mobilesdk_app_id": "1:1098516707870:android:3923dda3a58270fa2e8c0f",
         "android_client_info": {
           "package_name": "com.vlmoon.bosnotifications"
@@ -39,10 +83,10 @@
               "client_type": 3
             },
             {
-              "client_id": "1098516707870-lotkomce3bvjigf1t62su5g38m97mjhi.apps.googleusercontent.com",
+              "client_id": "1098516707870-25j1nbbkgqh40gjon85niov76m82qqm9.apps.googleusercontent.com",
               "client_type": 2,
               "ios_info": {
-                "bundle_id": "com.vlmoon.bosnotifications"
+                "bundle_id": "com.vlmoon.bosnotification"
               }
             }
           ]

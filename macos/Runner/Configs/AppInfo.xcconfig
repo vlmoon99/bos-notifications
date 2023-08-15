@@ -8,7 +8,7 @@
 PRODUCT_NAME = BOS Notifications
 
 // The application's bundle identifier
-PRODUCT_BUNDLE_IDENTIFIER = com.vlmoon.bosnotifications
+PRODUCT_BUNDLE_IDENTIFIER = com.vlmoon.bosnotification
 
 // The copyright displayed in application information
 PRODUCT_COPYRIGHT = Copyright © 2022 BOS Notifications. All rights reserved.
