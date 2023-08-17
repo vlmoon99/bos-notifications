@@ -45,8 +45,4 @@ post_install do |installer|
   end
 end
 
-target 'ImageNotification' do
-  use_frameworks!
-  pod 'Firebase/Messaging'
-  pod 'GoogleUtilities'
-end
+

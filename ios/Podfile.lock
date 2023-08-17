@@ -829,7 +829,6 @@ PODS:
 DEPENDENCIES:
   - cloud_firestore (from `.symlinks/plugins/cloud_firestore/ios`)
   - cloud_functions (from `.symlinks/plugins/cloud_functions/ios`)
-  - Firebase/Messaging
   - firebase_auth (from `.symlinks/plugins/firebase_auth/ios`)
   - firebase_core (from `.symlinks/plugins/firebase_core/ios`)
   - firebase_messaging (from `.symlinks/plugins/firebase_messaging/ios`)
@@ -945,6 +944,6 @@ SPEC CHECKSUMS:
   url_launcher_ios: 08a3dfac5fb39e8759aeb0abbd5d9480f30fc8b4
   webview_flutter_wkwebview: d08f59cde5e8402c345c0bdda35ac0031352dcae
 
-PODFILE CHECKSUM: a1292467a5128fa2c3394998389ae46578b5534b
+PODFILE CHECKSUM: ab5175c4871749e70848ead17ccfde4ceeff09b5
 
 COCOAPODS: 1.12.0
