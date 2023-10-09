@@ -82,8 +82,8 @@ class _PushNotificationsHandlerState extends State<PushNotificationsHandler> {
           : Container(
               color: Colors.transparent,
               child: Image.asset(
-                'assets/images/icon.png',
-                fit: BoxFit.contain,
+                'assets/images/Loading2.png',
+                fit: BoxFit.fill,
               ),
             )
       : widget.child;

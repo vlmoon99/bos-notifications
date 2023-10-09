@@ -46,7 +46,7 @@ class _AccountIdSearchWidgetState extends State<AccountIdSearchWidget> {
     context.watch<FFAppState>();
 
     return Align(
-      alignment: AlignmentDirectional(0.0, 0.0),
+      alignment: AlignmentDirectional(0.00, 0.00),
       child: Container(
         width: 900.0,
         height: MediaQuery.sizeOf(context).height * 1.0,
@@ -82,7 +82,7 @@ class _AccountIdSearchWidgetState extends State<AccountIdSearchWidget> {
               ),
             ),
             Align(
-              alignment: AlignmentDirectional(0.0, -1.0),
+              alignment: AlignmentDirectional(0.00, -1.00),
               child: Padding(
                 padding: EdgeInsetsDirectional.fromSTEB(8.0, 100.0, 8.0, 0.0),
                 child: Container(
@@ -161,7 +161,7 @@ class _AccountIdSearchWidgetState extends State<AccountIdSearchWidget> {
               ),
             ),
             Align(
-              alignment: AlignmentDirectional(0.0, -0.95),
+              alignment: AlignmentDirectional(0.00, -0.95),
               child: FlutterFlowIconButton(
                 borderColor: Colors.transparent,
                 borderRadius: 50.0,

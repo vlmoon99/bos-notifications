@@ -115,6 +115,12 @@ class _FlutterFlowIconButtonState extends State<FlutterFlowIconButton> {
           return widget.fillColor;
         },
       ),
+      overlayColor: MaterialStateProperty.resolveWith<Color?>((states) {
+        if (states.contains(MaterialState.pressed)) {
+          return null;
+        }
+        return widget.hoverColor == null ? null : Colors.transparent;
+      }),
     );
 
     return SizedBox(

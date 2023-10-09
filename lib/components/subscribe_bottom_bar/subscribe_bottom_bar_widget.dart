@@ -49,7 +49,7 @@ class _SubscribeBottomBarWidgetState extends State<SubscribeBottomBarWidget> {
     context.watch<FFAppState>();
 
     return Align(
-      alignment: AlignmentDirectional(0.0, 0.0),
+      alignment: AlignmentDirectional(0.00, 0.00),
       child: Padding(
         padding: EdgeInsetsDirectional.fromSTEB(8.0, 8.0, 8.0, 8.0),
         child: Container(
@@ -121,7 +121,7 @@ class _SubscribeBottomBarWidgetState extends State<SubscribeBottomBarWidget> {
               ),
               Flexible(
                 child: Align(
-                  alignment: AlignmentDirectional(0.0, 1.0),
+                  alignment: AlignmentDirectional(0.00, 1.00),
                   child: Container(
                     width: 180.0,
                     height: 70.0,
@@ -129,7 +129,7 @@ class _SubscribeBottomBarWidgetState extends State<SubscribeBottomBarWidget> {
                       color: FlutterFlowTheme.of(context).secondaryBackground,
                     ),
                     child: Align(
-                      alignment: AlignmentDirectional(0.0, 0.0),
+                      alignment: AlignmentDirectional(0.00, 0.00),
                       child: FFButtonWidget(
                         onPressed: () async {
                           var _shouldSetState = false;
@@ -201,8 +201,12 @@ class _SubscribeBottomBarWidgetState extends State<SubscribeBottomBarWidget> {
                           }
 
                           await currentUserReference!.update({
-                            'subscriptions': FieldValue.arrayUnion(
-                                [_model.textController.text]),
+                            ...mapToFirestore(
+                              {
+                                'subscriptions': FieldValue.arrayUnion(
+                                    [_model.textController.text]),
+                              },
+                            ),
                           });
                           if (_shouldSetState) setState(() {});
                         },

@@ -43,7 +43,7 @@ class _NotFoundAnyAccountsWidgetState extends State<NotFoundAnyAccountsWidget> {
     context.watch<FFAppState>();
 
     return Align(
-      alignment: AlignmentDirectional(0.0, -0.1),
+      alignment: AlignmentDirectional(0.00, -0.10),
       child: Padding(
         padding: EdgeInsetsDirectional.fromSTEB(20.0, 0.0, 20.0, 0.0),
         child: Text(

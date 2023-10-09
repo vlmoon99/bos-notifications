@@ -2,7 +2,6 @@ import 'dart:convert';
 import 'dart:typed_data';
 
 import '../../flutter_flow/flutter_flow_util.dart';
-
 import 'api_manager.dart';
 
 export 'api_manager.dart' show ApiCallResponse;
@@ -17,7 +16,7 @@ class GetNotificationsByUserIdCall {
     String? order = 'desc',
     int? from = 98202726,
   }) {
-    final body = '''
+    final ffApiRequestBody = '''
 {
   "action": "${action}",
   "key": "${accountId}",
@@ -34,7 +33,7 @@ class GetNotificationsByUserIdCall {
       callType: ApiCallType.POST,
       headers: {},
       params: {},
-      body: body,
+      body: ffApiRequestBody,
       bodyType: BodyType.JSON,
       returnBody: true,
       encodeBodyUtf8: false,
@@ -57,7 +56,7 @@ class GetNotificationsByUserIdWithoutFromValueCall {
     int? limit = 10,
     String? order = 'desc',
   }) {
-    final body = '''
+    final ffApiRequestBody = '''
 {
   "action": "${action}",
   "key": "${accountId}",
@@ -73,7 +72,7 @@ class GetNotificationsByUserIdWithoutFromValueCall {
       callType: ApiCallType.POST,
       headers: {},
       params: {},
-      body: body,
+      body: ffApiRequestBody,
       bodyType: BodyType.JSON,
       returnBody: true,
       encodeBodyUtf8: false,
@@ -91,7 +90,7 @@ class GetNotificationsByUserIdWithoutFromValueCall {
 
 class GetMainNetLatestBlockHeightCall {
   static Future<ApiCallResponse> call() {
-    final body = '''
+    final ffApiRequestBody = '''
 {
   "jsonrpc": "2.0",
   "id": "dontcare",
@@ -104,7 +103,7 @@ class GetMainNetLatestBlockHeightCall {
       callType: ApiCallType.POST,
       headers: {},
       params: {},
-      body: body,
+      body: ffApiRequestBody,
       bodyType: BodyType.JSON,
       returnBody: true,
       encodeBodyUtf8: false,
@@ -123,7 +122,7 @@ class GetNearSocialInformationCall {
   static Future<ApiCallResponse> call({
     String? accountId = 'vlmoon.near',
   }) {
-    final body = '''
+    final ffApiRequestBody = '''
 {
   "keys": [
     "${accountId}/profile/**"
@@ -135,7 +134,7 @@ class GetNearSocialInformationCall {
       callType: ApiCallType.POST,
       headers: {},
       params: {},
-      body: body,
+      body: ffApiRequestBody,
       bodyType: BodyType.JSON,
       returnBody: true,
       encodeBodyUtf8: false,
