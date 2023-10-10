@@ -84,11 +84,6 @@ dependencies:
   url_launcher_android: 6.0.27
   url_launcher_ios: 6.1.4
   url_launcher_platform_interface: 2.1.2
-  webview_flutter: 4.0.5
-  webview_flutter_android: 3.3.1
-  webview_flutter_platform_interface: 2.0.2
-  webview_flutter_wkwebview: 3.1.1
-  webviewx_plus: 0.3.3
   xml: 6.3.0
 
 

@@ -1,57 +1,30 @@
-import '/auth/firebase_auth/auth_util.dart';
-import '/backend/api_requests/api_calls.dart';
-import '/backend/backend.dart';
 import '/flutter_flow/flutter_flow_icon_button.dart';
 import '/flutter_flow/flutter_flow_theme.dart';
 import '/flutter_flow/flutter_flow_util.dart';
 import '/flutter_flow/flutter_flow_widgets.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/scheduler.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
-import 'home_page_model.dart';
-export 'home_page_model.dart';
+import 'settings_page_model.dart';
+export 'settings_page_model.dart';
 
-class HomePageWidget extends StatefulWidget {
-  const HomePageWidget({Key? key}) : super(key: key);
+class SettingsPageWidget extends StatefulWidget {
+  const SettingsPageWidget({Key? key}) : super(key: key);
 
   @override
-  _HomePageWidgetState createState() => _HomePageWidgetState();
+  _SettingsPageWidgetState createState() => _SettingsPageWidgetState();
 }
 
-class _HomePageWidgetState extends State<HomePageWidget> {
-  late HomePageModel _model;
+class _SettingsPageWidgetState extends State<SettingsPageWidget> {
+  late SettingsPageModel _model;
 
   final scaffoldKey = GlobalKey<ScaffoldState>();
 
   @override
   void initState() {
     super.initState();
-    _model = createModel(context, () => HomePageModel());
-
-    // On page load action.
-    SchedulerBinding.instance.addPostFrameCallback((_) async {
-      _model.latestBlockHeight = await GetMainNetLatestBlockHeightCall.call();
-      if ((_model.latestBlockHeight?.succeeded ?? true)) {
-        setState(() {
-          FFAppState().latestBlockHeight = getJsonField(
-            (_model.latestBlockHeight?.jsonBody ?? ''),
-            r'''$.result.sync_info.latest_block_height''',
-          );
-        });
-      } else {
-        return;
-      }
-
-      _model.authUser =
-          await UsersRecord.getDocumentOnce(currentUserReference!);
-      setState(() {
-        FFAppState().subscriptions =
-            _model.authUser!.subscriptions.toList().cast<String>();
-      });
-    });
+    _model = createModel(context, () => SettingsPageModel());
 
     _model.textController ??= TextEditingController();
     WidgetsBinding.instance.addPostFrameCallback((_) => setState(() {}));
@@ -69,7 +42,7 @@ class _HomePageWidgetState extends State<HomePageWidget> {
     context.watch<FFAppState>();
 
     return Title(
-        title: 'HomePage',
+        title: 'SettingsPage',
         color: FlutterFlowTheme.of(context).primary.withAlpha(0XFF),
         child: GestureDetector(
           onTap: () => _model.unfocusNode.canRequestFocus
@@ -87,7 +60,7 @@ class _HomePageWidgetState extends State<HomePageWidget> {
                   children: [
                     Container(
                       width: MediaQuery.sizeOf(context).width * 1.0,
-                      height: MediaQuery.sizeOf(context).height * 0.095,
+                      height: 80.0,
                       decoration: BoxDecoration(
                         color: Color(0x00FFFFFF),
                       ),
@@ -163,6 +136,7 @@ class _HomePageWidgetState extends State<HomePageWidget> {
                                     mainAxisSize: MainAxisSize.max,
                                     children: [
                                       FlutterFlowIconButton(
+                                        borderColor: Colors.transparent,
                                         borderRadius: 20.0,
                                         borderWidth: 1.0,
                                         buttonSize: 45.0,
@@ -230,6 +204,7 @@ class _HomePageWidgetState extends State<HomePageWidget> {
                                 ),
                               ),
                               FlutterFlowIconButton(
+                                borderColor: Colors.transparent,
                                 borderRadius: 8.0,
                                 borderWidth: 1.0,
                                 buttonSize: 45.0,

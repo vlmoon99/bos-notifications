@@ -77,15 +77,13 @@ class _PushNotificationsHandlerState extends State<PushNotificationsHandler> {
 
   @override
   Widget build(BuildContext context) => _loading
-      ? isWeb
-          ? Container()
-          : Container(
-              color: Colors.transparent,
-              child: Image.asset(
-                'assets/images/Loading2.png',
-                fit: BoxFit.fill,
-              ),
-            )
+      ? Container(
+          color: Colors.transparent,
+          child: Image.asset(
+            'assets/images/Loading2.png',
+            fit: BoxFit.fill,
+          ),
+        )
       : widget.child;
 }
 
@@ -112,6 +110,8 @@ final parametersBuilderMap =
     <String, Future<ParameterData> Function(Map<String, dynamic>)>{
   'LoginPage': ParameterData.none(),
   'HomePage': ParameterData.none(),
+  'AccountPage': ParameterData.none(),
+  'SettingsPage': ParameterData.none(),
 };
 
 Map<String, dynamic> getInitialParameterData(Map<String, dynamic> data) {
