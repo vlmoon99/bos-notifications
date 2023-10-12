@@ -133,7 +133,6 @@ class _NavBarPageState extends State<NavBarPage> {
     final tabs = {
       'HomePage': HomePageWidget(),
       'AccountPage': AccountPageWidget(),
-      'SettingsPage': SettingsPageWidget(),
     };
     final currentIndex = tabs.keys.toList().indexOf(_currentPageName);
 
@@ -154,15 +153,7 @@ class _NavBarPageState extends State<NavBarPage> {
         items: <BottomNavigationBarItem>[
           BottomNavigationBarItem(
             icon: Icon(
-              Icons.chat,
-              size: 20.0,
-            ),
-            label: 'home',
-            tooltip: '',
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(
-              Icons.supervisor_account,
+              Icons.home_outlined,
               size: 24.0,
             ),
             label: 'Home',
@@ -170,10 +161,10 @@ class _NavBarPageState extends State<NavBarPage> {
           ),
           BottomNavigationBarItem(
             icon: Icon(
-              Icons.settings_suggest_sharp,
+              Icons.home_outlined,
               size: 24.0,
             ),
-            label: 'settings',
+            label: 'Account',
             tooltip: '',
           )
         ],

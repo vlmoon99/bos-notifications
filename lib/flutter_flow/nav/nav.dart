@@ -97,7 +97,6 @@ GoRouter createRouter(AppStateNotifier appStateNotifier) => GoRouter(
         FFRoute(
           name: 'HomePage',
           path: '/homePage',
-          requireAuth: true,
           builder: (context, params) => params.isEmpty
               ? NavBarPage(initialPage: 'HomePage')
               : HomePageWidget(),
@@ -108,13 +107,6 @@ GoRouter createRouter(AppStateNotifier appStateNotifier) => GoRouter(
           builder: (context, params) => params.isEmpty
               ? NavBarPage(initialPage: 'AccountPage')
               : AccountPageWidget(),
-        ),
-        FFRoute(
-          name: 'SettingsPage',
-          path: '/settingsPage',
-          builder: (context, params) => params.isEmpty
-              ? NavBarPage(initialPage: 'SettingsPage')
-              : SettingsPageWidget(),
         )
       ].map((r) => r.toRoute(appStateNotifier)).toList(),
     );
