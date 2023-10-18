@@ -1,20 +1,17 @@
-import '/components/subscribe_bottom_bar/subscribe_bottom_bar_widget.dart';
-import '/flutter_flow/flutter_flow_icon_button.dart';
 import '/flutter_flow/flutter_flow_theme.dart';
 import '/flutter_flow/flutter_flow_util.dart';
 import '/flutter_flow/flutter_flow_widgets.dart';
-import 'account_page_widget.dart' show AccountPageWidget;
+import 'settings_page_widget.dart' show SettingsPageWidget;
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
 
-class AccountPageModel extends FlutterFlowModel<AccountPageWidget> {
+class SettingsPageModel extends FlutterFlowModel<SettingsPageWidget> {
   ///  State fields for stateful widgets in this page.
 
   final unfocusNode = FocusNode();
-  // State field(s) for TextField widget.
-  TextEditingController? textController;
-  String? Function(BuildContext, String?)? textControllerValidator;
+  // State field(s) for Switch widget.
+  bool? switchValue;
 
   /// Initialization and disposal methods.
 
@@ -22,12 +19,9 @@ class AccountPageModel extends FlutterFlowModel<AccountPageWidget> {
 
   void dispose() {
     unfocusNode.dispose();
-    textController?.dispose();
   }
 
   /// Action blocks are added here.
-
-  Future buttonColor(BuildContext context) async {}
 
   /// Additional helper methods are added here.
 }

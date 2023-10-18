@@ -68,7 +68,7 @@ class _HomePageWidgetState extends State<HomePageWidget> {
                             fontFamily:
                                 FlutterFlowTheme.of(context).bodyMediumFamily,
                             fontSize: 24.0,
-                            fontWeight: FontWeight.w500,
+                            fontWeight: FontWeight.normal,
                             useGoogleFonts: GoogleFonts.asMap().containsKey(
                                 FlutterFlowTheme.of(context).bodyMediumFamily),
                           ),
@@ -275,43 +275,104 @@ class _HomePageWidgetState extends State<HomePageWidget> {
                                 ),
                               ),
                             ),
-                            FlutterFlowIconButton(
-                              borderRadius: 8.0,
-                              borderWidth: 0.0,
-                              buttonSize: 45.0,
-                              fillColor: Colors.black,
-                              icon: Icon(
-                                Icons.add,
-                                color: Colors.white,
-                                size: 24.0,
-                              ),
-                              onPressed: () async {
-                                await showModalBottomSheet(
-                                  isScrollControlled: true,
-                                  backgroundColor: Colors.white,
-                                  enableDrag: false,
-                                  context: context,
-                                  builder: (context) {
-                                    return GestureDetector(
-                                      onTap: () => _model
-                                              .unfocusNode.canRequestFocus
-                                          ? FocusScope.of(context)
-                                              .requestFocus(_model.unfocusNode)
-                                          : FocusScope.of(context).unfocus(),
-                                      child: Padding(
-                                        padding:
-                                            MediaQuery.viewInsetsOf(context),
-                                        child: Container(
-                                          height: MediaQuery.sizeOf(context)
-                                                  .height *
-                                              0.85,
-                                          child: FiltersWidget(),
+                            Container(
+                              width: 55.0,
+                              height: 55.0,
+                              child: Stack(
+                                alignment: AlignmentDirectional(0.0, 0.0),
+                                children: [
+                                  FlutterFlowIconButton(
+                                    borderRadius: 8.0,
+                                    borderWidth: 0.0,
+                                    buttonSize: 45.0,
+                                    fillColor: Colors.black,
+                                    icon: Icon(
+                                      Icons.add,
+                                      color: Colors.white,
+                                      size: 24.0,
+                                    ),
+                                    onPressed: () async {
+                                      await showModalBottomSheet(
+                                        isScrollControlled: true,
+                                        backgroundColor: Colors.white,
+                                        enableDrag: false,
+                                        context: context,
+                                        builder: (context) {
+                                          return GestureDetector(
+                                            onTap: () => _model
+                                                    .unfocusNode.canRequestFocus
+                                                ? FocusScope.of(context)
+                                                    .requestFocus(
+                                                        _model.unfocusNode)
+                                                : FocusScope.of(context)
+                                                    .unfocus(),
+                                            child: Padding(
+                                              padding: MediaQuery.viewInsetsOf(
+                                                  context),
+                                              child: Container(
+                                                height:
+                                                    MediaQuery.sizeOf(context)
+                                                            .height *
+                                                        0.85,
+                                                child: FiltersWidget(),
+                                              ),
+                                            ),
+                                          );
+                                        },
+                                      ).then((value) => safeSetState(() {}));
+                                    },
+                                  ),
+                                  Opacity(
+                                    opacity: (FFAppState().filterData.first !=
+                                                    null &&
+                                                FFAppState().filterData.first !=
+                                                    '') &&
+                                            (FFAppState().filterData.last !=
+                                                    null &&
+                                                FFAppState().filterData.last !=
+                                                    '')
+                                        ? 1.0
+                                        : 0.0,
+                                    child: Align(
+                                      alignment:
+                                          AlignmentDirectional(1.00, -1.00),
+                                      child: Container(
+                                        width: 16.0,
+                                        height: 16.0,
+                                        decoration: BoxDecoration(
+                                          color: Color(0xFFFF7966),
+                                          shape: BoxShape.circle,
+                                        ),
+                                        alignment:
+                                            AlignmentDirectional(0.00, -1.00),
+                                        child: Align(
+                                          alignment:
+                                              AlignmentDirectional(0.00, -1.00),
+                                          child: Text(
+                                            '1',
+                                            style: FlutterFlowTheme.of(context)
+                                                .bodyMedium
+                                                .override(
+                                                  fontFamily:
+                                                      FlutterFlowTheme.of(
+                                                              context)
+                                                          .bodyMediumFamily,
+                                                  color: Colors.white,
+                                                  fontSize: 13.0,
+                                                  useGoogleFonts: GoogleFonts
+                                                          .asMap()
+                                                      .containsKey(
+                                                          FlutterFlowTheme.of(
+                                                                  context)
+                                                              .bodyMediumFamily),
+                                                ),
+                                          ),
                                         ),
                                       ),
-                                    );
-                                  },
-                                ).then((value) => safeSetState(() {}));
-                              },
+                                    ),
+                                  ),
+                                ],
+                              ),
                             ),
                           ],
                         ),

@@ -111,6 +111,8 @@ final parametersBuilderMap =
   'LoginPage': ParameterData.none(),
   'HomePage': ParameterData.none(),
   'AccountPage': ParameterData.none(),
+  'SettingsPage': ParameterData.none(),
+  'fakeLoading': ParameterData.none(),
 };
 
 Map<String, dynamic> getInitialParameterData(Map<String, dynamic> data) {

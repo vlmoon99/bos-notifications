@@ -59,6 +59,47 @@ class FFAppState extends ChangeNotifier {
   void insertAtIndexInSubscriptions(int _index, String _value) {
     _subscriptions.insert(_index, _value);
   }
+
+  bool _tapButton = false;
+  bool get tapButton => _tapButton;
+  set tapButton(bool _value) {
+    _tapButton = _value;
+  }
+
+  List<String> _filterData = ['', ''];
+  List<String> get filterData => _filterData;
+  set filterData(List<String> _value) {
+    _filterData = _value;
+  }
+
+  void addToFilterData(String _value) {
+    _filterData.add(_value);
+  }
+
+  void removeFromFilterData(String _value) {
+    _filterData.remove(_value);
+  }
+
+  void removeAtIndexFromFilterData(int _index) {
+    _filterData.removeAt(_index);
+  }
+
+  void updateFilterDataAtIndex(
+    int _index,
+    String Function(String) updateFn,
+  ) {
+    _filterData[_index] = updateFn(_filterData[_index]);
+  }
+
+  void insertAtIndexInFilterData(int _index, String _value) {
+    _filterData.insert(_index, _value);
+  }
+
+  int _image = 0;
+  int get image => _image;
+  set image(int _value) {
+    _image = _value;
+  }
 }
 
 LatLng? _latLngFromString(String? val) {
