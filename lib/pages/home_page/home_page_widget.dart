@@ -115,149 +115,244 @@ class _HomePageWidgetState extends State<HomePageWidget> {
                             ),
                       ),
                     ),
-                    Flexible(
-                      child: Padding(
-                        padding: EdgeInsetsDirectional.fromSTEB(
-                            24.0, 0.0, 24.0, 0.0),
-                        child: Row(
-                          mainAxisSize: MainAxisSize.max,
-                          mainAxisAlignment: MainAxisAlignment.start,
-                          children: [
-                            Padding(
-                              padding: EdgeInsetsDirectional.fromSTEB(
-                                  0.0, 0.0, 24.0, 0.0),
-                              child: Container(
-                                width: () {
-                                  if (MediaQuery.sizeOf(context).width <
-                                      valueOrDefault<double>(
-                                        kBreakpointSmall,
-                                        400.0,
-                                      )) {
-                                    return 250.0;
-                                  } else if (MediaQuery.sizeOf(context).width <
-                                      valueOrDefault<double>(
-                                        kBreakpointMedium,
-                                        1025.0,
-                                      )) {
-                                    return 350.0;
-                                  } else if (MediaQuery.sizeOf(context).width <
-                                      valueOrDefault<double>(
-                                        kBreakpointLarge,
-                                        1500.0,
-                                      )) {
-                                    return 450.0;
-                                  } else {
-                                    return 600.0;
-                                  }
-                                }(),
-                                height: 45.0,
-                                decoration: BoxDecoration(
-                                  color: Color(0xFFF5F5EF),
-                                  borderRadius: BorderRadius.circular(8.0),
-                                ),
-                                child: Row(
-                                  mainAxisSize: MainAxisSize.min,
-                                  mainAxisAlignment: MainAxisAlignment.start,
-                                  crossAxisAlignment: CrossAxisAlignment.center,
-                                  children: [
-                                    Flexible(
-                                      child: FlutterFlowIconButton(
-                                        borderColor: Color(0x004B39EF),
-                                        buttonSize: 45.0,
-                                        fillColor: Color(0x004B39EF),
-                                        icon: Icon(
-                                          Icons.search,
-                                          color: FlutterFlowTheme.of(context)
-                                              .primaryText,
-                                          size: 24.0,
-                                        ),
-                                        onPressed: () {
-                                          print('IconButton pressed ...');
-                                        },
+                    Padding(
+                      padding:
+                          EdgeInsetsDirectional.fromSTEB(24.0, 0.0, 24.0, 0.0),
+                      child: Row(
+                        mainAxisSize: MainAxisSize.max,
+                        mainAxisAlignment: MainAxisAlignment.start,
+                        children: [
+                          Padding(
+                            padding: EdgeInsetsDirectional.fromSTEB(
+                                0.0, 0.0, 24.0, 0.0),
+                            child: Container(
+                              width: () {
+                                if (MediaQuery.sizeOf(context).width <
+                                    valueOrDefault<double>(
+                                      kBreakpointSmall,
+                                      400.0,
+                                    )) {
+                                  return 250.0;
+                                } else if (MediaQuery.sizeOf(context).width <
+                                    valueOrDefault<double>(
+                                      kBreakpointMedium,
+                                      1025.0,
+                                    )) {
+                                  return 350.0;
+                                } else if (MediaQuery.sizeOf(context).width <
+                                    valueOrDefault<double>(
+                                      kBreakpointLarge,
+                                      1500.0,
+                                    )) {
+                                  return 450.0;
+                                } else {
+                                  return 600.0;
+                                }
+                              }(),
+                              height: 45.0,
+                              decoration: BoxDecoration(
+                                color: Color(0xFFF5F5EF),
+                                borderRadius: BorderRadius.circular(8.0),
+                              ),
+                              child: Row(
+                                mainAxisSize: MainAxisSize.min,
+                                mainAxisAlignment: MainAxisAlignment.start,
+                                crossAxisAlignment: CrossAxisAlignment.center,
+                                children: [
+                                  Flexible(
+                                    child: FlutterFlowIconButton(
+                                      borderColor: Color(0x004B39EF),
+                                      buttonSize: 45.0,
+                                      fillColor: Color(0x004B39EF),
+                                      icon: Icon(
+                                        Icons.search,
+                                        color: FlutterFlowTheme.of(context)
+                                            .primaryText,
+                                        size: 24.0,
+                                      ),
+                                      onPressed: () {
+                                        print('IconButton pressed ...');
+                                      },
+                                    ),
+                                  ),
+                                  Container(
+                                    width: () {
+                                      if (MediaQuery.sizeOf(context).width <
+                                          valueOrDefault<double>(
+                                            kBreakpointSmall,
+                                            400.0,
+                                          )) {
+                                        return 205.0;
+                                      } else if (MediaQuery.sizeOf(context)
+                                              .width <
+                                          valueOrDefault<double>(
+                                            kBreakpointMedium,
+                                            1025.0,
+                                          )) {
+                                        return 305.0;
+                                      } else if (MediaQuery.sizeOf(context)
+                                              .width <
+                                          valueOrDefault<double>(
+                                            kBreakpointLarge,
+                                            1500.0,
+                                          )) {
+                                        return 405.0;
+                                      } else {
+                                        return 555.0;
+                                      }
+                                    }(),
+                                    height: 100.0,
+                                    constraints: BoxConstraints(
+                                      maxWidth: 550.0,
+                                    ),
+                                    decoration: BoxDecoration(
+                                      borderRadius: BorderRadius.only(
+                                        bottomLeft: Radius.circular(0.0),
+                                        bottomRight: Radius.circular(8.0),
+                                        topLeft: Radius.circular(0.0),
+                                        topRight: Radius.circular(8.0),
                                       ),
                                     ),
-                                    Container(
-                                      width: () {
-                                        if (MediaQuery.sizeOf(context).width <
-                                            valueOrDefault<double>(
-                                              kBreakpointSmall,
-                                              400.0,
-                                            )) {
-                                          return 205.0;
-                                        } else if (MediaQuery.sizeOf(context)
-                                                .width <
-                                            valueOrDefault<double>(
-                                              kBreakpointMedium,
-                                              1025.0,
-                                            )) {
-                                          return 305.0;
-                                        } else if (MediaQuery.sizeOf(context)
-                                                .width <
-                                            valueOrDefault<double>(
-                                              kBreakpointLarge,
-                                              1500.0,
-                                            )) {
-                                          return 405.0;
-                                        } else {
-                                          return 555.0;
-                                        }
-                                      }(),
-                                      height: 100.0,
-                                      constraints: BoxConstraints(
-                                        maxWidth: 550.0,
-                                      ),
-                                      decoration: BoxDecoration(
-                                        borderRadius: BorderRadius.only(
-                                          bottomLeft: Radius.circular(0.0),
-                                          bottomRight: Radius.circular(8.0),
-                                          topLeft: Radius.circular(0.0),
-                                          topRight: Radius.circular(8.0),
+                                    child: Container(
+                                      width: MediaQuery.sizeOf(context).width *
+                                          1.0,
+                                      child: TextFormField(
+                                        controller: _model.textController,
+                                        autofocus: true,
+                                        obscureText: false,
+                                        decoration: InputDecoration(
+                                          labelText:
+                                              'Search by Account ID or Name',
+                                          labelStyle: FlutterFlowTheme.of(
+                                                  context)
+                                              .labelMedium
+                                              .override(
+                                                fontFamily:
+                                                    FlutterFlowTheme.of(context)
+                                                        .labelMediumFamily,
+                                                color: Color(0xFFBDBDBD),
+                                                fontSize: 12.0,
+                                                useGoogleFonts: GoogleFonts
+                                                        .asMap()
+                                                    .containsKey(
+                                                        FlutterFlowTheme.of(
+                                                                context)
+                                                            .labelMediumFamily),
+                                              ),
+                                          hintStyle:
+                                              FlutterFlowTheme.of(context)
+                                                  .labelMedium,
+                                          enabledBorder: InputBorder.none,
+                                          focusedBorder: InputBorder.none,
+                                          errorBorder: InputBorder.none,
+                                          focusedErrorBorder: InputBorder.none,
                                         ),
+                                        style: FlutterFlowTheme.of(context)
+                                            .bodyMedium
+                                            .override(
+                                              fontFamily:
+                                                  FlutterFlowTheme.of(context)
+                                                      .bodyMediumFamily,
+                                              fontSize: 14.0,
+                                              useGoogleFonts: GoogleFonts
+                                                      .asMap()
+                                                  .containsKey(
+                                                      FlutterFlowTheme.of(
+                                                              context)
+                                                          .bodyMediumFamily),
+                                            ),
+                                        validator: _model
+                                            .textControllerValidator
+                                            .asValidator(context),
                                       ),
-                                      child: Container(
-                                        width:
-                                            MediaQuery.sizeOf(context).width *
-                                                1.0,
-                                        child: TextFormField(
-                                          controller: _model.textController,
-                                          autofocus: true,
-                                          obscureText: false,
-                                          decoration: InputDecoration(
-                                            labelText:
-                                                'Search by Account ID or Name',
-                                            labelStyle:
-                                                FlutterFlowTheme.of(context)
-                                                    .labelMedium
-                                                    .override(
-                                                      fontFamily:
-                                                          FlutterFlowTheme.of(
-                                                                  context)
-                                                              .labelMediumFamily,
-                                                      color: Color(0xFFBDBDBD),
-                                                      fontSize: 12.0,
-                                                      useGoogleFonts: GoogleFonts
-                                                              .asMap()
-                                                          .containsKey(
-                                                              FlutterFlowTheme.of(
-                                                                      context)
-                                                                  .labelMediumFamily),
-                                                    ),
-                                            hintStyle:
-                                                FlutterFlowTheme.of(context)
-                                                    .labelMedium,
-                                            enabledBorder: InputBorder.none,
-                                            focusedBorder: InputBorder.none,
-                                            errorBorder: InputBorder.none,
-                                            focusedErrorBorder:
-                                                InputBorder.none,
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
+                          ),
+                          Container(
+                            width: 55.0,
+                            height: 55.0,
+                            child: Stack(
+                              alignment: AlignmentDirectional(0.0, 0.0),
+                              children: [
+                                FlutterFlowIconButton(
+                                  borderRadius: 8.0,
+                                  borderWidth: 0.0,
+                                  buttonSize: 45.0,
+                                  fillColor: Colors.black,
+                                  icon: Icon(
+                                    Icons.add,
+                                    color: Colors.white,
+                                    size: 24.0,
+                                  ),
+                                  onPressed: () async {
+                                    await showModalBottomSheet(
+                                      isScrollControlled: true,
+                                      backgroundColor: Colors.white,
+                                      enableDrag: false,
+                                      context: context,
+                                      builder: (context) {
+                                        return GestureDetector(
+                                          onTap: () => _model
+                                                  .unfocusNode.canRequestFocus
+                                              ? FocusScope.of(context)
+                                                  .requestFocus(
+                                                      _model.unfocusNode)
+                                              : FocusScope.of(context)
+                                                  .unfocus(),
+                                          child: Padding(
+                                            padding: MediaQuery.viewInsetsOf(
+                                                context),
+                                            child: Container(
+                                              height: MediaQuery.sizeOf(context)
+                                                      .height *
+                                                  0.85,
+                                              child: FiltersWidget(),
+                                            ),
                                           ),
+                                        );
+                                      },
+                                    ).then((value) => safeSetState(() {}));
+                                  },
+                                ),
+                                Opacity(
+                                  opacity: (FFAppState().filterData.first !=
+                                                  null &&
+                                              FFAppState().filterData.first !=
+                                                  '') &&
+                                          (FFAppState().filterData.last !=
+                                                  null &&
+                                              FFAppState().filterData.last !=
+                                                  '')
+                                      ? 1.0
+                                      : 0.0,
+                                  child: Align(
+                                    alignment:
+                                        AlignmentDirectional(1.00, -1.00),
+                                    child: Container(
+                                      width: 16.0,
+                                      height: 16.0,
+                                      decoration: BoxDecoration(
+                                        color: Color(0xFFFF7966),
+                                        shape: BoxShape.circle,
+                                      ),
+                                      alignment:
+                                          AlignmentDirectional(0.00, -1.00),
+                                      child: Align(
+                                        alignment:
+                                            AlignmentDirectional(0.00, -1.00),
+                                        child: Text(
+                                          '1',
                                           style: FlutterFlowTheme.of(context)
                                               .bodyMedium
                                               .override(
                                                 fontFamily:
                                                     FlutterFlowTheme.of(context)
                                                         .bodyMediumFamily,
-                                                fontSize: 14.0,
+                                                color: Colors.white,
+                                                fontSize: 13.0,
                                                 useGoogleFonts: GoogleFonts
                                                         .asMap()
                                                     .containsKey(
@@ -265,117 +360,15 @@ class _HomePageWidgetState extends State<HomePageWidget> {
                                                                 context)
                                                             .bodyMediumFamily),
                                               ),
-                                          validator: _model
-                                              .textControllerValidator
-                                              .asValidator(context),
                                         ),
                                       ),
                                     ),
-                                  ],
+                                  ),
                                 ),
-                              ),
+                              ],
                             ),
-                            Container(
-                              width: 55.0,
-                              height: 55.0,
-                              child: Stack(
-                                alignment: AlignmentDirectional(0.0, 0.0),
-                                children: [
-                                  FlutterFlowIconButton(
-                                    borderRadius: 8.0,
-                                    borderWidth: 0.0,
-                                    buttonSize: 45.0,
-                                    fillColor: Colors.black,
-                                    icon: Icon(
-                                      Icons.add,
-                                      color: Colors.white,
-                                      size: 24.0,
-                                    ),
-                                    onPressed: () async {
-                                      await showModalBottomSheet(
-                                        isScrollControlled: true,
-                                        backgroundColor: Colors.white,
-                                        enableDrag: false,
-                                        context: context,
-                                        builder: (context) {
-                                          return GestureDetector(
-                                            onTap: () => _model
-                                                    .unfocusNode.canRequestFocus
-                                                ? FocusScope.of(context)
-                                                    .requestFocus(
-                                                        _model.unfocusNode)
-                                                : FocusScope.of(context)
-                                                    .unfocus(),
-                                            child: Padding(
-                                              padding: MediaQuery.viewInsetsOf(
-                                                  context),
-                                              child: Container(
-                                                height:
-                                                    MediaQuery.sizeOf(context)
-                                                            .height *
-                                                        0.85,
-                                                child: FiltersWidget(),
-                                              ),
-                                            ),
-                                          );
-                                        },
-                                      ).then((value) => safeSetState(() {}));
-                                    },
-                                  ),
-                                  Opacity(
-                                    opacity: (FFAppState().filterData.first !=
-                                                    null &&
-                                                FFAppState().filterData.first !=
-                                                    '') &&
-                                            (FFAppState().filterData.last !=
-                                                    null &&
-                                                FFAppState().filterData.last !=
-                                                    '')
-                                        ? 1.0
-                                        : 0.0,
-                                    child: Align(
-                                      alignment:
-                                          AlignmentDirectional(1.00, -1.00),
-                                      child: Container(
-                                        width: 16.0,
-                                        height: 16.0,
-                                        decoration: BoxDecoration(
-                                          color: Color(0xFFFF7966),
-                                          shape: BoxShape.circle,
-                                        ),
-                                        alignment:
-                                            AlignmentDirectional(0.00, -1.00),
-                                        child: Align(
-                                          alignment:
-                                              AlignmentDirectional(0.00, -1.00),
-                                          child: Text(
-                                            '1',
-                                            style: FlutterFlowTheme.of(context)
-                                                .bodyMedium
-                                                .override(
-                                                  fontFamily:
-                                                      FlutterFlowTheme.of(
-                                                              context)
-                                                          .bodyMediumFamily,
-                                                  color: Colors.white,
-                                                  fontSize: 13.0,
-                                                  useGoogleFonts: GoogleFonts
-                                                          .asMap()
-                                                      .containsKey(
-                                                          FlutterFlowTheme.of(
-                                                                  context)
-                                                              .bodyMediumFamily),
-                                                ),
-                                          ),
-                                        ),
-                                      ),
-                                    ),
-                                  ),
-                                ],
-                              ),
-                            ),
-                          ],
-                        ),
+                          ),
+                        ],
                       ),
                     ),
                     Align(
