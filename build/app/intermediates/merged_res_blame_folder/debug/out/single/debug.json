@@ -1,0 +1,26 @@
+[
+    {
+        "merged": "com.vlmoon.bosnotification.app-merged_res-19:/drawable_launch_background.xml.flat",
+        "source": "com.vlmoon.bosnotification.app-main-12:/drawable/launch_background.xml"
+    },
+    {
+        "merged": "com.vlmoon.bosnotification.app-merged_res-19:/mipmap-hdpi_ic_launcher.png.flat",
+        "source": "com.vlmoon.bosnotification.app-main-12:/mipmap-hdpi/ic_launcher.png"
+    },
+    {
+        "merged": "com.vlmoon.bosnotification.app-merged_res-19:/mipmap-xxxhdpi_ic_launcher.png.flat",
+        "source": "com.vlmoon.bosnotification.app-main-12:/mipmap-xxxhdpi/ic_launcher.png"
+    },
+    {
+        "merged": "com.vlmoon.bosnotification.app-merged_res-19:/mipmap-xhdpi_ic_launcher.png.flat",
+        "source": "com.vlmoon.bosnotification.app-main-12:/mipmap-xhdpi/ic_launcher.png"
+    },
+    {
+        "merged": "com.vlmoon.bosnotification.app-merged_res-19:/mipmap-xxhdpi_ic_launcher.png.flat",
+        "source": "com.vlmoon.bosnotification.app-main-12:/mipmap-xxhdpi/ic_launcher.png"
+    },
+    {
+        "merged": "com.vlmoon.bosnotification.app-merged_res-19:/mipmap-mdpi_ic_launcher.png.flat",
+        "source": "com.vlmoon.bosnotification.app-main-12:/mipmap-mdpi/ic_launcher.png"
+    }
+]
