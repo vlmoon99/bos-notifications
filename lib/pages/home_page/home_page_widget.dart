@@ -374,17 +374,17 @@ class _HomePageWidgetState extends State<HomePageWidget> {
                     Align(
                       alignment: AlignmentDirectional(0.00, -1.00),
                       child: Padding(
-                        padding: EdgeInsetsDirectional.fromSTEB(
-                            0.0, 150.0, 0.0, 0.0),
+                        padding:
+                            EdgeInsetsDirectional.fromSTEB(0.0, 30.0, 0.0, 0.0),
                         child: Container(
                           width: 512.0,
-                          height: 275.0,
+                          height: 186.0,
                           decoration: BoxDecoration(
                             color: FlutterFlowTheme.of(context)
                                 .secondaryBackground,
                           ),
                           child: Column(
-                            mainAxisSize: MainAxisSize.max,
+                            mainAxisSize: MainAxisSize.min,
                             children: [
                               Icon(
                                 Icons.people_alt,
