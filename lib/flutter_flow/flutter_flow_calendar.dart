@@ -20,6 +20,7 @@ class FlutterFlowCalendar extends StatefulWidget {
     this.initialDate,
     this.weekFormat = false,
     this.weekStartsMonday = false,
+    this.twoRowHeader = false,
     this.iconColor,
     this.dateStyle,
     this.dayOfWeekStyle,
@@ -32,6 +33,7 @@ class FlutterFlowCalendar extends StatefulWidget {
 
   final bool weekFormat;
   final bool weekStartsMonday;
+  final bool twoRowHeader;
   final Color color;
   final void Function(DateTimeRange?)? onChange;
   final DateTime? initialDate;
@@ -120,6 +122,7 @@ class _FlutterFlowCalendarState extends State<FlutterFlowCalendar> {
             titleStyle: widget.titleStyle,
             iconColor: widget.iconColor,
             locale: widget.locale,
+            twoRowHeader: widget.twoRowHeader,
           ),
           TableCalendar(
             focusedDay: focusedDay,
@@ -196,6 +199,7 @@ class CalendarHeader extends StatelessWidget {
     this.iconColor,
     this.titleStyle,
     this.locale,
+    this.twoRowHeader = false,
   }) : super(key: key);
 
   final DateTime focusedDay;
@@ -205,39 +209,63 @@ class CalendarHeader extends StatelessWidget {
   final Color? iconColor;
   final TextStyle? titleStyle;
   final String? locale;
+  final bool twoRowHeader;
 
   @override
   Widget build(BuildContext context) => Container(
         decoration: const BoxDecoration(),
         margin: const EdgeInsets.all(0),
         padding: const EdgeInsets.symmetric(vertical: 8),
-        child: Row(
-          mainAxisSize: MainAxisSize.max,
-          children: <Widget>[
-            const SizedBox(
-              width: 20,
-            ),
-            Expanded(
-              child: Text(
-                DateFormat.yMMMM(locale).format(focusedDay),
-                style: const TextStyle(fontSize: 17).merge(titleStyle),
-              ),
-            ),
-            CustomIconButton(
-              icon: Icon(Icons.calendar_today, color: iconColor),
-              onTap: onTodayButtonTap,
-            ),
-            CustomIconButton(
-              icon: Icon(Icons.chevron_left, color: iconColor),
-              onTap: onLeftChevronTap,
-            ),
-            CustomIconButton(
-              icon: Icon(Icons.chevron_right, color: iconColor),
-              onTap: onRightChevronTap,
-            ),
-          ],
+        child: twoRowHeader ? _buildTwoRowHeader() : _buildOneRowHeader(),
+      );
+
+  Widget _buildTwoRowHeader() => Column(
+        children: [
+          Row(
+            mainAxisSize: MainAxisSize.max,
+            children: [
+              const SizedBox(width: 16),
+              _buildDateWidget(),
+            ],
+          ),
+          Row(
+            mainAxisSize: MainAxisSize.max,
+            mainAxisAlignment: MainAxisAlignment.end,
+            children: _buildCustomIconButtons(),
+          ),
+        ],
+      );
+
+  Widget _buildOneRowHeader() => Row(
+        mainAxisSize: MainAxisSize.max,
+        children: <Widget>[
+          const SizedBox(width: 16),
+          _buildDateWidget(),
+          ..._buildCustomIconButtons(),
+        ],
+      );
+
+  Widget _buildDateWidget() => Expanded(
+        child: Text(
+          DateFormat.yMMMM(locale).format(focusedDay),
+          style: const TextStyle(fontSize: 17).merge(titleStyle),
         ),
       );
+
+  List<Widget> _buildCustomIconButtons() => <Widget>[
+        CustomIconButton(
+          icon: Icon(Icons.calendar_today, color: iconColor),
+          onTap: onTodayButtonTap,
+        ),
+        CustomIconButton(
+          icon: Icon(Icons.chevron_left, color: iconColor),
+          onTap: onLeftChevronTap,
+        ),
+        CustomIconButton(
+          icon: Icon(Icons.chevron_right, color: iconColor),
+          onTap: onRightChevronTap,
+        ),
+      ];
 }
 
 class CustomIconButton extends StatelessWidget {

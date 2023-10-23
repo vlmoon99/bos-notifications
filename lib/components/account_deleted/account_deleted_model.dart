@@ -1,24 +1,25 @@
 import '/flutter_flow/flutter_flow_theme.dart';
 import '/flutter_flow/flutter_flow_timer.dart';
 import '/flutter_flow/flutter_flow_util.dart';
-import '/flutter_flow/flutter_flow_widgets.dart';
-import 'fake_loading_widget.dart' show FakeLoadingWidget;
+import '/flutter_flow/custom_functions.dart' as functions;
+import 'account_deleted_widget.dart' show AccountDeletedWidget;
 import 'package:stop_watch_timer/stop_watch_timer.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:flutter/services.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:percent_indicator/percent_indicator.dart';
 import 'package:provider/provider.dart';
 
-class FakeLoadingModel extends FlutterFlowModel<FakeLoadingWidget> {
-  ///  State fields for stateful widgets in this page.
+class AccountDeletedModel extends FlutterFlowModel<AccountDeletedWidget> {
+  ///  State fields for stateful widgets in this component.
 
-  final unfocusNode = FocusNode();
   // State field(s) for Timer widget.
-  int timerMilliseconds = 7000;
+  int timerMilliseconds = 10000;
   String timerValue = StopWatchTimer.getDisplayTime(
-    7000,
+    10000,
     hours: false,
+    minute: false,
     milliSecond: false,
   );
   FlutterFlowTimerController timerController =
@@ -29,7 +30,6 @@ class FakeLoadingModel extends FlutterFlowModel<FakeLoadingWidget> {
   void initState(BuildContext context) {}
 
   void dispose() {
-    unfocusNode.dispose();
     timerController.dispose();
   }
 

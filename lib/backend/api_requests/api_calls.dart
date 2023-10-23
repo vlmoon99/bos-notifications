@@ -1,7 +1,7 @@
 import 'dart:convert';
 import 'dart:typed_data';
 
-import '../../flutter_flow/flutter_flow_util.dart';
+import '/flutter_flow/flutter_flow_util.dart';
 import 'api_manager.dart';
 
 export 'api_manager.dart' show ApiCallResponse;
@@ -15,7 +15,7 @@ class GetNotificationsByUserIdCall {
     int? limit = 10,
     String? order = 'desc',
     int? from = 98202726,
-  }) {
+  }) async {
     final ffApiRequestBody = '''
 {
   "action": "${action}",
@@ -55,7 +55,7 @@ class GetNotificationsByUserIdWithoutFromValueCall {
     String? accountId = 'vlmoon.near',
     int? limit = 10,
     String? order = 'desc',
-  }) {
+  }) async {
     final ffApiRequestBody = '''
 {
   "action": "${action}",
@@ -89,7 +89,7 @@ class GetNotificationsByUserIdWithoutFromValueCall {
 }
 
 class GetMainNetLatestBlockHeightCall {
-  static Future<ApiCallResponse> call() {
+  static Future<ApiCallResponse> call() async {
     final ffApiRequestBody = '''
 {
   "jsonrpc": "2.0",
@@ -121,7 +121,7 @@ class GetMainNetLatestBlockHeightCall {
 class GetNearSocialInformationCall {
   static Future<ApiCallResponse> call({
     String? accountId = 'vlmoon.near',
-  }) {
+  }) async {
     final ffApiRequestBody = '''
 {
   "keys": [
@@ -146,6 +146,10 @@ class GetNearSocialInformationCall {
   static dynamic all(dynamic response) => getJsonField(
         response,
         r'''$''',
+      );
+  static dynamic backgroundImage(dynamic response) => getJsonField(
+        response,
+        r'''$..image.ipfs_cid''',
       );
 }
 

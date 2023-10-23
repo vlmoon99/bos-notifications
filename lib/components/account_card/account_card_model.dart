@@ -1,13 +1,18 @@
+import '/flutter_flow/flutter_flow_icon_button.dart';
 import '/flutter_flow/flutter_flow_theme.dart';
 import '/flutter_flow/flutter_flow_util.dart';
-import 'bos_notification_widget.dart' show BosNotificationWidget;
-import 'package:auto_size_text/auto_size_text.dart';
+import 'account_card_widget.dart' show AccountCardWidget;
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
 
-class BosNotificationModel extends FlutterFlowModel<BosNotificationWidget> {
+class AccountCardModel extends FlutterFlowModel<AccountCardWidget> {
+  ///  Local state fields for this component.
+
+  String accountName = 'Account';
+
   /// Initialization and disposal methods.
 
   void initState(BuildContext context) {}

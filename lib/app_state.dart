@@ -100,6 +100,18 @@ class FFAppState extends ChangeNotifier {
   set image(int _value) {
     _image = _value;
   }
+
+  int _userfound = 0;
+  int get userfound => _userfound;
+  set userfound(int _value) {
+    _userfound = _value;
+  }
+
+  String _searchAccount = '';
+  String get searchAccount => _searchAccount;
+  set searchAccount(String _value) {
+    _searchAccount = _value;
+  }
 }
 
 LatLng? _latLngFromString(String? val) {
