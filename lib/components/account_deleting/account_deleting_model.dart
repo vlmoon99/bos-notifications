@@ -1,9 +1,12 @@
+import '/backend/schema/structs/index.dart';
+import '/flutter_flow/flutter_flow_icon_button.dart';
 import '/flutter_flow/flutter_flow_theme.dart';
 import '/flutter_flow/flutter_flow_timer.dart';
 import '/flutter_flow/flutter_flow_util.dart';
 import '/flutter_flow/custom_functions.dart' as functions;
-import 'account_deleted_widget.dart' show AccountDeletedWidget;
+import 'account_deleting_widget.dart' show AccountDeletingWidget;
 import 'package:stop_watch_timer/stop_watch_timer.dart';
+import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:flutter/services.dart';
@@ -11,7 +14,11 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:percent_indicator/percent_indicator.dart';
 import 'package:provider/provider.dart';
 
-class AccountDeletedModel extends FlutterFlowModel<AccountDeletedWidget> {
+class AccountDeletingModel extends FlutterFlowModel<AccountDeletingWidget> {
+  ///  Local state fields for this component.
+
+  bool start = false;
+
   ///  State fields for stateful widgets in this component.
 
   // State field(s) for Timer widget.

@@ -1,5 +1,6 @@
 import '/auth/firebase_auth/auth_util.dart';
-import '/components/account_deleted/account_deleted_widget.dart';
+import '/backend/schema/structs/index.dart';
+import '/components/account_deleting/account_deleting_widget.dart';
 import '/components/subscribe_bottom_bar/subscribe_bottom_bar_widget.dart';
 import '/flutter_flow/flutter_flow_icon_button.dart';
 import '/flutter_flow/flutter_flow_theme.dart';

@@ -13,7 +13,12 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import '/backend/schema/structs/index.dart';
 import '/auth/firebase_auth/auth_util.dart';
 
-double timer(String value) {
-  double progress = (int.parse(value) / 10);
-  return progress;
+String imageReturn(String? cid) {
+  return 'https://gateway.pinata.cloud/ipfs/bafkreicyjmeov72yasyngowwz2tdamo5hnfkoqjljtatquvtxqcaomfey4/';
+}
+
+double timer(String seconds) {
+  int realSeconds = int.parse(seconds);
+  double timerResult = realSeconds / 10;
+  return timerResult;
 }

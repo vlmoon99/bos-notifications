@@ -83,6 +83,10 @@ class _AccountCardWidgetState extends State<AccountCardWidget> {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
+                  _model.accountName,
+                  style: FlutterFlowTheme.of(context).bodyMedium,
+                ),
+                Text(
                   'Platform',
                   style: FlutterFlowTheme.of(context).bodyMedium.override(
                         fontFamily:

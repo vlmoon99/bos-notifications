@@ -112,6 +112,36 @@ class FFAppState extends ChangeNotifier {
   set searchAccount(String _value) {
     _searchAccount = _value;
   }
+
+  List<DeletingAccountsStruct> _deletingAccounts = [];
+  List<DeletingAccountsStruct> get deletingAccounts => _deletingAccounts;
+  set deletingAccounts(List<DeletingAccountsStruct> _value) {
+    _deletingAccounts = _value;
+  }
+
+  void addToDeletingAccounts(DeletingAccountsStruct _value) {
+    _deletingAccounts.add(_value);
+  }
+
+  void removeFromDeletingAccounts(DeletingAccountsStruct _value) {
+    _deletingAccounts.remove(_value);
+  }
+
+  void removeAtIndexFromDeletingAccounts(int _index) {
+    _deletingAccounts.removeAt(_index);
+  }
+
+  void updateDeletingAccountsAtIndex(
+    int _index,
+    DeletingAccountsStruct Function(DeletingAccountsStruct) updateFn,
+  ) {
+    _deletingAccounts[_index] = updateFn(_deletingAccounts[_index]);
+  }
+
+  void insertAtIndexInDeletingAccounts(
+      int _index, DeletingAccountsStruct _value) {
+    _deletingAccounts.insert(_index, _value);
+  }
 }
 
 LatLng? _latLngFromString(String? val) {
