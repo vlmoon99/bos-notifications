@@ -82,13 +82,13 @@ GoRouter createRouter(AppStateNotifier appStateNotifier) => GoRouter(
       debugLogDiagnostics: true,
       refreshListenable: appStateNotifier,
       errorBuilder: (context, state) =>
-          appStateNotifier.loggedIn ? NavBarPage() : FakeLoadingWidget(),
+          appStateNotifier.loggedIn ? NavBarPage() : LoginPageWidget(),
       routes: [
         FFRoute(
           name: '_initialize',
           path: '/',
           builder: (context, _) =>
-              appStateNotifier.loggedIn ? NavBarPage() : FakeLoadingWidget(),
+              appStateNotifier.loggedIn ? NavBarPage() : LoginPageWidget(),
         ),
         FFRoute(
           name: 'LoginPage',
@@ -115,18 +115,6 @@ GoRouter createRouter(AppStateNotifier appStateNotifier) => GoRouter(
           builder: (context, params) => params.isEmpty
               ? NavBarPage(initialPage: 'SettingsPage')
               : SettingsPageWidget(),
-        ),
-        FFRoute(
-          name: 'fakeLoading',
-          path: '/fakeLoading',
-          builder: (context, params) => FakeLoadingWidget(),
-        ),
-        FFRoute(
-          name: 'testPage',
-          path: '/testPage',
-          builder: (context, params) => params.isEmpty
-              ? NavBarPage(initialPage: 'testPage')
-              : TestPageWidget(),
         )
       ].map((r) => r.toRoute(appStateNotifier)).toList(),
     );
@@ -293,7 +281,7 @@ class FFRoute {
 
           if (requireAuth && !appStateNotifier.loggedIn) {
             appStateNotifier.setRedirectLocationIfUnset(state.location);
-            return '/fakeLoading';
+            return '/loginPage';
           }
           return null;
         },

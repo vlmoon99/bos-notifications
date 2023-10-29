@@ -134,7 +134,6 @@ class _NavBarPageState extends State<NavBarPage> {
       'HomePage': HomePageWidget(),
       'AccountPage': AccountPageWidget(),
       'SettingsPage': SettingsPageWidget(),
-      'testPage': TestPageWidget(),
     };
     final currentIndex = tabs.keys.toList().indexOf(_currentPageName);
 
@@ -175,14 +174,6 @@ class _NavBarPageState extends State<NavBarPage> {
               size: 24.0,
             ),
             label: 'Settings',
-            tooltip: '',
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(
-              Icons.texture,
-              size: 24.0,
-            ),
-            label: 'test',
             tooltip: '',
           )
         ],
