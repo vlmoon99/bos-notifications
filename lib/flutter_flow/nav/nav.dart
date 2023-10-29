@@ -294,13 +294,15 @@ class FFRoute {
                 )
               : builder(context, ffParams);
           final child = appStateNotifier.loading
-              ? Container(
-                  color: Colors.transparent,
-                  child: Image.asset(
-                    'assets/images/Loading2.png',
-                    fit: BoxFit.fill,
-                  ),
-                )
+              ? isWeb
+                  ? Container()
+                  : Container(
+                      color: Colors.white,
+                      child: Image.asset(
+                        'assets/images/Loading2.png',
+                        fit: BoxFit.cover,
+                      ),
+                    )
               : PushNotificationsHandler(child: page);
 
           final transitionInfo = state.transitionInfo;
