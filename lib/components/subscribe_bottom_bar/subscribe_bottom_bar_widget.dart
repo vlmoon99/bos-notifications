@@ -289,34 +289,39 @@ class _SubscribeBottomBarWidgetState extends State<SubscribeBottomBarWidget> {
                                 '_model.textController',
                                 Duration(milliseconds: 2000),
                                 () async {
-                                  var _shouldSetState = false;
-                                  if (_model.textController.text == '') {
-                                    setState(() {
-                                      FFAppState().userfound = 0;
-                                    });
-                                    if (_shouldSetState) setState(() {});
-                                    return;
-                                  }
-                                  _model.socialInformation =
-                                      await GetNearSocialInformationCall.call(
-                                    accountId: _model.textController.text,
-                                  );
-                                  _shouldSetState = true;
-                                  if ((_model.socialInformation?.bodyText ??
-                                          '') !=
-                                      '{}') {
-                                    setState(() {
-                                      FFAppState().userfound = 1;
-                                    });
-                                  } else {
-                                    setState(() {
-                                      FFAppState().userfound = 2;
-                                    });
-                                  }
-
-                                  if (_shouldSetState) setState(() {});
+                                  setState(() {
+                                    FFAppState().userfound = 0;
+                                  });
                                 },
                               ),
+                              onFieldSubmitted: (_) async {
+                                var _shouldSetState = false;
+                                if (_model.textController.text == '') {
+                                  setState(() {
+                                    FFAppState().userfound = 0;
+                                  });
+                                  if (_shouldSetState) setState(() {});
+                                  return;
+                                }
+                                _model.socialInformation =
+                                    await GetNearSocialInformationCall.call(
+                                  accountId: _model.textController.text,
+                                );
+                                _shouldSetState = true;
+                                if ((_model.socialInformation?.bodyText ??
+                                        '') !=
+                                    '{}') {
+                                  setState(() {
+                                    FFAppState().userfound = 1;
+                                  });
+                                } else {
+                                  setState(() {
+                                    FFAppState().userfound = 2;
+                                  });
+                                }
+
+                                if (_shouldSetState) setState(() {});
+                              },
                               obscureText: false,
                               decoration: InputDecoration(
                                 labelText: 'Enter Account ID here...',
@@ -439,14 +444,7 @@ class _SubscribeBottomBarWidgetState extends State<SubscribeBottomBarWidget> {
                               image: DecorationImage(
                                 fit: BoxFit.cover,
                                 image: Image.network(
-                                  valueOrDefault<String>(
-                                    GetNearSocialInformationCall
-                                        .backgroundImage(
-                                      (_model.socialInformation?.jsonBody ??
-                                          ''),
-                                    ),
-                                    'xxx',
-                                  ),
+                                  '',
                                 ).image,
                               ),
                               shape: BoxShape.circle,
@@ -534,7 +532,8 @@ class _SubscribeBottomBarWidgetState extends State<SubscribeBottomBarWidget> {
                                 (_model.socialInformation?.bodyText ?? '') !=
                                     '') &&
                             ((_model.socialInformation?.bodyText ?? '') !=
-                                '{}')) {
+                                '{}') &&
+                            (FFAppState().userfound != 0)) {
                           await currentUserReference!.update({
                             ...mapToFirestore(
                               {

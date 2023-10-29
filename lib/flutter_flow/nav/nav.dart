@@ -120,6 +120,13 @@ GoRouter createRouter(AppStateNotifier appStateNotifier) => GoRouter(
           name: 'fakeLoading',
           path: '/fakeLoading',
           builder: (context, params) => FakeLoadingWidget(),
+        ),
+        FFRoute(
+          name: 'testPage',
+          path: '/testPage',
+          builder: (context, params) => params.isEmpty
+              ? NavBarPage(initialPage: 'testPage')
+              : TestPageWidget(),
         )
       ].map((r) => r.toRoute(appStateNotifier)).toList(),
     );

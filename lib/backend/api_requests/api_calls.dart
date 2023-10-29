@@ -149,7 +149,7 @@ class GetNearSocialInformationCall {
       );
   static dynamic backgroundImage(dynamic response) => getJsonField(
         response,
-        r'''$..image.ipfs_cid''',
+        r'''$..backgroundimage.ipfs_cid''',
       );
 }
 

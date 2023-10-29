@@ -113,34 +113,33 @@ class FFAppState extends ChangeNotifier {
     _searchAccount = _value;
   }
 
-  List<DeletingAccountsStruct> _deletingAccounts = [];
-  List<DeletingAccountsStruct> get deletingAccounts => _deletingAccounts;
-  set deletingAccounts(List<DeletingAccountsStruct> _value) {
-    _deletingAccounts = _value;
+  List<String> _accountDeletingNames = [];
+  List<String> get accountDeletingNames => _accountDeletingNames;
+  set accountDeletingNames(List<String> _value) {
+    _accountDeletingNames = _value;
   }
 
-  void addToDeletingAccounts(DeletingAccountsStruct _value) {
-    _deletingAccounts.add(_value);
+  void addToAccountDeletingNames(String _value) {
+    _accountDeletingNames.add(_value);
   }
 
-  void removeFromDeletingAccounts(DeletingAccountsStruct _value) {
-    _deletingAccounts.remove(_value);
+  void removeFromAccountDeletingNames(String _value) {
+    _accountDeletingNames.remove(_value);
   }
 
-  void removeAtIndexFromDeletingAccounts(int _index) {
-    _deletingAccounts.removeAt(_index);
+  void removeAtIndexFromAccountDeletingNames(int _index) {
+    _accountDeletingNames.removeAt(_index);
   }
 
-  void updateDeletingAccountsAtIndex(
+  void updateAccountDeletingNamesAtIndex(
     int _index,
-    DeletingAccountsStruct Function(DeletingAccountsStruct) updateFn,
+    String Function(String) updateFn,
   ) {
-    _deletingAccounts[_index] = updateFn(_deletingAccounts[_index]);
+    _accountDeletingNames[_index] = updateFn(_accountDeletingNames[_index]);
   }
 
-  void insertAtIndexInDeletingAccounts(
-      int _index, DeletingAccountsStruct _value) {
-    _deletingAccounts.insert(_index, _value);
+  void insertAtIndexInAccountDeletingNames(int _index, String _value) {
+    _accountDeletingNames.insert(_index, _value);
   }
 }
 

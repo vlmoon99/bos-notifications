@@ -1,5 +1,4 @@
 import '/auth/firebase_auth/auth_util.dart';
-import '/backend/schema/structs/index.dart';
 import '/components/account_deleting/account_deleting_widget.dart';
 import '/components/subscribe_bottom_bar/subscribe_bottom_bar_widget.dart';
 import '/flutter_flow/flutter_flow_icon_button.dart';
@@ -22,15 +21,22 @@ class AccountPageModel extends FlutterFlowModel<AccountPageWidget> {
   FocusNode? textFieldFocusNode;
   TextEditingController? textController;
   String? Function(BuildContext, String?)? textControllerValidator;
+  // Models for accountDeleting dynamic component.
+  late FlutterFlowDynamicModels<AccountDeletingModel> accountDeletingModels;
 
   /// Initialization and disposal methods.
 
-  void initState(BuildContext context) {}
+  void initState(BuildContext context) {
+    accountDeletingModels =
+        FlutterFlowDynamicModels(() => AccountDeletingModel());
+  }
 
   void dispose() {
     unfocusNode.dispose();
     textFieldFocusNode?.dispose();
     textController?.dispose();
+
+    accountDeletingModels.dispose();
   }
 
   /// Action blocks are added here.

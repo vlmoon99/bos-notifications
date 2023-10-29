@@ -1,5 +1,4 @@
 import '/auth/firebase_auth/auth_util.dart';
-import '/backend/schema/structs/index.dart';
 import '/components/account_deleting/account_deleting_widget.dart';
 import '/components/subscribe_bottom_bar/subscribe_bottom_bar_widget.dart';
 import '/flutter_flow/flutter_flow_icon_button.dart';
@@ -401,6 +400,8 @@ class _AccountPageWidgetState extends State<AccountPageWidget> {
                                                 ?.toList() ??
                                             [])
                                         .map((e) => e)
+                                        .toList()
+                                        .take(10)
                                         .toList();
                                     return ListView.separated(
                                       padding: EdgeInsets.zero,
@@ -514,13 +515,16 @@ class _AccountPageWidgetState extends State<AccountPageWidget> {
                                                             size: 20.0,
                                                           ),
                                                           onPressed: () async {
+                                                            if (FFAppState()
+                                                                .accountDeletingNames
+                                                                .contains(
+                                                                    accountsItem)) {
+                                                              return;
+                                                            }
                                                             setState(() {
                                                               FFAppState()
-                                                                  .addToDeletingAccounts(
-                                                                      DeletingAccountsStruct(
-                                                                accountName:
-                                                                    accountsItem,
-                                                              ));
+                                                                  .addToAccountDeletingNames(
+                                                                      accountsItem);
                                                             });
                                                           },
                                                         ),
@@ -542,36 +546,52 @@ class _AccountPageWidgetState extends State<AccountPageWidget> {
                           Align(
                             alignment: AlignmentDirectional(0.00, 1.00),
                             child: Container(
-                              width: MediaQuery.sizeOf(context).width * 1.0,
-                              height: MediaQuery.sizeOf(context).height * 0.2,
+                              width: MediaQuery.sizeOf(context).width * 0.75,
+                              height: MediaQuery.sizeOf(context).height * 0.4,
+                              constraints: BoxConstraints(
+                                maxWidth: 350.0,
+                              ),
                               decoration: BoxDecoration(
                                 color: Color(0x00FFFFFF),
                               ),
                               child: Builder(
                                 builder: (context) {
-                                  final deletingAccounts = FFAppState()
-                                      .deletingAccounts
+                                  final accounts = FFAppState()
+                                      .accountDeletingNames
                                       .map((e) => e)
-                                      .toList()
-                                      .take(1)
                                       .toList();
                                   return ListView.separated(
                                     padding:
-                                        EdgeInsets.symmetric(horizontal: 60.0),
-                                    scrollDirection: Axis.horizontal,
-                                    itemCount: deletingAccounts.length,
+                                        EdgeInsets.symmetric(vertical: 20.0),
+                                    reverse: true,
+                                    primary: false,
+                                    shrinkWrap: true,
+                                    scrollDirection: Axis.vertical,
+                                    itemCount: accounts.length,
                                     separatorBuilder: (_, __) =>
-                                        SizedBox(width: 60.0),
-                                    itemBuilder:
-                                        (context, deletingAccountsIndex) {
-                                      final deletingAccountsItem =
-                                          deletingAccounts[
-                                              deletingAccountsIndex];
-                                      return AccountDeletingWidget(
-                                        key: Key(
-                                            'Keyn0w_${deletingAccountsIndex}_of_${deletingAccounts.length}'),
-                                        name: deletingAccountsItem.accountName,
-                                        index: deletingAccountsIndex,
+                                        SizedBox(height: 20.0),
+                                    itemBuilder: (context, accountsIndex) {
+                                      final accountsItem =
+                                          accounts[accountsIndex];
+                                      return Align(
+                                        alignment:
+                                            AlignmentDirectional(0.00, 1.00),
+                                        child: wrapWithModel(
+                                          model: _model.accountDeletingModels
+                                              .getModel(
+                                            accountsItem,
+                                            accountsIndex,
+                                          ),
+                                          updateCallback: () => setState(() {}),
+                                          updateOnChange: true,
+                                          child: AccountDeletingWidget(
+                                            key: Key(
+                                              'Keyxtf_${accountsItem}',
+                                            ),
+                                            name: accountsItem,
+                                            index: accountsIndex,
+                                          ),
+                                        ),
                                       );
                                     },
                                   );
