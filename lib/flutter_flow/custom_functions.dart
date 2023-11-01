@@ -18,3 +18,17 @@ double timer(String seconds) {
   double timerResult = realSeconds / 10;
   return timerResult;
 }
+
+bool nearDetect(String text) {
+  return text.endsWith(".near");
+}
+
+String imageReturn(String accountName) {
+  return "https://i.near.social/magic/large/https://near.social/magic/img/account/" +
+      accountName;
+}
+
+List<AccountsDeletedStruct> reverseList(
+    List<AccountsDeletedStruct> originalList) {
+  return originalList.reversed.toList();
+}

@@ -113,33 +113,62 @@ class FFAppState extends ChangeNotifier {
     _searchAccount = _value;
   }
 
-  List<String> _accountDeletingNames = [];
-  List<String> get accountDeletingNames => _accountDeletingNames;
-  set accountDeletingNames(List<String> _value) {
-    _accountDeletingNames = _value;
+  List<String> _accountDeleted = [];
+  List<String> get accountDeleted => _accountDeleted;
+  set accountDeleted(List<String> _value) {
+    _accountDeleted = _value;
   }
 
-  void addToAccountDeletingNames(String _value) {
-    _accountDeletingNames.add(_value);
+  void addToAccountDeleted(String _value) {
+    _accountDeleted.add(_value);
   }
 
-  void removeFromAccountDeletingNames(String _value) {
-    _accountDeletingNames.remove(_value);
+  void removeFromAccountDeleted(String _value) {
+    _accountDeleted.remove(_value);
   }
 
-  void removeAtIndexFromAccountDeletingNames(int _index) {
-    _accountDeletingNames.removeAt(_index);
+  void removeAtIndexFromAccountDeleted(int _index) {
+    _accountDeleted.removeAt(_index);
   }
 
-  void updateAccountDeletingNamesAtIndex(
+  void updateAccountDeletedAtIndex(
     int _index,
     String Function(String) updateFn,
   ) {
-    _accountDeletingNames[_index] = updateFn(_accountDeletingNames[_index]);
+    _accountDeleted[_index] = updateFn(_accountDeleted[_index]);
   }
 
-  void insertAtIndexInAccountDeletingNames(int _index, String _value) {
-    _accountDeletingNames.insert(_index, _value);
+  void insertAtIndexInAccountDeleted(int _index, String _value) {
+    _accountDeleted.insert(_index, _value);
+  }
+
+  List<String> _accountSelected = [];
+  List<String> get accountSelected => _accountSelected;
+  set accountSelected(List<String> _value) {
+    _accountSelected = _value;
+  }
+
+  void addToAccountSelected(String _value) {
+    _accountSelected.add(_value);
+  }
+
+  void removeFromAccountSelected(String _value) {
+    _accountSelected.remove(_value);
+  }
+
+  void removeAtIndexFromAccountSelected(int _index) {
+    _accountSelected.removeAt(_index);
+  }
+
+  void updateAccountSelectedAtIndex(
+    int _index,
+    String Function(String) updateFn,
+  ) {
+    _accountSelected[_index] = updateFn(_accountSelected[_index]);
+  }
+
+  void insertAtIndexInAccountSelected(int _index, String _value) {
+    _accountSelected.insert(_index, _value);
   }
 }
 

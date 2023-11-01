@@ -51,6 +51,11 @@ class UsersRecord extends FirestoreRecord {
   List<String> get subscriptions => _subscriptions ?? const [];
   bool hasSubscriptions() => _subscriptions != null;
 
+  // "accountDeleted" field.
+  List<AccountsDeletedStruct>? _accountDeleted;
+  List<AccountsDeletedStruct> get accountDeleted => _accountDeleted ?? const [];
+  bool hasAccountDeleted() => _accountDeleted != null;
+
   void _initializeFields() {
     _email = snapshotData['email'] as String?;
     _displayName = snapshotData['display_name'] as String?;
@@ -59,6 +64,10 @@ class UsersRecord extends FirestoreRecord {
     _createdTime = snapshotData['created_time'] as DateTime?;
     _phoneNumber = snapshotData['phone_number'] as String?;
     _subscriptions = getDataList(snapshotData['subscriptions']);
+    _accountDeleted = getStructList(
+      snapshotData['accountDeleted'],
+      AccountsDeletedStruct.fromMap,
+    );
   }
 
   static CollectionReference get collection =>
@@ -128,7 +137,8 @@ class UsersRecordDocumentEquality implements Equality<UsersRecord> {
         e1?.uid == e2?.uid &&
         e1?.createdTime == e2?.createdTime &&
         e1?.phoneNumber == e2?.phoneNumber &&
-        listEquality.equals(e1?.subscriptions, e2?.subscriptions);
+        listEquality.equals(e1?.subscriptions, e2?.subscriptions) &&
+        listEquality.equals(e1?.accountDeleted, e2?.accountDeleted);
   }
 
   @override
@@ -139,7 +149,8 @@ class UsersRecordDocumentEquality implements Equality<UsersRecord> {
         e?.uid,
         e?.createdTime,
         e?.phoneNumber,
-        e?.subscriptions
+        e?.subscriptions,
+        e?.accountDeleted
       ]);
 
   @override
