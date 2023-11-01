@@ -727,14 +727,16 @@ class _AccountPageWidgetState extends State<AccountPageWidget> {
                                                                         .accountSelected
                                                                         .contains(
                                                                             accountsItem)) {
-                                                                      setState(
-                                                                          () {
+                                                                      FFAppState()
+                                                                          .update(
+                                                                              () {
                                                                         FFAppState()
                                                                             .removeFromAccountSelected(accountsItem);
                                                                       });
                                                                     } else {
-                                                                      setState(
-                                                                          () {
+                                                                      FFAppState()
+                                                                          .update(
+                                                                              () {
                                                                         FFAppState()
                                                                             .addToAccountSelected(accountsItem);
                                                                       });
