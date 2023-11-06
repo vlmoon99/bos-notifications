@@ -244,55 +244,90 @@ class _AccountsDeletingDialogWidgetState
                                   : null;
                           return FFButtonWidget(
                             onPressed: () async {
-                              while (FFAppState().accountSelected.length != 0) {
-                                _model.updatePage(() {
-                                  FFAppState().removeFromSubscriptions(
-                                      FFAppState().accountSelected.first);
-                                });
-                                FFAppState().addToAccountDeleted(
-                                    FFAppState().accountSelected.first);
+                              FFAppState().update(() {
+                                FFAppState().deletedAccountList.add(
+                                    FFAppState().deletionAccountList.value);
 
-                                await currentUserReference!.update({
-                                  ...mapToFirestore(
-                                    {
-                                      'accountDeleted': FieldValue.arrayUnion([
-                                        getAccountsDeletedFirestoreData(
-                                          createAccountsDeletedStruct(
-                                            name: FFAppState()
-                                                .accountSelected
-                                                .first,
-                                            date: getCurrentTimestamp,
-                                            clearUnsetFields: false,
-                                          ),
-                                          true,
-                                        )
-                                      ]),
-                                    },
-                                  ),
-                                });
+                                FFAppState().subsAccountList.value.remove(
+                                    FFAppState().deletionAccountList.value);
+                                FFAppState()
+                                    .subsAccountList
+                                    .add(FFAppState().subsAccountList.value);
+                              });
+                              await currentUserReference?.update({
+                                ...mapToFirestore({
+                                  'accountDeleted': FieldValue.arrayUnion(
+                                      FFAppState()
+                                          .deletedAccountList
+                                          .value
+                                          .map((e) {
+                                    return {
+                                      'name': e,
+                                      'date': getCurrentTimestamp,
+                                    };
+                                  }).toList())
+                                })
+                              });
 
-                                await currentUserReference!.update({
-                                  ...mapToFirestore(
-                                    {
-                                      'subscriptions': FieldValue.arrayRemove(
-                                          [FFAppState().accountSelected.first]),
-                                    },
-                                  ),
-                                });
+                              await currentUserReference?.update({
+                                ...mapFromFirestore({
+                                  'subscriptions': FieldValue.arrayRemove(
+                                      FFAppState().deletedAccountList.value)
+                                })
+                              });
+                              // onPressed: () async {
+                              //   while (FFAppState().accountSelected.length != 0) {
+                              //     _model.updatePage(() {
+                              //       FFAppState().removeFromSubscriptions(
+                              //           FFAppState().accountSelected.first);
+                              //     });
+                              //     FFAppState().addToAccountDeleted(
+                              //         FFAppState().accountSelected.first);
 
-                                await buttonUsersRecord!.reference.update({
-                                  ...mapToFirestore(
-                                    {
-                                      'subscriptions': FieldValue.arrayRemove(
-                                          [FFAppState().accountSelected.first]),
-                                    },
-                                  ),
-                                });
-                                setState(() {
-                                  FFAppState()
-                                      .removeAtIndexFromAccountSelected(0);
-                                });
-                              }
+                              //     await currentUserReference!.update({
+                              //       ...mapToFirestore(
+                              //         {
+                              //           'accountDeleted': FieldValue.arrayUnion([
+                              //             getAccountsDeletedFirestoreData(
+                              //               createAccountsDeletedStruct(
+                              //                 name: FFAppState()
+                              //                     .accountSelected
+                              //                     .first,
+                              //                 date: getCurrentTimestamp,
+                              //                 clearUnsetFields: false,
+                              //               ),
+                              //               true,
+                              //             )
+                              //           ]),
+                              //         },
+                              //       ),
+                              //     });
+
+                              //     await currentUserReference!.update({
+                              //       ...mapToFirestore(
+                              //         {
+                              //           'subscriptions': FieldValue.arrayRemove(
+                              //               [FFAppState().accountSelected.first]),
+                              //         },
+                              //       ),
+                              //     });
+
+                              //     await buttonUsersRecord!.reference.update({
+                              //       ...mapToFirestore(
+                              //         {
+                              //           'subscriptions': FieldValue.arrayRemove(
+                              //               [FFAppState().accountSelected.first]),
+                              //         },
+                              //       ),
+                              //     });
+                              //     setState(() {
+                              //       FFAppState()
+                              //           .removeAtIndexFromAccountSelected(0);
+                              //     });
+                              //   }
+                              FFAppState().update(() {
+                                FFAppState().deletionAccountList.value.clear();
+                              });
                               Navigator.pop(context);
                             },
                             text: 'Yes, remove',

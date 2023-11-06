@@ -1,3 +1,5 @@
+import 'package:flutter_svg/flutter_svg.dart';
+
 import '/auth/firebase_auth/auth_util.dart';
 import '/backend/backend.dart';
 import '/flutter_flow/flutter_flow_icon_button.dart';
@@ -136,78 +138,64 @@ class _AccountDeletedWidgetState extends State<AccountDeletedWidget> {
                           iconButtonUsersRecordList.isNotEmpty
                               ? iconButtonUsersRecordList.first
                               : null;
-                      return FlutterFlowIconButton(
-                        borderColor: Color(0x004B39EF),
-                        borderRadius: 30.0,
-                        borderWidth: 0.0,
-                        buttonSize: 40.0,
-                        fillColor: Color(0x00FDFDFD),
-                        icon: FaIcon(
-                          FontAwesomeIcons.redoAlt,
-                          color: Colors.black,
-                          size: 20.0,
+                      return Padding(
+                        padding: const EdgeInsets.only(right: 10),
+                        child: InkWell(
+                          child: SvgPicture.asset(
+                            'assets/icons/undo.svg',
+                            height: 24,
+                          ),
+                          onTap: () async {
+                            await currentUserReference!.update({
+                              ...mapToFirestore(
+                                {
+                                  'subscriptions':
+                                      FieldValue.arrayUnion([widget.name]),
+                                },
+                              ),
+                            });
+
+                            await iconButtonUsersRecord!.reference.update({
+                              ...mapToFirestore(
+                                {
+                                  'subscriptions': (currentUserDocument
+                                          ?.subscriptions
+                                          ?.toList() ??
+                                      []),
+                                },
+                              ),
+                            });
+
+                            await currentUserReference!.update({
+                              ...mapToFirestore(
+                                {
+                                  'accountDeleted':
+                                      FieldValue.arrayRemove([widget.name]),
+                                },
+                              ),
+                            });
+
+                            await iconButtonUsersRecord!.reference.update({
+                              ...mapToFirestore(
+                                {
+                                  'accountDeleted': FieldValue.arrayRemove(
+                                    (currentUserDocument?.accountDeleted
+                                                ?.toList() ??
+                                            [])
+                                        .where((e) => e.name == widget.name)
+                                        .map((item) =>
+                                            getAccountsDeletedFirestoreData(
+                                              updateAccountsDeletedStruct(item,
+                                                  clearUnsetFields: false),
+                                              true,
+                                            ))
+                                        .toList(),
+                                  ),
+                                },
+                              ),
+                            });
+                          },
                         ),
-                        onPressed: () async {
-                          await currentUserReference!.update({
-                            ...mapToFirestore(
-                              {
-                                'subscriptions':
-                                    FieldValue.arrayUnion([widget.name]),
-                              },
-                            ),
-                          });
-
-                          await iconButtonUsersRecord!.reference.update({
-                            ...mapToFirestore(
-                              {
-                                'subscriptions': (currentUserDocument
-                                        ?.subscriptions
-                                        ?.toList() ??
-                                    []),
-                              },
-                            ),
-                          });
-
-                          await currentUserReference!.update({
-                            ...mapToFirestore(
-                              {
-                                'accountDeleted': FieldValue.arrayRemove([
-                                  getAccountsDeletedFirestoreData(
-                                    updateAccountsDeletedStruct(
-                                      (currentUserDocument?.accountDeleted
-                                                  ?.toList() ??
-                                              [])
-                                          .where((e) => e.name == widget.name)
-                                          .toList()
-                                          .first,
-                                      clearUnsetFields: false,
-                                    ),
-                                    true,
-                                  )
-                                ]),
-                              },
-                            ),
-                          });
-
-                          await iconButtonUsersRecord!.reference.update({
-                            ...mapToFirestore(
-                              {
-                                'accountDeleted': FieldValue.arrayRemove([
-                                  getAccountsDeletedFirestoreData(
-                                    updateAccountsDeletedStruct(
-                                      iconButtonUsersRecord?.accountDeleted
-                                          ?.where((e) => e.name == widget.name)
-                                          .toList()
-                                          ?.first,
-                                      clearUnsetFields: true,
-                                    ),
-                                    true,
-                                  )
-                                ]),
-                              },
-                            ),
-                          });
-                        },
                       );
                     },
                   ),

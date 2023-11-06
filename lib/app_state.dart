@@ -4,6 +4,7 @@ import '/backend/schema/structs/index.dart';
 import 'backend/api_requests/api_manager.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'flutter_flow/flutter_flow_util.dart';
+import 'package:rxdart/rxdart.dart';
 
 class FFAppState extends ChangeNotifier {
   static FFAppState _instance = FFAppState._internal();
@@ -11,6 +12,18 @@ class FFAppState extends ChangeNotifier {
   factory FFAppState() {
     return _instance;
   }
+
+  final BehaviorSubject<List<String>> subsAccountList =
+      BehaviorSubject<List<String>>()..add([]);
+
+  final BehaviorSubject<List<String>> deletedAccountList =
+      BehaviorSubject<List<String>>()..add([]);
+
+  final BehaviorSubject<List<String>> deletionAccountList =
+      BehaviorSubject<List<String>>()..add([]);
+
+  final BehaviorSubject<bool> historyOnOff = BehaviorSubject<bool>()
+    ..add(false);
 
   FFAppState._internal();
 
@@ -169,6 +182,16 @@ class FFAppState extends ChangeNotifier {
 
   void insertAtIndexInAccountSelected(int _index, String _value) {
     _accountSelected.insert(_index, _value);
+  }
+
+  @override
+  void dispose() {
+    // TODO: implement dispose
+    subsAccountList.close();
+    deletedAccountList.close();
+    historyOnOff.close();
+    deletionAccountList.close();
+    super.dispose();
   }
 }
 

@@ -1,3 +1,5 @@
+import 'package:flutter_svg/flutter_svg.dart';
+
 import '/auth/firebase_auth/auth_util.dart';
 import '/components/account_deleting_dialog/account_deleting_dialog_widget.dart';
 import '/components/subscribe_bottom_bar/subscribe_bottom_bar_widget.dart';
@@ -467,6 +469,16 @@ class _AccountPageWidgetState extends State<AccountPageWidget> {
                                       setState(() {
                                         FFAppState().accountSelected = [];
                                       });
+                                      FFAppState().update(() {
+                                        FFAppState()
+                                            .deletionAccountList
+                                            .value
+                                            .clear();
+                                        FFAppState().deletionAccountList.add(
+                                            FFAppState()
+                                                .deletionAccountList
+                                                .value);
+                                      });
                                       setState(() {
                                         _model.select = !_model.select!;
                                       });
@@ -560,14 +572,44 @@ class _AccountPageWidgetState extends State<AccountPageWidget> {
                                             hoverColor: Colors.transparent,
                                             highlightColor: Colors.transparent,
                                             onLongPress: () async {
-                                              setState(() {
-                                                FFAppState()
-                                                    .addToAccountSelected(
-                                                        accountsItem);
-                                              });
-                                              setState(() {
-                                                _model.select = true;
-                                              });
+                                              if (_model.select == false)
+                                                setState(() {
+                                                  _model.select = true;
+                                                });
+                                              if (FFAppState()
+                                                  .deletionAccountList
+                                                  .value
+                                                  .contains(accountsItem)) {
+                                                FFAppState().update(() {
+                                                  FFAppState()
+                                                      .deletionAccountList
+                                                      .value
+                                                      .remove(accountsItem);
+                                                  FFAppState()
+                                                      .deletionAccountList
+                                                      .add(FFAppState()
+                                                          .deletionAccountList
+                                                          .value);
+                                                  FFAppState()
+                                                      .removeFromAccountSelected(
+                                                          accountsItem);
+                                                });
+                                              } else {
+                                                FFAppState().update(() {
+                                                  FFAppState()
+                                                      .deletionAccountList
+                                                      .value
+                                                      .add(accountsItem);
+                                                  FFAppState()
+                                                      .deletionAccountList
+                                                      .add(FFAppState()
+                                                          .deletionAccountList
+                                                          .value);
+                                                  FFAppState()
+                                                      .addToAccountSelected(
+                                                          accountsItem);
+                                                });
+                                              }
                                             },
                                             child: Container(
                                               width: MediaQuery.sizeOf(context)
@@ -664,7 +706,8 @@ class _AccountPageWidgetState extends State<AccountPageWidget> {
                                                               if (_model
                                                                       .select! &&
                                                                   FFAppState()
-                                                                      .accountSelected
+                                                                      .deletionAccountList
+                                                                      .value
                                                                       .contains(
                                                                           accountsItem))
                                                                 InkWell(
@@ -681,11 +724,21 @@ class _AccountPageWidgetState extends State<AccountPageWidget> {
                                                                   onTap:
                                                                       () async {
                                                                     if (FFAppState()
-                                                                        .accountSelected
+                                                                        .deletionAccountList
+                                                                        .value
                                                                         .contains(
                                                                             accountsItem)) {
                                                                       setState(
                                                                           () {
+                                                                        FFAppState()
+                                                                            .deletionAccountList
+                                                                            .value
+                                                                            .remove(accountsItem);
+                                                                        FFAppState()
+                                                                            .deletionAccountList
+                                                                            .add(FFAppState().deletionAccountList.value);
+                                                                        FFAppState()
+                                                                            .removeFromAccountSelected(accountsItem);
                                                                         FFAppState()
                                                                             .removeFromAccountSelected(accountsItem);
                                                                       });
@@ -693,16 +746,26 @@ class _AccountPageWidgetState extends State<AccountPageWidget> {
                                                                       setState(
                                                                           () {
                                                                         FFAppState()
+                                                                            .deletionAccountList
+                                                                            .value
+                                                                            .add(accountsItem);
+                                                                        FFAppState()
+                                                                            .deletionAccountList
+                                                                            .add(FFAppState().deletionAccountList.value);
+                                                                        FFAppState()
                                                                             .addToAccountSelected(accountsItem);
                                                                       });
                                                                     }
                                                                   },
-                                                                  child: Icon(
-                                                                    Icons
-                                                                        .settings_outlined,
-                                                                    color: Color(
-                                                                        0xFF46EF39),
-                                                                    size: 24.0,
+                                                                  child:
+                                                                      Padding(
+                                                                    padding: const EdgeInsets
+                                                                        .only(
+                                                                        right:
+                                                                            10),
+                                                                    child: SvgPicture
+                                                                        .asset(
+                                                                            'assets/icons/boxon.svg'),
                                                                   ),
                                                                 ),
                                                               if (_model
@@ -732,6 +795,13 @@ class _AccountPageWidgetState extends State<AccountPageWidget> {
                                                                           .update(
                                                                               () {
                                                                         FFAppState()
+                                                                            .deletionAccountList
+                                                                            .value
+                                                                            .remove(accountsItem);
+                                                                        FFAppState()
+                                                                            .deletionAccountList
+                                                                            .add(FFAppState().deletionAccountList.value);
+                                                                        FFAppState()
                                                                             .removeFromAccountSelected(accountsItem);
                                                                       });
                                                                     } else {
@@ -739,17 +809,26 @@ class _AccountPageWidgetState extends State<AccountPageWidget> {
                                                                           .update(
                                                                               () {
                                                                         FFAppState()
+                                                                            .deletionAccountList
+                                                                            .value
+                                                                            .add(accountsItem);
+                                                                        FFAppState()
+                                                                            .deletionAccountList
+                                                                            .add(FFAppState().deletionAccountList.value);
+                                                                        FFAppState()
                                                                             .addToAccountSelected(accountsItem);
                                                                       });
                                                                     }
                                                                   },
-                                                                  child: Icon(
-                                                                    Icons
-                                                                        .settings_outlined,
-                                                                    color: FlutterFlowTheme.of(
-                                                                            context)
-                                                                        .secondaryText,
-                                                                    size: 24.0,
+                                                                  child:
+                                                                      Padding(
+                                                                    padding: const EdgeInsets
+                                                                        .only(
+                                                                        right:
+                                                                            10),
+                                                                    child: SvgPicture
+                                                                        .asset(
+                                                                            'assets/icons/boxoff.svg'),
                                                                   ),
                                                                 ),
                                                             ],
@@ -774,26 +853,18 @@ class _AccountPageWidgetState extends State<AccountPageWidget> {
                                                                           0.0,
                                                                           3.0,
                                                                           0.0),
-                                                              child:
-                                                                  FlutterFlowIconButton(
-                                                                borderColor: Color(
-                                                                    0x004B39EF),
-                                                                borderRadius:
-                                                                    30.0,
-                                                                borderWidth:
-                                                                    0.0,
-                                                                buttonSize:
-                                                                    40.0,
-                                                                fillColor: Color(
-                                                                    0x00FDFDFD),
-                                                                icon: FaIcon(
-                                                                  FontAwesomeIcons
-                                                                      .solidTrashAlt,
-                                                                  color: Color(
-                                                                      0xFFFF7966),
-                                                                  size: 20.0,
+                                                              child: InkWell(
+                                                                child: Padding(
+                                                                  padding:
+                                                                      const EdgeInsets
+                                                                          .only(
+                                                                          right:
+                                                                              10),
+                                                                  child: SvgPicture
+                                                                      .asset(
+                                                                          'assets/icons/trash.svg'),
                                                                 ),
-                                                                onPressed:
+                                                                onTap:
                                                                     () async {
                                                                   await showAlignedDialog(
                                                                     context:

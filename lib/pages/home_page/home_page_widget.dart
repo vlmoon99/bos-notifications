@@ -1,3 +1,5 @@
+import 'package:flutter_svg/flutter_svg.dart';
+
 import '/components/filters/filters_widget.dart';
 import '/flutter_flow/flutter_flow_icon_button.dart';
 import '/flutter_flow/flutter_flow_theme.dart';
@@ -171,18 +173,15 @@ class _HomePageWidgetState extends State<HomePageWidget> {
                                 mainAxisAlignment: MainAxisAlignment.start,
                                 crossAxisAlignment: CrossAxisAlignment.center,
                                 children: [
-                                  Flexible(
-                                    child: FlutterFlowIconButton(
-                                      borderColor: Color(0x004B39EF),
-                                      buttonSize: 45.0,
-                                      fillColor: Color(0x004B39EF),
-                                      icon: Icon(
-                                        Icons.search,
-                                        color: FlutterFlowTheme.of(context)
-                                            .primaryText,
-                                        size: 24.0,
+                                  SizedBox(
+                                    height: 45,
+                                    width: 45,
+                                    child: InkWell(
+                                      child: SvgPicture.asset(
+                                        'assets/icons/Icon_search.svg',
+                                        fit: BoxFit.none,
                                       ),
-                                      onPressed: () {
+                                      onTap: () {
                                         print('IconButton pressed ...');
                                       },
                                     ),
@@ -285,20 +284,20 @@ class _HomePageWidgetState extends State<HomePageWidget> {
                             ),
                           ),
                           Container(
-                            width: 55.0,
-                            height: 55.0,
+                            width: 45.0,
+                            height: 45.0,
+                            decoration: BoxDecoration(
+                              color: Colors.black,
+                              borderRadius: BorderRadius.circular(8),
+                            ),
                             child: Stack(
                               alignment: AlignmentDirectional(0.0, 0.0),
                               children: [
-                                FlutterFlowIconButton(
-                                  borderRadius: 8.0,
-                                  borderWidth: 0.0,
-                                  buttonSize: 45.0,
-                                  fillColor: Colors.black,
-                                  icon: Icon(
-                                    Icons.add,
+                                OutlinedButton(
+                                  child: SvgPicture.asset(
+                                    'assets/icons/Icon_filter.svg',
                                     color: Colors.white,
-                                    size: 24.0,
+                                    fit: BoxFit.cover,
                                   ),
                                   onPressed: () async {
                                     await showModalBottomSheet(

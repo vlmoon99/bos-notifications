@@ -1,12 +1,14 @@
+import 'package:flutter_svg/flutter_svg.dart';
 import 'package:provider/provider.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
-
+import '/components/accounts_deleting_dialog/accounts_deleting_dialog_widget.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_web_plugins/url_strategy.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'auth/firebase_auth/firebase_user_provider.dart';
 import 'auth/firebase_auth/auth_util.dart';
+import 'package:aligned_dialog/aligned_dialog.dart';
 
 import 'backend/push_notifications/push_notifications_util.dart';
 import 'backend/firebase/firebase_config.dart';
@@ -139,45 +141,110 @@ class _NavBarPageState extends State<NavBarPage> {
 
     return Scaffold(
       body: _currentPage ?? tabs[_currentPageName],
-      bottomNavigationBar: BottomNavigationBar(
-        currentIndex: currentIndex,
-        onTap: (i) => setState(() {
-          _currentPage = null;
-          _currentPageName = tabs.keys.toList()[i];
-        }),
-        backgroundColor: Colors.white,
-        selectedItemColor: Color(0xFF9797FF),
-        unselectedItemColor: Color(0xFF7E7E7E),
-        showSelectedLabels: false,
-        showUnselectedLabels: false,
-        type: BottomNavigationBarType.fixed,
-        items: <BottomNavigationBarItem>[
-          BottomNavigationBarItem(
-            icon: Icon(
-              Icons.home_outlined,
-              size: 24.0,
-            ),
-            label: 'Home',
-            tooltip: '',
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(
-              Icons.supervisor_account_outlined,
-              size: 24.0,
-            ),
-            label: 'Account',
-            tooltip: '',
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(
-              Icons.settings,
-              size: 24.0,
-            ),
-            label: 'Settings',
-            tooltip: '',
-          )
-        ],
-      ),
+      bottomNavigationBar: StreamBuilder<List<String>>(
+          stream: FFAppState().deletionAccountList,
+          builder: (context, snapshot) {
+            final accountDeletingList = snapshot.data ?? [];
+            if (accountDeletingList.isNotEmpty)
+              return Container(
+                decoration: BoxDecoration(
+                  boxShadow: [
+                    BoxShadow(
+                        blurRadius: 30,
+                        blurStyle: BlurStyle.normal,
+                        color: Color.fromARGB(43, 164, 164, 164))
+                  ],
+                  color: Colors.white,
+                ),
+                width: MediaQuery.sizeOf(context).width,
+                height: 90,
+                child: Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 50),
+                  child: Padding(
+                    padding: const EdgeInsets.only(bottom: 10),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Text(
+                          '${FFAppState().accountSelected.length} account selected',
+                          style: TextStyle(
+                            fontSize: 16,
+                            fontWeight: FontWeight.w500,
+                            color: Color.fromRGBO(126, 126, 126, 1),
+                          ),
+                        ),
+                        InkWell(
+                          splashColor: Colors.transparent,
+                          focusColor: Colors.transparent,
+                          hoverColor: Colors.transparent,
+                          highlightColor: Colors.transparent,
+                          onTap: () async {
+                            await showAlignedDialog(
+                              context: context,
+                              isGlobal: true,
+                              avoidOverflow: false,
+                              targetAnchor: AlignmentDirectional(0.0, 0.0)
+                                  .resolve(Directionality.of(context)),
+                              followerAnchor: AlignmentDirectional(0.0, 0.0)
+                                  .resolve(Directionality.of(context)),
+                              builder: (dialogContext) {
+                                return Material(
+                                  color: Colors.transparent,
+                                  child: AccountsDeletingDialogWidget(),
+                                );
+                              },
+                            ).then((value) => setState(() {}));
+                          },
+                          child: SvgPicture.asset('assets/icons/trash.svg'),
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+              );
+            return SizedBox(
+              height: 90,
+              child: BottomNavigationBar(
+                currentIndex: currentIndex,
+                onTap: (i) => setState(() {
+                  _currentPage = null;
+                  _currentPageName = tabs.keys.toList()[i];
+                }),
+                backgroundColor: Colors.white,
+                selectedItemColor: Color(0xFF9797FF),
+                unselectedItemColor: Color(0xFF7E7E7E),
+                showSelectedLabels: false,
+                showUnselectedLabels: false,
+                type: BottomNavigationBarType.fixed,
+                items: <BottomNavigationBarItem>[
+                  BottomNavigationBarItem(
+                    icon: SvgPicture.asset(
+                      'assets/icons/tabhome2.svg',
+                      fit: BoxFit.cover,
+                    ),
+                    label: 'Home',
+                    tooltip: '',
+                  ),
+                  BottomNavigationBarItem(
+                    icon: SvgPicture.asset(
+                      'assets/icons/accounts.svg',
+                      fit: BoxFit.cover,
+                    ),
+                    label: 'Account',
+                    tooltip: '',
+                  ),
+                  BottomNavigationBarItem(
+                    icon: SvgPicture.asset(
+                      'assets/icons/Icon_settings.svg',
+                      fit: BoxFit.cover,
+                    ),
+                    label: 'Settings',
+                    tooltip: '',
+                  )
+                ],
+              ),
+            );
+          }),
     );
   }
 }

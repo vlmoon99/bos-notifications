@@ -12,6 +12,7 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
 import 'history_account_deleted_model.dart';
 export 'history_account_deleted_model.dart';
+import 'package:b_o_s_notifications/pages/settings_page/settings_page_widget.dart';
 
 class HistoryAccountDeletedWidget extends StatefulWidget {
   const HistoryAccountDeletedWidget({Key? key}) : super(key: key);
@@ -24,7 +25,6 @@ class HistoryAccountDeletedWidget extends StatefulWidget {
 class _HistoryAccountDeletedWidgetState
     extends State<HistoryAccountDeletedWidget> {
   late HistoryAccountDeletedModel _model;
-
   @override
   void setState(VoidCallback callback) {
     super.setState(callback);
@@ -86,7 +86,11 @@ class _HistoryAccountDeletedWidgetState
                         size: 24.0,
                       ),
                       onPressed: () async {
-                        Navigator.pop(context);
+                        setState(() {
+                          FFAppState().update(() {
+                            FFAppState().historyOnOff.add(false);
+                          });
+                        });
                       },
                     ),
                     Text(
@@ -120,13 +124,10 @@ class _HistoryAccountDeletedWidgetState
                         child: AuthUserStreamWidget(
                           builder: (context) => Builder(
                             builder: (context) {
-                              final accountDeletedList = functions
-                                  .reverseList((currentUserDocument
-                                              ?.accountDeleted
-                                              ?.toList() ??
-                                          [])
-                                      .toList())
-                                  .toList();
+                              final accountDeletedList = (currentUserDocument
+                                      ?.accountDeleted
+                                      .toList() ??
+                                  []);
                               return ListView.separated(
                                 padding: EdgeInsets.zero,
                                 scrollDirection: Axis.vertical,
@@ -139,6 +140,8 @@ class _HistoryAccountDeletedWidgetState
                                       accountDeletedList[
                                           accountDeletedListIndex];
                                   return Container(
+                                    key: Key(
+                                        'Key6mz_${accountDeletedListIndex}_of_${accountDeletedList.length}'),
                                     height: () {
                                       if (accountDeletedListIndex == 0) {
                                         return 70.0;
@@ -191,7 +194,7 @@ class _HistoryAccountDeletedWidgetState
                                                   'd/M/y',
                                                   (currentUserDocument
                                                                   ?.accountDeleted
-                                                                  ?.toList() ??
+                                                                  .toList() ??
                                                               [])[
                                                           accountDeletedListIndex -
                                                               1]
@@ -226,20 +229,16 @@ class _HistoryAccountDeletedWidgetState
                                               alignment: AlignmentDirectional(
                                                   0.00, 1.00),
                                               child: AccountDeletedWidget(
-                                                key: Key(
-                                                    'Key6mz_${accountDeletedListIndex}_of_${accountDeletedList.length}'),
                                                 name: (currentUserDocument
-                                                                ?.accountDeleted
-                                                                ?.toList() ??
+                                                                ?.accountDeleted ??
                                                             [])[
                                                         accountDeletedListIndex]
                                                     .name,
                                                 dataDeleted: (currentUserDocument
-                                                                ?.accountDeleted
-                                                                ?.toList() ??
+                                                                ?.accountDeleted ??
                                                             [])[
                                                         accountDeletedListIndex]
-                                                    .date!,
+                                                    .date,
                                               ),
                                             ),
                                           ),
