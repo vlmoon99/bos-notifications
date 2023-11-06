@@ -178,11 +178,8 @@ class _AccountDeletedWidgetState extends State<AccountDeletedWidget> {
                             await iconButtonUsersRecord!.reference.update({
                               ...mapToFirestore(
                                 {
-                                  'accountDeleted': FieldValue.arrayRemove(
-                                            [widget.name]
-                                            )
-                                        ,
-                                  ),
+                                  'accountDeleted':
+                                      FieldValue.arrayRemove([widget.name]),
                                 },
                               ),
                             });
