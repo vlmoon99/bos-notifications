@@ -179,17 +179,9 @@ class _AccountDeletedWidgetState extends State<AccountDeletedWidget> {
                               ...mapToFirestore(
                                 {
                                   'accountDeleted': FieldValue.arrayRemove(
-                                    (currentUserDocument?.accountDeleted
-                                                ?.toList() ??
-                                            [])
-                                        .where((e) => e.name == widget.name)
-                                        .map((item) =>
-                                            getAccountsDeletedFirestoreData(
-                                              updateAccountsDeletedStruct(item,
-                                                  clearUnsetFields: false),
-                                              true,
-                                            ))
-                                        .toList(),
+                                            [widget.name]
+                                            )
+                                        ,
                                   ),
                                 },
                               ),
