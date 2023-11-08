@@ -258,7 +258,7 @@ class _AccountsDeletingDialogWidgetState
                                 ...mapToFirestore({
                                   'accountDeleted': FieldValue.arrayUnion(
                                       FFAppState()
-                                          .deletedAccountList
+                                          .deletionAccountList
                                           .value
                                           .map((e) {
                                     return {
@@ -272,7 +272,7 @@ class _AccountsDeletingDialogWidgetState
                               await currentUserReference?.update({
                                 ...mapFromFirestore({
                                   'subscriptions': FieldValue.arrayRemove(
-                                      FFAppState().deletedAccountList.value)
+                                      FFAppState().deletionAccountList.value)
                                 })
                               });
                               // onPressed: () async {
@@ -327,6 +327,8 @@ class _AccountsDeletingDialogWidgetState
                               //   }
                               FFAppState().update(() {
                                 FFAppState().deletionAccountList.value.clear();
+                                FFAppState().deletionAccountList.add(
+                                    FFAppState().deletionAccountList.value);
                               });
                               Navigator.pop(context);
                             },

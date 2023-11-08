@@ -248,21 +248,19 @@ class _AccountDeletingDialogWidgetState
                                   : null;
                           return FFButtonWidget(
                             onPressed: () async {
-                              _model.updatePage(() {
-                                FFAppState()
-                                    .removeFromSubscriptions(widget.name!);
-                              });
-                              FFAppState().addToAccountDeleted(widget.name!);
+                              Map<String, dynamic> account = {
+                                'name': widget.name,
+                                'date': getCurrentTimestamp
+                              };
 
-                              await currentUserReference!.update({
-                                ...mapToFirestore(
-                                  {
-                                    'subscriptions':
-                                        FieldValue.arrayRemove([widget.name]),
-                                  },
-                                ),
+                              await buttonUsersRecord!.reference.update({
+                                'accountDeleted': [
+                                  AccountsDeletedStruct(
+                                      name: widget.name,
+                                      date: getCurrentTimestamp)
+                                ]
                               });
-
+                              print(buttonUsersRecord.accountDeleted);
                               await buttonUsersRecord!.reference.update({
                                 ...mapToFirestore(
                                   {
@@ -272,22 +270,6 @@ class _AccountDeletingDialogWidgetState
                                 ),
                               });
 
-                              await currentUserReference!.update({
-                                ...mapToFirestore(
-                                  {
-                                    'accountDeleted': FieldValue.arrayUnion([
-                                      getAccountsDeletedFirestoreData(
-                                        createAccountsDeletedStruct(
-                                          name: widget.name,
-                                          date: getCurrentTimestamp,
-                                          clearUnsetFields: false,
-                                        ),
-                                        true,
-                                      )
-                                    ]),
-                                  },
-                                ),
-                              });
                               Navigator.pop(context);
                             },
                             text: 'Yes, remove',

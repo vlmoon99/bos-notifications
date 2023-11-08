@@ -128,16 +128,12 @@ class _AccountDeletedWidgetState extends State<AccountDeletedWidget> {
                           ),
                         );
                       }
-                      List<UsersRecord> iconButtonUsersRecordList =
-                          snapshot.data!;
+
                       // Return an empty Container when the item does not exist.
                       if (snapshot.data!.isEmpty) {
                         return Container();
                       }
-                      final iconButtonUsersRecord =
-                          iconButtonUsersRecordList.isNotEmpty
-                              ? iconButtonUsersRecordList.first
-                              : null;
+
                       return Padding(
                         padding: const EdgeInsets.only(right: 10),
                         child: InkWell(
@@ -146,40 +142,36 @@ class _AccountDeletedWidgetState extends State<AccountDeletedWidget> {
                             height: 24,
                           ),
                           onTap: () async {
-                            await currentUserReference!.update({
+                            var docRef = FirebaseFirestore.instance
+                                .collection("users")
+                                .doc("accountDeleted");
+                            docRef.get().then(
+                              (DocumentSnapshot docRef) async {
+                                List<Map<String, dynamic>> data =
+                                    docRef.data() as List<Map<String, dynamic>>;
+                                data.removeWhere((element) =>
+                                    element.containsValue(widget.name));
+                                await currentUserReference?.update({
+                                  ...mapToFirestore({
+                                    'accountDeleted': data,
+                                  })
+                                });
+                              },
+                              onError: (e) =>
+                                  print("Error getting document: $e"),
+                            );
+
+                            // await currentUserReference?.update({
+                            //   ...mapToFirestore(
+                            //     {'accountDeleted': XXXXXXX},
+                            //   ),
+                            // });
+
+                            await currentUserReference?.update({
                               ...mapToFirestore(
                                 {
                                   'subscriptions':
                                       FieldValue.arrayUnion([widget.name]),
-                                },
-                              ),
-                            });
-
-                            await iconButtonUsersRecord!.reference.update({
-                              ...mapToFirestore(
-                                {
-                                  'subscriptions': (currentUserDocument
-                                          ?.subscriptions
-                                          ?.toList() ??
-                                      []),
-                                },
-                              ),
-                            });
-
-                            await currentUserReference!.update({
-                              ...mapToFirestore(
-                                {
-                                  'accountDeleted':
-                                      FieldValue.arrayRemove([widget.name]),
-                                },
-                              ),
-                            });
-
-                            await iconButtonUsersRecord!.reference.update({
-                              ...mapToFirestore(
-                                {
-                                  'accountDeleted':
-                                      FieldValue.arrayRemove([widget.name]),
                                 },
                               ),
                             });
