@@ -333,7 +333,7 @@ class _AccountPageWidgetState extends State<AccountPageWidget> {
                                       focusNode: _model.textFieldFocusNode,
                                       onChanged: (_) => EasyDebounce.debounce(
                                         '_model.textController',
-                                        Duration(milliseconds: 2000),
+                                        Duration(milliseconds: 100),
                                         () async {
                                           setState(() {
                                             FFAppState().searchAccount =
@@ -363,6 +363,8 @@ class _AccountPageWidgetState extends State<AccountPageWidget> {
                                             ),
                                         hintStyle: FlutterFlowTheme.of(context)
                                             .labelMedium,
+                                        floatingLabelBehavior:
+                                            FloatingLabelBehavior.never,
                                         enabledBorder: InputBorder.none,
                                         focusedBorder: InputBorder.none,
                                         errorBorder: InputBorder.none,
@@ -547,14 +549,12 @@ class _AccountPageWidgetState extends State<AccountPageWidget> {
                                         .toList()
                                         .take(10)
                                         .toList();
-                                    return ListView.separated(
+                                    return ListView.builder(
                                       padding: EdgeInsets.zero,
                                       primary: false,
                                       shrinkWrap: true,
                                       scrollDirection: Axis.vertical,
                                       itemCount: accounts.length,
-                                      separatorBuilder: (_, __) =>
-                                          SizedBox(height: 15.0),
                                       itemBuilder: (context, accountsIndex) {
                                         final accountsItem =
                                             accounts[accountsIndex];
@@ -564,353 +564,365 @@ class _AccountPageWidgetState extends State<AccountPageWidget> {
                                                       null ||
                                                   _model.textController.text ==
                                                       '') ||
-                                              (FFAppState().searchAccount ==
-                                                  accountsItem),
-                                          child: InkWell(
-                                            splashColor: Colors.transparent,
-                                            focusColor: Colors.transparent,
-                                            hoverColor: Colors.transparent,
-                                            highlightColor: Colors.transparent,
-                                            onLongPress: () async {
-                                              if (_model.select == false)
-                                                setState(() {
-                                                  _model.select = true;
-                                                });
-                                              if (FFAppState()
-                                                  .deletionAccountList
-                                                  .value
-                                                  .contains(accountsItem)) {
-                                                FFAppState().update(() {
-                                                  FFAppState()
-                                                      .deletionAccountList
-                                                      .value
-                                                      .remove(accountsItem);
-                                                  FFAppState()
-                                                      .deletionAccountList
-                                                      .add(FFAppState()
-                                                          .deletionAccountList
-                                                          .value);
-                                                  FFAppState()
-                                                      .removeFromAccountSelected(
-                                                          accountsItem);
-                                                });
-                                              } else {
-                                                FFAppState().update(() {
-                                                  FFAppState()
-                                                      .deletionAccountList
-                                                      .value
-                                                      .add(accountsItem);
-                                                  FFAppState()
-                                                      .deletionAccountList
-                                                      .add(FFAppState()
-                                                          .deletionAccountList
-                                                          .value);
-                                                  FFAppState()
-                                                      .addToAccountSelected(
-                                                          accountsItem);
-                                                });
-                                              }
-                                            },
-                                            child: Container(
-                                              width: MediaQuery.sizeOf(context)
-                                                      .width *
-                                                  0.7,
-                                              height: MediaQuery.sizeOf(context)
-                                                      .height *
-                                                  0.06,
-                                              constraints: BoxConstraints(
-                                                maxWidth: 300.0,
-                                                maxHeight: 60.0,
-                                              ),
-                                              decoration: BoxDecoration(
-                                                color: Color(0xFFFAF9F8),
-                                                borderRadius:
-                                                    BorderRadius.circular(8.0),
-                                              ),
-                                              child: Padding(
-                                                padding: EdgeInsetsDirectional
-                                                    .fromSTEB(
-                                                        2.0, 3.0, 2.0, 3.0),
-                                                child: Row(
-                                                  mainAxisSize:
-                                                      MainAxisSize.max,
-                                                  children: [
-                                                    Padding(
-                                                      padding:
-                                                          EdgeInsetsDirectional
-                                                              .fromSTEB(
-                                                                  3.0,
-                                                                  0.0,
-                                                                  7.0,
-                                                                  0.0),
-                                                      child: Container(
-                                                        width: 50.0,
-                                                        height: 50.0,
-                                                        decoration:
-                                                            BoxDecoration(
-                                                          color: FlutterFlowTheme
-                                                                  .of(context)
-                                                              .secondaryBackground,
-                                                          image:
-                                                              DecorationImage(
-                                                            fit: BoxFit.cover,
+                                              accountsItem
+                                                  .toLowerCase()
+                                                  .startsWith(_model
+                                                      .textController.text
+                                                      .toLowerCase()),
+                                          child: Padding(
+                                            padding: const EdgeInsets.symmetric(
+                                                vertical: 8),
+                                            child: InkWell(
+                                              splashColor: Colors.transparent,
+                                              focusColor: Colors.transparent,
+                                              hoverColor: Colors.transparent,
+                                              highlightColor:
+                                                  Colors.transparent,
+                                              onLongPress: () async {
+                                                if (_model.select == false)
+                                                  setState(() {
+                                                    _model.select = true;
+                                                  });
+                                                if (FFAppState()
+                                                    .deletionAccountList
+                                                    .value
+                                                    .contains(accountsItem)) {
+                                                  FFAppState().update(() {
+                                                    FFAppState()
+                                                        .deletionAccountList
+                                                        .value
+                                                        .remove(accountsItem);
+                                                    FFAppState()
+                                                        .deletionAccountList
+                                                        .add(FFAppState()
+                                                            .deletionAccountList
+                                                            .value);
+                                                    FFAppState()
+                                                        .removeFromAccountSelected(
+                                                            accountsItem);
+                                                  });
+                                                } else {
+                                                  FFAppState().update(() {
+                                                    FFAppState()
+                                                        .deletionAccountList
+                                                        .value
+                                                        .add(accountsItem);
+                                                    FFAppState()
+                                                        .deletionAccountList
+                                                        .add(FFAppState()
+                                                            .deletionAccountList
+                                                            .value);
+                                                    FFAppState()
+                                                        .addToAccountSelected(
+                                                            accountsItem);
+                                                  });
+                                                }
+                                              },
+                                              child: Container(
+                                                width:
+                                                    MediaQuery.sizeOf(context)
+                                                            .width *
+                                                        0.7,
+                                                height:
+                                                    MediaQuery.sizeOf(context)
+                                                            .height *
+                                                        0.06,
+                                                constraints: BoxConstraints(
+                                                  maxWidth: 300.0,
+                                                  maxHeight: 60.0,
+                                                ),
+                                                decoration: BoxDecoration(
+                                                  color: Color(0xFFFAF9F8),
+                                                  borderRadius:
+                                                      BorderRadius.circular(
+                                                          8.0),
+                                                ),
+                                                child: Padding(
+                                                  padding: EdgeInsetsDirectional
+                                                      .fromSTEB(
+                                                          2.0, 3.0, 2.0, 3.0),
+                                                  child: Row(
+                                                    mainAxisSize:
+                                                        MainAxisSize.max,
+                                                    children: [
+                                                      Padding(
+                                                        padding:
+                                                            EdgeInsetsDirectional
+                                                                .fromSTEB(
+                                                                    3.0,
+                                                                    0.0,
+                                                                    7.0,
+                                                                    0.0),
+                                                        child: Container(
+                                                          width: 50.0,
+                                                          height: 50.0,
+                                                          decoration:
+                                                              BoxDecoration(
+                                                            color: FlutterFlowTheme
+                                                                    .of(context)
+                                                                .secondaryBackground,
                                                             image:
-                                                                Image.network(
-                                                              valueOrDefault<
-                                                                  String>(
-                                                                functions
-                                                                    .imageReturn(
-                                                                        accountsItem),
-                                                                'https://i.near.social/magic/large/https://near.social/magic/img/account/sesona.near',
-                                                              ),
-                                                            ).image,
-                                                          ),
-                                                          shape:
-                                                              BoxShape.circle,
-                                                        ),
-                                                      ),
-                                                    ),
-                                                    Column(
-                                                      mainAxisSize:
-                                                          MainAxisSize.max,
-                                                      mainAxisAlignment:
-                                                          MainAxisAlignment
-                                                              .spaceBetween,
-                                                      crossAxisAlignment:
-                                                          CrossAxisAlignment
-                                                              .start,
-                                                      children: [
-                                                        Text(
-                                                          accountsItem,
-                                                          style: FlutterFlowTheme
-                                                                  .of(context)
-                                                              .bodyMedium,
-                                                        ),
-                                                      ],
-                                                    ),
-                                                    Expanded(
-                                                      child: Align(
-                                                        alignment:
-                                                            AlignmentDirectional(
-                                                                1.00, 0.00),
-                                                        child: Padding(
-                                                          padding:
-                                                              EdgeInsetsDirectional
-                                                                  .fromSTEB(
-                                                                      0.0,
-                                                                      0.0,
-                                                                      3.0,
-                                                                      0.0),
-                                                          child: Stack(
-                                                            children: [
-                                                              if (_model
-                                                                      .select! &&
-                                                                  FFAppState()
-                                                                      .deletionAccountList
-                                                                      .value
-                                                                      .contains(
-                                                                          accountsItem))
-                                                                InkWell(
-                                                                  splashColor:
-                                                                      Colors
-                                                                          .transparent,
-                                                                  focusColor: Colors
-                                                                      .transparent,
-                                                                  hoverColor: Colors
-                                                                      .transparent,
-                                                                  highlightColor:
-                                                                      Colors
-                                                                          .transparent,
-                                                                  onTap:
-                                                                      () async {
-                                                                    if (FFAppState()
-                                                                        .deletionAccountList
-                                                                        .value
-                                                                        .contains(
-                                                                            accountsItem)) {
-                                                                      setState(
-                                                                          () {
-                                                                        FFAppState()
-                                                                            .deletionAccountList
-                                                                            .value
-                                                                            .remove(accountsItem);
-                                                                        FFAppState()
-                                                                            .deletionAccountList
-                                                                            .add(FFAppState().deletionAccountList.value);
-                                                                        FFAppState()
-                                                                            .removeFromAccountSelected(accountsItem);
-                                                                        FFAppState()
-                                                                            .removeFromAccountSelected(accountsItem);
-                                                                      });
-                                                                    } else {
-                                                                      setState(
-                                                                          () {
-                                                                        FFAppState()
-                                                                            .deletionAccountList
-                                                                            .value
-                                                                            .add(accountsItem);
-                                                                        FFAppState()
-                                                                            .deletionAccountList
-                                                                            .add(FFAppState().deletionAccountList.value);
-                                                                        FFAppState()
-                                                                            .addToAccountSelected(accountsItem);
-                                                                      });
-                                                                    }
-                                                                  },
-                                                                  child:
-                                                                      Padding(
-                                                                    padding: const EdgeInsets
-                                                                        .only(
-                                                                        right:
-                                                                            10),
-                                                                    child: SvgPicture
-                                                                        .asset(
-                                                                            'assets/icons/boxon.svg'),
-                                                                  ),
+                                                                DecorationImage(
+                                                              fit: BoxFit.cover,
+                                                              image:
+                                                                  Image.network(
+                                                                valueOrDefault<
+                                                                    String>(
+                                                                  functions
+                                                                      .imageReturn(
+                                                                          accountsItem),
+                                                                  'https://i.near.social/magic/large/https://near.social/magic/img/account/sesona.near',
                                                                 ),
-                                                              if (_model
-                                                                      .select! &&
-                                                                  !FFAppState()
-                                                                      .accountSelected
-                                                                      .contains(
-                                                                          accountsItem))
-                                                                InkWell(
-                                                                  splashColor:
-                                                                      Colors
-                                                                          .transparent,
-                                                                  focusColor: Colors
-                                                                      .transparent,
-                                                                  hoverColor: Colors
-                                                                      .transparent,
-                                                                  highlightColor:
-                                                                      Colors
-                                                                          .transparent,
-                                                                  onTap:
-                                                                      () async {
-                                                                    if (FFAppState()
-                                                                        .accountSelected
-                                                                        .contains(
-                                                                            accountsItem)) {
-                                                                      FFAppState()
-                                                                          .update(
-                                                                              () {
-                                                                        FFAppState()
-                                                                            .deletionAccountList
-                                                                            .value
-                                                                            .remove(accountsItem);
-                                                                        FFAppState()
-                                                                            .deletionAccountList
-                                                                            .add(FFAppState().deletionAccountList.value);
-                                                                        FFAppState()
-                                                                            .removeFromAccountSelected(accountsItem);
-                                                                      });
-                                                                    } else {
-                                                                      FFAppState()
-                                                                          .update(
-                                                                              () {
-                                                                        FFAppState()
-                                                                            .deletionAccountList
-                                                                            .value
-                                                                            .add(accountsItem);
-                                                                        FFAppState()
-                                                                            .deletionAccountList
-                                                                            .add(FFAppState().deletionAccountList.value);
-                                                                        FFAppState()
-                                                                            .addToAccountSelected(accountsItem);
-                                                                      });
-                                                                    }
-                                                                  },
-                                                                  child:
-                                                                      Padding(
-                                                                    padding: const EdgeInsets
-                                                                        .only(
-                                                                        right:
-                                                                            10),
-                                                                    child: SvgPicture
-                                                                        .asset(
-                                                                            'assets/icons/boxoff.svg'),
-                                                                  ),
-                                                                ),
-                                                            ],
+                                                              ).image,
+                                                            ),
+                                                            shape:
+                                                                BoxShape.circle,
                                                           ),
                                                         ),
                                                       ),
-                                                    ),
-                                                    if (!_model.select!)
+                                                      Column(
+                                                        mainAxisSize:
+                                                            MainAxisSize.max,
+                                                        mainAxisAlignment:
+                                                            MainAxisAlignment
+                                                                .spaceBetween,
+                                                        crossAxisAlignment:
+                                                            CrossAxisAlignment
+                                                                .start,
+                                                        children: [
+                                                          Text(
+                                                            accountsItem,
+                                                            style: FlutterFlowTheme
+                                                                    .of(context)
+                                                                .bodyMedium,
+                                                          ),
+                                                        ],
+                                                      ),
                                                       Expanded(
                                                         child: Align(
                                                           alignment:
                                                               AlignmentDirectional(
                                                                   1.00, 0.00),
-                                                          child: Builder(
-                                                            builder:
-                                                                (context) =>
-                                                                    Padding(
-                                                              padding:
-                                                                  EdgeInsetsDirectional
-                                                                      .fromSTEB(
-                                                                          0.0,
-                                                                          0.0,
-                                                                          3.0,
-                                                                          0.0),
-                                                              child: InkWell(
-                                                                child: Padding(
-                                                                  padding:
-                                                                      const EdgeInsets
+                                                          child: Padding(
+                                                            padding:
+                                                                EdgeInsetsDirectional
+                                                                    .fromSTEB(
+                                                                        0.0,
+                                                                        0.0,
+                                                                        3.0,
+                                                                        0.0),
+                                                            child: Stack(
+                                                              children: [
+                                                                if (_model
+                                                                        .select! &&
+                                                                    FFAppState()
+                                                                        .deletionAccountList
+                                                                        .value
+                                                                        .contains(
+                                                                            accountsItem))
+                                                                  InkWell(
+                                                                    splashColor:
+                                                                        Colors
+                                                                            .transparent,
+                                                                    focusColor:
+                                                                        Colors
+                                                                            .transparent,
+                                                                    hoverColor:
+                                                                        Colors
+                                                                            .transparent,
+                                                                    highlightColor:
+                                                                        Colors
+                                                                            .transparent,
+                                                                    onTap:
+                                                                        () async {
+                                                                      if (FFAppState()
+                                                                          .deletionAccountList
+                                                                          .value
+                                                                          .contains(
+                                                                              accountsItem)) {
+                                                                        setState(
+                                                                            () {
+                                                                          FFAppState()
+                                                                              .deletionAccountList
+                                                                              .value
+                                                                              .remove(accountsItem);
+                                                                          FFAppState()
+                                                                              .deletionAccountList
+                                                                              .add(FFAppState().deletionAccountList.value);
+                                                                          FFAppState()
+                                                                              .removeFromAccountSelected(accountsItem);
+                                                                          FFAppState()
+                                                                              .removeFromAccountSelected(accountsItem);
+                                                                        });
+                                                                      } else {
+                                                                        setState(
+                                                                            () {
+                                                                          FFAppState()
+                                                                              .deletionAccountList
+                                                                              .value
+                                                                              .add(accountsItem);
+                                                                          FFAppState()
+                                                                              .deletionAccountList
+                                                                              .add(FFAppState().deletionAccountList.value);
+                                                                          FFAppState()
+                                                                              .addToAccountSelected(accountsItem);
+                                                                        });
+                                                                      }
+                                                                    },
+                                                                    child:
+                                                                        Padding(
+                                                                      padding: const EdgeInsets
                                                                           .only(
                                                                           right:
                                                                               10),
-                                                                  child: SvgPicture
-                                                                      .asset(
-                                                                          'assets/icons/trash.svg'),
-                                                                ),
-                                                                onTap:
-                                                                    () async {
-                                                                  await showAlignedDialog(
-                                                                    context:
-                                                                        context,
-                                                                    isGlobal:
-                                                                        true,
-                                                                    avoidOverflow:
-                                                                        false,
-                                                                    targetAnchor: AlignmentDirectional(
-                                                                            0.0,
-                                                                            0.0)
-                                                                        .resolve(
-                                                                            Directionality.of(context)),
-                                                                    followerAnchor: AlignmentDirectional(
-                                                                            0.0,
-                                                                            0.0)
-                                                                        .resolve(
-                                                                            Directionality.of(context)),
-                                                                    builder:
-                                                                        (dialogContext) {
-                                                                      return Material(
-                                                                        color: Colors
+                                                                      child: SvgPicture
+                                                                          .asset(
+                                                                              'assets/icons/boxon.svg'),
+                                                                    ),
+                                                                  ),
+                                                                if (_model
+                                                                        .select! &&
+                                                                    !FFAppState()
+                                                                        .accountSelected
+                                                                        .contains(
+                                                                            accountsItem))
+                                                                  InkWell(
+                                                                    splashColor:
+                                                                        Colors
                                                                             .transparent,
-                                                                        child:
-                                                                            GestureDetector(
-                                                                          onTap: () => _model.unfocusNode.canRequestFocus
-                                                                              ? FocusScope.of(context).requestFocus(_model.unfocusNode)
-                                                                              : FocusScope.of(context).unfocus(),
-                                                                          child:
-                                                                              AccountDeletingDialogWidget(
-                                                                            name:
-                                                                                accountsItem,
-                                                                          ),
-                                                                        ),
-                                                                      );
+                                                                    focusColor:
+                                                                        Colors
+                                                                            .transparent,
+                                                                    hoverColor:
+                                                                        Colors
+                                                                            .transparent,
+                                                                    highlightColor:
+                                                                        Colors
+                                                                            .transparent,
+                                                                    onTap:
+                                                                        () async {
+                                                                      if (FFAppState()
+                                                                          .accountSelected
+                                                                          .contains(
+                                                                              accountsItem)) {
+                                                                        FFAppState()
+                                                                            .update(() {
+                                                                          FFAppState()
+                                                                              .deletionAccountList
+                                                                              .value
+                                                                              .remove(accountsItem);
+                                                                          FFAppState()
+                                                                              .deletionAccountList
+                                                                              .add(FFAppState().deletionAccountList.value);
+                                                                          FFAppState()
+                                                                              .removeFromAccountSelected(accountsItem);
+                                                                        });
+                                                                      } else {
+                                                                        FFAppState()
+                                                                            .update(() {
+                                                                          FFAppState()
+                                                                              .deletionAccountList
+                                                                              .value
+                                                                              .add(accountsItem);
+                                                                          FFAppState()
+                                                                              .deletionAccountList
+                                                                              .add(FFAppState().deletionAccountList.value);
+                                                                          FFAppState()
+                                                                              .addToAccountSelected(accountsItem);
+                                                                        });
+                                                                      }
                                                                     },
-                                                                  ).then((value) =>
-                                                                      setState(
-                                                                          () {}));
-                                                                },
-                                                              ),
+                                                                    child:
+                                                                        Padding(
+                                                                      padding: const EdgeInsets
+                                                                          .only(
+                                                                          right:
+                                                                              10),
+                                                                      child: SvgPicture
+                                                                          .asset(
+                                                                              'assets/icons/boxoff.svg'),
+                                                                    ),
+                                                                  ),
+                                                              ],
                                                             ),
                                                           ),
                                                         ),
                                                       ),
-                                                  ],
+                                                      if (!_model.select!)
+                                                        Expanded(
+                                                          child: Align(
+                                                            alignment:
+                                                                AlignmentDirectional(
+                                                                    1.00, 0.00),
+                                                            child: Builder(
+                                                              builder:
+                                                                  (context) =>
+                                                                      Padding(
+                                                                padding:
+                                                                    EdgeInsetsDirectional
+                                                                        .fromSTEB(
+                                                                            0.0,
+                                                                            0.0,
+                                                                            3.0,
+                                                                            0.0),
+                                                                child: InkWell(
+                                                                  child:
+                                                                      Padding(
+                                                                    padding: const EdgeInsets
+                                                                        .only(
+                                                                        right:
+                                                                            10),
+                                                                    child: SvgPicture
+                                                                        .asset(
+                                                                            'assets/icons/trash.svg'),
+                                                                  ),
+                                                                  onTap:
+                                                                      () async {
+                                                                    await showAlignedDialog(
+                                                                      context:
+                                                                          context,
+                                                                      isGlobal:
+                                                                          true,
+                                                                      avoidOverflow:
+                                                                          false,
+                                                                      targetAnchor: AlignmentDirectional(
+                                                                              0.0,
+                                                                              0.0)
+                                                                          .resolve(
+                                                                              Directionality.of(context)),
+                                                                      followerAnchor: AlignmentDirectional(
+                                                                              0.0,
+                                                                              0.0)
+                                                                          .resolve(
+                                                                              Directionality.of(context)),
+                                                                      builder:
+                                                                          (dialogContext) {
+                                                                        return Material(
+                                                                          color:
+                                                                              Colors.transparent,
+                                                                          child:
+                                                                              GestureDetector(
+                                                                            onTap: () => _model.unfocusNode.canRequestFocus
+                                                                                ? FocusScope.of(context).requestFocus(_model.unfocusNode)
+                                                                                : FocusScope.of(context).unfocus(),
+                                                                            child:
+                                                                                AccountDeletingDialogWidget(
+                                                                              name: accountsItem,
+                                                                            ),
+                                                                          ),
+                                                                        );
+                                                                      },
+                                                                    ).then((value) =>
+                                                                        setState(
+                                                                            () {}));
+                                                                  },
+                                                                ),
+                                                              ),
+                                                            ),
+                                                          ),
+                                                        ),
+                                                    ],
+                                                  ),
                                                 ),
                                               ),
                                             ),

@@ -1,3 +1,4 @@
+import 'package:b_o_s_notifications/local_DataBase.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
 import '/auth/firebase_auth/auth_util.dart';
@@ -22,8 +23,8 @@ class AccountDeletedWidget extends StatefulWidget {
     required this.dataDeleted,
   }) : super(key: key);
 
-  final String? name;
-  final DateTime? dataDeleted;
+  final String name;
+  final DateTime dataDeleted;
 
   @override
   _AccountDeletedWidgetState createState() => _AccountDeletedWidgetState();
@@ -142,23 +143,16 @@ class _AccountDeletedWidgetState extends State<AccountDeletedWidget> {
                             height: 24,
                           ),
                           onTap: () async {
-                            var docRef = FirebaseFirestore.instance
-                                .collection("users")
-                                .doc("accountDeleted");
-                            docRef.get().then(
-                              (DocumentSnapshot docRef) async {
-                                List<Map<String, dynamic>> data =
-                                    docRef.data() as List<Map<String, dynamic>>;
-                                data.removeWhere((element) =>
-                                    element.containsValue(widget.name));
-                                await currentUserReference?.update({
-                                  ...mapToFirestore({
-                                    'accountDeleted': data,
-                                  })
-                                });
+                            DatabaseHelper dbHelper = DatabaseHelper();
+                            var db = await dbHelper.db;
+
+                            FFAppState().update(
+                              () async {
+                                await dbHelper.deleteRecordByName(widget.name);
+                                FFAppState()
+                                    .deletedAccountList
+                                    .add(await db.query('myDB'));
                               },
-                              onError: (e) =>
-                                  print("Error getting document: $e"),
                             );
 
                             // await currentUserReference?.update({

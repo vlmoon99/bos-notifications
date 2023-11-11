@@ -124,130 +124,145 @@ class _HistoryAccountDeletedWidgetState
                         child: AuthUserStreamWidget(
                           builder: (context) => Builder(
                             builder: (context) {
-                              final accountDeletedList = (currentUserDocument
-                                      ?.accountDeleted
-                                      .toList() ??
-                                  []);
-                              return ListView.separated(
-                                padding: EdgeInsets.zero,
-                                scrollDirection: Axis.vertical,
-                                itemCount: accountDeletedList.length,
-                                separatorBuilder: (_, __) =>
-                                    SizedBox(height: 15.0),
-                                itemBuilder:
-                                    (context, accountDeletedListIndex) {
-                                  final accountDeletedListItem =
-                                      accountDeletedList[
-                                          accountDeletedListIndex];
-                                  return Container(
-                                    key: Key(
-                                        'Key6mz_${accountDeletedListIndex}_of_${accountDeletedList.length}'),
-                                    height: () {
-                                      if (accountDeletedListIndex == 0) {
-                                        return 70.0;
-                                      } else if (dateTimeFormat(
-                                            'd/M/y',
-                                            accountDeletedListItem.date,
-                                            locale: FFLocalizations.of(context)
-                                                .languageCode,
-                                          ) !=
-                                          dateTimeFormat(
-                                            'd/M/y',
-                                            (currentUserDocument?.accountDeleted
-                                                            ?.toList() ??
-                                                        [])[
-                                                    accountDeletedListIndex - 1]
-                                                .date,
-                                            locale: FFLocalizations.of(context)
-                                                .languageCode,
-                                          )) {
-                                        return 70.0;
-                                      } else {
-                                        return 50.0;
-                                      }
-                                    }(),
-                                    decoration: BoxDecoration(
-                                      color: FlutterFlowTheme.of(context)
-                                          .secondaryBackground,
-                                    ),
-                                    child: Align(
-                                      alignment:
-                                          AlignmentDirectional(0.00, 0.00),
-                                      child: Column(
-                                        mainAxisSize: MainAxisSize.min,
-                                        mainAxisAlignment:
-                                            MainAxisAlignment.start,
-                                        crossAxisAlignment:
-                                            CrossAxisAlignment.center,
-                                        children: [
-                                          if (() {
+                              return StreamBuilder<List<Map<String, dynamic>>>(
+                                  stream: FFAppState().deletedAccountList,
+                                  builder: (context, snapshot) {
+                                    List<Map<String, dynamic>>
+                                        deletedAccountList =
+                                        snapshot.data ?? [];
+                                    return ListView.separated(
+                                      padding: EdgeInsets.zero,
+                                      scrollDirection: Axis.vertical,
+                                      itemCount: deletedAccountList.length,
+                                      separatorBuilder: (_, __) =>
+                                          SizedBox(height: 15.0),
+                                      itemBuilder:
+                                          (context, accountDeletedListIndex) {
+                                        final accountDeletedListItem =
+                                            deletedAccountList[
+                                                accountDeletedListIndex];
+                                        return Container(
+                                          key: Key(
+                                              'Key6mz_${accountDeletedListIndex}_of_${deletedAccountList.length}'),
+                                          height: () {
                                             if (accountDeletedListIndex == 0) {
-                                              return true;
+                                              return 70.0;
                                             } else if (dateTimeFormat(
                                                   'd/M/y',
-                                                  accountDeletedListItem.date,
+                                                  DateTime.parse(
+                                                      accountDeletedListItem[
+                                                          'date']),
                                                   locale: FFLocalizations.of(
                                                           context)
                                                       .languageCode,
                                                 ) !=
                                                 dateTimeFormat(
                                                   'd/M/y',
-                                                  (currentUserDocument
-                                                                  ?.accountDeleted
-                                                                  .toList() ??
+                                                  DateTime.parse(
+                                                      (deletedAccountList ??
                                                               [])[
                                                           accountDeletedListIndex -
-                                                              1]
-                                                      .date,
+                                                              1]['date']),
                                                   locale: FFLocalizations.of(
                                                           context)
                                                       .languageCode,
                                                 )) {
-                                              return true;
+                                              return 70.0;
                                             } else {
-                                              return false;
+                                              return 50.0;
                                             }
-                                          }())
-                                            Align(
-                                              alignment: AlignmentDirectional(
-                                                  1.00, 0.00),
-                                              child: Text(
-                                                dateTimeFormat(
-                                                  'd/M/y',
-                                                  accountDeletedListItem.date!,
-                                                  locale: FFLocalizations.of(
-                                                          context)
-                                                      .languageCode,
+                                          }(),
+                                          decoration: BoxDecoration(
+                                            color: FlutterFlowTheme.of(context)
+                                                .secondaryBackground,
+                                          ),
+                                          child: Align(
+                                            alignment: AlignmentDirectional(
+                                                0.00, 0.00),
+                                            child: Column(
+                                              mainAxisSize: MainAxisSize.min,
+                                              mainAxisAlignment:
+                                                  MainAxisAlignment.start,
+                                              crossAxisAlignment:
+                                                  CrossAxisAlignment.center,
+                                              children: [
+                                                if (() {
+                                                  if (accountDeletedListIndex ==
+                                                      0) {
+                                                    return true;
+                                                  } else if (dateTimeFormat(
+                                                        'd/M/y',
+                                                        DateTime.parse(
+                                                            accountDeletedListItem[
+                                                                'date']),
+                                                        locale:
+                                                            FFLocalizations.of(
+                                                                    context)
+                                                                .languageCode,
+                                                      ) !=
+                                                      dateTimeFormat(
+                                                        'd/M/y',
+                                                        DateTime.parse(
+                                                            (deletedAccountList ??
+                                                                    [])[
+                                                                accountDeletedListIndex -
+                                                                    1]['date']),
+                                                        locale:
+                                                            FFLocalizations.of(
+                                                                    context)
+                                                                .languageCode,
+                                                      )) {
+                                                    return true;
+                                                  } else {
+                                                    return false;
+                                                  }
+                                                }())
+                                                  Align(
+                                                    alignment:
+                                                        AlignmentDirectional(
+                                                            1.00, 0.00),
+                                                    child: Text(
+                                                      dateTimeFormat(
+                                                        'd/M/y',
+                                                        DateTime.parse(
+                                                            accountDeletedListItem[
+                                                                'date']),
+                                                        locale:
+                                                            FFLocalizations.of(
+                                                                    context)
+                                                                .languageCode,
+                                                      ),
+                                                      style:
+                                                          FlutterFlowTheme.of(
+                                                                  context)
+                                                              .bodyMedium,
+                                                    ),
+                                                  ),
+                                                Expanded(
+                                                  child: Align(
+                                                    alignment:
+                                                        AlignmentDirectional(
+                                                            0.00, 1.00),
+                                                    child: AccountDeletedWidget(
+                                                      name: (deletedAccountList ??
+                                                                  [])[
+                                                              accountDeletedListIndex]
+                                                          ['name'],
+                                                      dataDeleted: DateTime.parse(
+                                                          (deletedAccountList ??
+                                                                      [])[
+                                                                  accountDeletedListIndex]
+                                                              ['date']),
+                                                    ),
+                                                  ),
                                                 ),
-                                                style:
-                                                    FlutterFlowTheme.of(context)
-                                                        .bodyMedium,
-                                              ),
-                                            ),
-                                          Expanded(
-                                            child: Align(
-                                              alignment: AlignmentDirectional(
-                                                  0.00, 1.00),
-                                              child: AccountDeletedWidget(
-                                                name: (currentUserDocument
-                                                                ?.accountDeleted ??
-                                                            [])[
-                                                        accountDeletedListIndex]
-                                                    .name,
-                                                dataDeleted: (currentUserDocument
-                                                                ?.accountDeleted ??
-                                                            [])[
-                                                        accountDeletedListIndex]
-                                                    .date,
-                                              ),
+                                              ],
                                             ),
                                           ),
-                                        ],
-                                      ),
-                                    ),
-                                  );
-                                },
-                              );
+                                        );
+                                      },
+                                    );
+                                  });
                             },
                           ),
                         ),

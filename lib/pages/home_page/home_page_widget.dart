@@ -181,9 +181,7 @@ class _HomePageWidgetState extends State<HomePageWidget> {
                                         'assets/icons/Icon_search.svg',
                                         fit: BoxFit.none,
                                       ),
-                                      onTap: () {
-                                        print('IconButton pressed ...');
-                                      },
+                                      onTap: () {},
                                     ),
                                   ),
                                   Container(
@@ -254,6 +252,8 @@ class _HomePageWidgetState extends State<HomePageWidget> {
                                           hintStyle:
                                               FlutterFlowTheme.of(context)
                                                   .labelMedium,
+                                          floatingLabelBehavior:
+                                              FloatingLabelBehavior.never,
                                           enabledBorder: InputBorder.none,
                                           focusedBorder: InputBorder.none,
                                           errorBorder: InputBorder.none,

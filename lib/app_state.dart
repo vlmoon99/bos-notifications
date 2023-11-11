@@ -1,10 +1,13 @@
+import 'package:b_o_s_notifications/local_DataBase.dart';
 import 'package:flutter/material.dart';
+import 'package:sqflite/sqflite.dart';
 import '/backend/backend.dart';
 import '/backend/schema/structs/index.dart';
 import 'backend/api_requests/api_manager.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'flutter_flow/flutter_flow_util.dart';
 import 'package:rxdart/rxdart.dart';
+import 'main.dart';
 
 class FFAppState extends ChangeNotifier {
   static FFAppState _instance = FFAppState._internal();
@@ -16,8 +19,8 @@ class FFAppState extends ChangeNotifier {
   final BehaviorSubject<List<String>> subsAccountList =
       BehaviorSubject<List<String>>()..add([]);
 
-  final BehaviorSubject<List<String>> deletedAccountList =
-      BehaviorSubject<List<String>>()..add([]);
+  final BehaviorSubject<List<Map<String, dynamic>>> deletedAccountList =
+      BehaviorSubject<List<Map<String, dynamic>>>()..add([]);
 
   final BehaviorSubject<List<String>> deletionAccountList =
       BehaviorSubject<List<String>>()..add([]);

@@ -1,3 +1,4 @@
+import 'package:b_o_s_notifications/local_DataBase.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:provider/provider.dart';
 import 'package:flutter/gestures.dart';
@@ -23,7 +24,7 @@ void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   usePathUrlStrategy();
   await initFirebase();
-
+  await DatabaseHelper().initDb();
   final appState = FFAppState(); // Initialize FFAppState
   await appState.initializePersistedState();
 
@@ -157,7 +158,7 @@ class _NavBarPageState extends State<NavBarPage> {
                   color: Colors.white,
                 ),
                 width: MediaQuery.sizeOf(context).width,
-                height: 90,
+                height: 70,
                 child: Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 50),
                   child: Padding(
@@ -202,47 +203,226 @@ class _NavBarPageState extends State<NavBarPage> {
                   ),
                 ),
               );
-            return SizedBox(
-              height: 90,
-              child: BottomNavigationBar(
-                currentIndex: currentIndex,
-                onTap: (i) => setState(() {
-                  _currentPage = null;
-                  _currentPageName = tabs.keys.toList()[i];
-                }),
-                backgroundColor: Colors.white,
-                selectedItemColor: Color(0xFF9797FF),
-                unselectedItemColor: Color(0xFF7E7E7E),
-                showSelectedLabels: false,
-                showUnselectedLabels: false,
-                type: BottomNavigationBarType.fixed,
-                items: <BottomNavigationBarItem>[
-                  BottomNavigationBarItem(
-                    icon: SvgPicture.asset(
-                      'assets/icons/tabhome2.svg',
-                      fit: BoxFit.cover,
-                    ),
-                    label: 'Home',
-                    tooltip: '',
-                  ),
-                  BottomNavigationBarItem(
-                    icon: SvgPicture.asset(
-                      'assets/icons/accounts.svg',
-                      fit: BoxFit.cover,
-                    ),
-                    label: 'Account',
-                    tooltip: '',
-                  ),
-                  BottomNavigationBarItem(
-                    icon: SvgPicture.asset(
-                      'assets/icons/Icon_settings.svg',
-                      fit: BoxFit.cover,
-                    ),
-                    label: 'Settings',
-                    tooltip: '',
-                  )
+            return Container(
+              height: 70,
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.only(
+                    topLeft: Radius.circular(8), topRight: Radius.circular(8)),
+                color: Colors.white,
+                boxShadow: [
+                  BoxShadow(
+                      color: Color.fromARGB(10, 0, 0, 0), blurRadius: 100),
                 ],
               ),
+              width: MediaQuery.sizeOf(context).width,
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceAround,
+                children: [
+                  InkWell(
+                    onTap: () => setState(() {
+                      _currentPage = null;
+                      _currentPageName = tabs.keys.toList()[0];
+                    }),
+                    child: SizedBox(
+                      height: 70,
+                      width: 65,
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Visibility(
+                            visible: currentIndex == 0,
+                            child: Container(
+                              decoration: BoxDecoration(
+                                  color: Color.fromARGB(255, 151, 151, 255),
+                                  borderRadius: BorderRadius.circular(2)),
+                              width: 45,
+                              height: 3,
+                            ),
+                          ),
+                          Padding(
+                            padding: const EdgeInsets.only(bottom: 16),
+                            child: Column(
+                              children: [
+                                Padding(
+                                  padding: const EdgeInsets.only(bottom: 5),
+                                  child: SvgPicture.asset(
+                                    'assets/icons/tabhome2.svg',
+                                    color: currentIndex == 0
+                                        ? Color.fromARGB(255, 151, 151, 255)
+                                        : Colors.grey,
+                                  ),
+                                ),
+                                Text('Home',
+                                    style: TextStyle(
+                                      fontSize: 13,
+                                      fontWeight: currentIndex == 0
+                                          ? FontWeight.bold
+                                          : FontWeight.normal,
+                                      color: currentIndex == 0
+                                          ? Color.fromARGB(255, 151, 151, 255)
+                                          : Colors.grey,
+                                    ))
+                              ],
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+                  InkWell(
+                    onTap: () => setState(() {
+                      _currentPage = null;
+                      _currentPageName = tabs.keys.toList()[1];
+                    }),
+                    child: SizedBox(
+                      height: 70,
+                      width: 65,
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Visibility(
+                            visible: currentIndex == 1,
+                            child: Container(
+                              decoration: BoxDecoration(
+                                  color: Color.fromARGB(255, 151, 151, 255),
+                                  borderRadius: BorderRadius.circular(2)),
+                              width: 45,
+                              height: 3,
+                            ),
+                          ),
+                          Padding(
+                            padding: const EdgeInsets.only(bottom: 16),
+                            child: Column(
+                              children: [
+                                Padding(
+                                  padding: const EdgeInsets.only(bottom: 5),
+                                  child: SvgPicture.asset(
+                                    'assets/icons/accounts.svg',
+                                    color: currentIndex == 1
+                                        ? Color.fromARGB(255, 151, 151, 255)
+                                        : Colors.grey,
+                                  ),
+                                ),
+                                Text('Accounts',
+                                    style: TextStyle(
+                                      fontSize: 13,
+                                      fontWeight: currentIndex == 1
+                                          ? FontWeight.bold
+                                          : FontWeight.normal,
+                                      color: currentIndex == 1
+                                          ? Color.fromARGB(255, 151, 151, 255)
+                                          : Colors.grey,
+                                    ))
+                              ],
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+                  InkWell(
+                    onTap: () => setState(() {
+                      _currentPage = null;
+                      _currentPageName = tabs.keys.toList()[2];
+                    }),
+                    child: SizedBox(
+                      height: 70,
+                      width: 65,
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Visibility(
+                            visible: currentIndex == 2,
+                            child: Container(
+                              decoration: BoxDecoration(
+                                  color: Color.fromARGB(255, 151, 151, 255),
+                                  borderRadius: BorderRadius.circular(2)),
+                              width: 45,
+                              height: 3,
+                            ),
+                          ),
+                          Padding(
+                            padding: const EdgeInsets.only(bottom: 16),
+                            child: Column(
+                              children: [
+                                Padding(
+                                  padding: const EdgeInsets.only(bottom: 5),
+                                  child: SvgPicture.asset(
+                                    'assets/icons/Icon_settings.svg',
+                                    color: currentIndex == 2
+                                        ? Color.fromARGB(255, 151, 151, 255)
+                                        : Colors.grey,
+                                  ),
+                                ),
+                                Text(
+                                  'Settings',
+                                  style: TextStyle(
+                                    fontSize: 13,
+                                    fontWeight: currentIndex == 2
+                                        ? FontWeight.bold
+                                        : FontWeight.normal,
+                                    color: currentIndex == 2
+                                        ? Color.fromARGB(255, 151, 151, 255)
+                                        : Colors.grey,
+                                  ),
+                                )
+                              ],
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+              // child: BottomNavigationBar(
+              //   currentIndex: currentIndex,
+              //   onTap: (i) => setState(() {
+              //     _currentPage = null;
+              //     _currentPageName = tabs.keys.toList()[i];
+              //   }),
+              //   backgroundColor: Colors.white,
+              //   selectedItemColor: Color(0xFF9797FF),
+              //   unselectedItemColor: Color(0xFF7E7E7E),
+              //   showSelectedLabels: false,
+              //   showUnselectedLabels: false,
+              //   type: BottomNavigationBarType.fixed,
+              //   items: <BottomNavigationBarItem>[
+              //     BottomNavigationBarItem(
+              //       icon: SvgPicture.asset(
+              //         'assets/icons/tabhome2.svg',
+              //         color: currentIndex == 0
+              //             ? Color.fromARGB(255, 151, 151, 255)
+              //             : Colors.grey,
+              //         fit: BoxFit.cover,
+              //       ),
+              //       label: 'Home',
+              //       tooltip: '',
+              //     ),
+              //     BottomNavigationBarItem(
+              //       icon: SvgPicture.asset(
+              //         'assets/icons/accounts.svg',
+              //         color: currentIndex == 1
+              //             ? Color.fromARGB(255, 151, 151, 255)
+              //             : Colors.grey,
+              //         fit: BoxFit.cover,
+              //       ),
+              //       label: 'Account',
+              //       tooltip: '',
+              //     ),
+              //     BottomNavigationBarItem(
+              //       icon: SvgPicture.asset(
+              //         'assets/icons/Icon_settings.svg',
+              //         color: currentIndex == 2
+              //             ? Color.fromARGB(255, 151, 151, 255)
+              //             : Colors.grey,
+              //         fit: BoxFit.cover,
+              //       ),
+              //       label: 'Settings',
+              //       tooltip: '',
+              //     )
+              //   ],
+              // ),
             );
           }),
     );

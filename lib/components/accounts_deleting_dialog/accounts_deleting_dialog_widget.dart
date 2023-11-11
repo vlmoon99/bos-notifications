@@ -1,3 +1,5 @@
+import 'package:b_o_s_notifications/local_DataBase.dart';
+
 import '/auth/firebase_auth/auth_util.dart';
 import '/backend/backend.dart';
 import '/flutter_flow/flutter_flow_theme.dart';
@@ -244,30 +246,49 @@ class _AccountsDeletingDialogWidgetState
                                   : null;
                           return FFButtonWidget(
                             onPressed: () async {
-                              FFAppState().update(() {
-                                FFAppState().deletedAccountList.add(
-                                    FFAppState().deletionAccountList.value);
-
-                                FFAppState().subsAccountList.value.remove(
-                                    FFAppState().deletionAccountList.value);
-                                FFAppState()
-                                    .subsAccountList
-                                    .add(FFAppState().subsAccountList.value);
+                              var dbHelper = DatabaseHelper();
+                              var db = await dbHelper.db;
+                              FFAppState()
+                                  .deletionAccountList
+                                  .value
+                                  .forEach((data) async {
+                                await db.insert('myDB', {
+                                  'name': data,
+                                  'date': getCurrentTimestamp
+                                      .toString()
+                                      .substring(
+                                          0,
+                                          getCurrentTimestamp
+                                                  .toString()
+                                                  .length -
+                                              7)
+                                });
                               });
-                              await currentUserReference?.update({
-                                ...mapToFirestore({
-                                  'accountDeleted': FieldValue.arrayUnion(
-                                      FFAppState()
-                                          .deletionAccountList
-                                          .value
-                                          .map((e) {
-                                    return {
-                                      'name': e,
-                                      'date': getCurrentTimestamp,
-                                    };
-                                  }).toList())
-                                })
-                              });
+                              FFAppState()
+                                  .deletedAccountList
+                                  .add(await db.query('myDB'));
+                              print(await db.query('myDB'));
+                              print(FFAppState().deletedAccountList.value);
+                              FFAppState().subsAccountList.value.remove(
+                                  FFAppState().deletionAccountList.value);
+                              FFAppState()
+                                  .subsAccountList
+                                  .add(FFAppState().subsAccountList.value);
+                              ;
+                              // await currentUserReference?.update({
+                              //   ...mapToFirestore({
+                              //     'accountDeleted': FieldValue.arrayUnion(
+                              //         FFAppState()
+                              //             .deletionAccountList
+                              //             .value
+                              //             .map((e) {
+                              //       return {
+                              //         'name': e,
+                              //         'date': getCurrentTimestamp,
+                              //       };
+                              //     }).toList())
+                              //   })
+                              // });
 
                               await currentUserReference?.update({
                                 ...mapFromFirestore({

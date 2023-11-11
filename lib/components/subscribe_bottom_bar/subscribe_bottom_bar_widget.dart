@@ -264,7 +264,7 @@ class _SubscribeBottomBarWidgetState extends State<SubscribeBottomBarWidget> {
                                     6.0, 0.0, 6.0, 0.0),
                                 child: Container(
                                   width: MediaQuery.sizeOf(context).width * 1.0,
-                                  child: TextFormField(
+                                  child: TextField(
                                     controller: _model.textController,
                                     focusNode: _model.textFieldFocusNode,
                                     onChanged: (_) => EasyDebounce.debounce(
@@ -342,6 +342,8 @@ class _SubscribeBottomBarWidgetState extends State<SubscribeBottomBarWidget> {
                                       hintStyle: FlutterFlowTheme.of(context)
                                           .labelMedium,
                                       enabledBorder: InputBorder.none,
+                                      floatingLabelBehavior:
+                                          FloatingLabelBehavior.never,
                                       focusedBorder: InputBorder.none,
                                       errorBorder: InputBorder.none,
                                       focusedErrorBorder: InputBorder.none,
@@ -358,8 +360,6 @@ class _SubscribeBottomBarWidgetState extends State<SubscribeBottomBarWidget> {
                                                   FlutterFlowTheme.of(context)
                                                       .bodyMediumFamily),
                                         ),
-                                    validator: _model.textControllerValidator
-                                        .asValidator(context),
                                   ),
                                 ),
                               ),

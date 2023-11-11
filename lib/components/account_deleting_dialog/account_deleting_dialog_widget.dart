@@ -1,3 +1,4 @@
+import '../../local_DataBase.dart';
 import '/auth/firebase_auth/auth_util.dart';
 import '/backend/backend.dart';
 import '/flutter_flow/flutter_flow_theme.dart';
@@ -248,19 +249,24 @@ class _AccountDeletingDialogWidgetState
                                   : null;
                           return FFButtonWidget(
                             onPressed: () async {
-                              Map<String, dynamic> account = {
+                              print(currentUserDocument?.uid);
+                              var dbHelper = DatabaseHelper();
+                              var db = await dbHelper.db;
+
+                              db.insert('myDB', {
                                 'name': widget.name,
                                 'date': getCurrentTimestamp
-                              };
-
-                              await buttonUsersRecord!.reference.update({
-                                'accountDeleted': [
-                                  AccountsDeletedStruct(
-                                      name: widget.name,
-                                      date: getCurrentTimestamp)
-                                ]
+                                    .toString()
+                                    .substring(
+                                        0,
+                                        getCurrentTimestamp.toString().length -
+                                            7),
                               });
-                              print(buttonUsersRecord.accountDeleted);
+                              FFAppState()
+                                  .deletedAccountList
+                                  .add(await db.query('myDB'));
+                              print(await db.query('myDB'));
+                              print(FFAppState().deletedAccountList.value);
                               await buttonUsersRecord!.reference.update({
                                 ...mapToFirestore(
                                   {
