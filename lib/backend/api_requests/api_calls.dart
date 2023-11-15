@@ -103,8 +103,8 @@ class GetNotificationsByUserIdWithFromValueCall {
   "options": {
     "limit": ${limit},
     "order": "${order}",
-    "subscribe": true
-    "from": ${from},
+    "subscribe": true,
+    "from": ${from}
   }
 }''';
     return ApiManager.instance.makeApiCall(
