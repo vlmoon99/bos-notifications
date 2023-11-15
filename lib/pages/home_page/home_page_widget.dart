@@ -47,7 +47,7 @@ class _HomePageWidgetState extends State<HomePageWidget> {
         print(finalBlockHeight);
         var _notifications =
             await GetNotificationsByUserIdWithFromValueCall.call(
-                from: 102082795);
+                from: finalBlockHeight);
         FFAppState().update(
           () {
             FFAppState().streamNotifications.value.add(_notifications.jsonBody);
