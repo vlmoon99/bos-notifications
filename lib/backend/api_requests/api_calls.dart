@@ -88,6 +88,47 @@ class GetNotificationsByUserIdWithoutFromValueCall {
       );
 }
 
+class GetNotificationsByUserIdWithFromValueCall {
+  static Future<ApiCallResponse> call({
+    String? action = 'notify',
+    String? accountId = 'vlmoon.near',
+    int? limit = 10,
+    String? order = 'desc',
+    int? from = 105231606,
+  }) async {
+    final ffApiRequestBody = '''
+{
+  "action": "${action}",
+  "key": "${accountId}",
+  "options": {
+    "limit": ${limit},
+    "order": "${order}",
+    "subscribe": true,
+    "from": ${from}
+  }
+}''';
+    return ApiManager.instance.makeApiCall(
+      callName: 'getNotificationsByUserIdWithFromValue',
+      apiUrl: 'https://api.near.social/index',
+      callType: ApiCallType.POST,
+      headers: {},
+      params: {},
+      body: ffApiRequestBody,
+      bodyType: BodyType.JSON,
+      returnBody: true,
+      encodeBodyUtf8: false,
+      decodeUtf8: false,
+      cache: false,
+    );
+  }
+
+  static dynamic notificationsRawData(dynamic response) => getJsonField(
+        response,
+        r'''$[:]''',
+        true,
+      );
+}
+
 class GetMainNetLatestBlockHeightCall {
   static Future<ApiCallResponse> call() async {
     final ffApiRequestBody = '''
