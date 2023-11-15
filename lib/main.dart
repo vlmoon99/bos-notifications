@@ -27,6 +27,7 @@ void main() async {
   await DatabaseHelper().initDb();
   final appState = FFAppState(); // Initialize FFAppState
   await appState.initializePersistedState();
+  initNotifications();
 
   runApp(ChangeNotifierProvider(
     create: (context) => appState,

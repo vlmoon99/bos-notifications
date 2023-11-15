@@ -1,3 +1,4 @@
+import 'package:b_o_s_notifications/backend/api_requests/api_calls.dart';
 import 'package:b_o_s_notifications/local_DataBase.dart';
 import 'package:flutter/material.dart';
 import 'package:sqflite/sqflite.dart';
@@ -15,6 +16,8 @@ class FFAppState extends ChangeNotifier {
   factory FFAppState() {
     return _instance;
   }
+
+  final BehaviorSubject<List> streamNotifications = BehaviorSubject<List>();
 
   final BehaviorSubject<List<String>> subsAccountList =
       BehaviorSubject<List<String>>()..add([]);
@@ -218,4 +221,11 @@ Future _safeInitAsync(Function() initializeField) async {
   try {
     await initializeField();
   } catch (_) {}
+}
+
+Future initNotifications() async {
+  ApiCallResponse _notification =
+      await GetNotificationsByUserIdWithoutFromValueCall.call();
+  FFAppState().streamNotifications.add(_notification.jsonBody);
+  return _notification;
 }

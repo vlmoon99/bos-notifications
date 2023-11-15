@@ -94,7 +94,7 @@ class GetNotificationsByUserIdWithFromValueCall {
     String? accountId = 'vlmoon.near',
     int? limit = 10,
     String? order = 'desc',
-    int? from = 105231606,
+    int? from = 105161501,
   }) async {
     final ffApiRequestBody = '''
 {
@@ -103,12 +103,12 @@ class GetNotificationsByUserIdWithFromValueCall {
   "options": {
     "limit": ${limit},
     "order": "${order}",
-    "subscribe": true,
-    "from": ${from}
+    "subscribe": true
+    "from": ${from},
   }
 }''';
     return ApiManager.instance.makeApiCall(
-      callName: 'getNotificationsByUserIdWithFromValue',
+      callName: 'getNotificationsByUserIdWithoutFromValue',
       apiUrl: 'https://api.near.social/index',
       callType: ApiCallType.POST,
       headers: {},

@@ -1,5 +1,6 @@
 import 'package:flutter_svg/flutter_svg.dart';
-
+import 'package:b_o_s_notifications/backend/api_requests/api_calls.dart';
+import 'package:rxdart/subjects.dart';
 import '/components/filters/filters_widget.dart';
 import '/flutter_flow/flutter_flow_icon_button.dart';
 import '/flutter_flow/flutter_flow_theme.dart';
@@ -25,6 +26,8 @@ class _HomePageWidgetState extends State<HomePageWidget> {
 
   final scaffoldKey = GlobalKey<ScaffoldState>();
 
+  final ScrollController scrollController = ScrollController();
+
   @override
   void initState() {
     super.initState();
@@ -34,6 +37,25 @@ class _HomePageWidgetState extends State<HomePageWidget> {
     _model.textFieldFocusNode ??= FocusNode();
 
     WidgetsBinding.instance.addPostFrameCallback((_) => setState(() {}));
+
+    scrollController.addListener(() async {
+      if (scrollController.position.pixels >=
+          scrollController.position.maxScrollExtent - 5) {
+        scrollController.position.setPixels(0);
+        int finalBlockHeight =
+            FFAppState().streamNotifications.value.last['blockHeight'];
+        print(finalBlockHeight);
+        var _notifications =
+            await GetNotificationsByUserIdWithFromValueCall.call(
+                from: 102082795);
+        FFAppState().update(
+          () {
+            FFAppState().streamNotifications.value.add(_notifications.jsonBody);
+          },
+        );
+        print(FFAppState().streamNotifications.value);
+      }
+    });
   }
 
   @override
@@ -455,6 +477,44 @@ class _HomePageWidgetState extends State<HomePageWidget> {
                         ),
                       ),
                     ),
+                    StreamBuilder(
+                        stream: FFAppState().streamNotifications,
+                        builder: (context, snapshot) {
+                          if (snapshot.hasData) {
+                            return SizedBox(
+                              width: MediaQuery.sizeOf(context).width,
+                              height: 300,
+                              child: ListView.separated(
+                                controller: scrollController,
+                                itemCount: snapshot.data?.length ?? 0,
+                                separatorBuilder: (context, index) {
+                                  return SizedBox(
+                                    height: 100,
+                                  );
+                                },
+                                itemBuilder: (context, index) {
+                                  return Text(
+                                      snapshot.data?[index].toString() ?? '');
+                                },
+                              ),
+                            );
+                          } else {
+                            return SizedBox();
+                          }
+                        }),
+                    InkWell(
+                      onTap: () async {
+                        var result =
+                            await GetNotificationsByUserIdWithoutFromValueCall
+                                .call();
+                        print(result.jsonBody[2]['accountId']);
+                      },
+                      child: Container(
+                        color: Colors.red,
+                        width: 100,
+                        height: 100,
+                      ),
+                    )
                   ],
                 ),
               ),
