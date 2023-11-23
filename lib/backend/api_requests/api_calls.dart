@@ -12,7 +12,7 @@ class GetNotificationsByUserIdCall {
   static Future<ApiCallResponse> call({
     String? action = 'notify',
     String? accountId = 'vlmoon.near',
-    int? limit = 10,
+    int? limit = 20,
     String? order = 'desc',
     int? from = 98202726,
   }) async {
@@ -49,11 +49,41 @@ class GetNotificationsByUserIdCall {
       );
 }
 
+class GetTimeForNotificationsByBlockHeight {
+  static Future<ApiCallResponse> call(int blockHeight) async {
+    final ffApiRequestBody = '''{ 
+      "blockHeight": "${blockHeight}"
+    }
+    }
+    ''';
+    return ApiManager.instance.makeApiCall(
+      callName: 'getNotificationsByUserIdWithoutFromValue',
+      apiUrl: 'https://api.near.social/time?blockHeight=${blockHeight}',
+      callType: ApiCallType.GET,
+      headers: {},
+      params: {},
+      body: ffApiRequestBody,
+      bodyType: BodyType.JSON,
+      returnBody: true,
+      encodeBodyUtf8: false,
+      decodeUtf8: false,
+      cache: false,
+    );
+  }
+
+  static dynamic notificationsRawData(dynamic response) => getJsonField(
+        response,
+        r'''$[:]''',
+        true,
+      );
+}
+// mob.near/widget/TimeAgo
+
 class GetNotificationsByUserIdWithoutFromValueCall {
   static Future<ApiCallResponse> call({
     String? action = 'notify',
     String? accountId = 'vlmoon.near',
-    int? limit = 10,
+    int? limit = 20,
     String? order = 'desc',
   }) async {
     final ffApiRequestBody = '''
@@ -92,7 +122,7 @@ class GetNotificationsByUserIdWithFromValueCall {
   static Future<ApiCallResponse> call({
     String? action = 'notify',
     String? accountId = 'vlmoon.near',
-    int? limit = 10,
+    int? limit = 20,
     String? order = 'desc',
     int? from = 105161501,
   }) async {

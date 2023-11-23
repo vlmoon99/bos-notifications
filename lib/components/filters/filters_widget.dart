@@ -17,6 +17,7 @@ class FiltersWidget extends StatefulWidget {
 }
 
 class _FiltersWidgetState extends State<FiltersWidget> {
+  bool pause = true;
   late FiltersModel _model;
 
   @override
@@ -117,18 +118,27 @@ class _FiltersWidgetState extends State<FiltersWidget> {
                   ),
                   FFButtonWidget(
                     onPressed: () async {
-                      setState(() {
-                        FFAppState().updateFilterDataAtIndex(
-                          0,
-                          (_) => '',
-                        );
-                      });
-                      setState(() {
-                        FFAppState().updateFilterDataAtIndex(
-                          1,
-                          (_) => '',
-                        );
-                      });
+                      if (pause) {
+                        pause = false;
+                        setState(() {
+                          FFAppState().updateFilterDataAtIndex(
+                            0,
+                            (_) => '',
+                          );
+                        });
+                        setState(() {
+                          FFAppState().updateFilterDataAtIndex(
+                            1,
+                            (_) => '',
+                          );
+                        });
+
+                        initNotifications();
+                        await Future.delayed(Duration(milliseconds: 600));
+                        pause = true;
+                      } else {
+                        print('TIME TIME TIME');
+                      }
                     },
                     text: 'Clear All',
                     options: FFButtonOptions(
@@ -392,7 +402,13 @@ class _FiltersWidgetState extends State<FiltersWidget> {
             ),
           ),
           FlutterFlowCalendar(
-            color: Color(0xFF65C3A2),
+            color: !(_model.calendarSelectedDay!.start > DateTime.timestamp() ||
+                    FFAppState().filterData.first != '' &&
+                        _model.calendarSelectedDay!.start >
+                            DateFormat('MMM d, yyyy')
+                                .parse(FFAppState().filterData.first))
+                ? Color(0xFF65C3A2)
+                : Color.fromARGB(255, 198, 198, 198),
             iconColor: Color(0xFF65C3A2),
             weekFormat: false,
             weekStartsMonday: false,
@@ -480,6 +496,10 @@ class _FiltersWidgetState extends State<FiltersWidget> {
                   ),
                   FFButtonWidget(
                     onPressed: () async {
+                      if (_model.calendarSelectedDay!.start >
+                          DateTime.timestamp()) {
+                        return;
+                      }
                       if (FFAppState().filterData.first == null ||
                           FFAppState().filterData.first == '') {
                         setState(() {
@@ -495,6 +515,12 @@ class _FiltersWidgetState extends State<FiltersWidget> {
                       } else {
                         if (FFAppState().filterData.last == null ||
                             FFAppState().filterData.last == '') {
+                          if (_model.calendarSelectedDay!.start >
+                              DateFormat('MMM d, yyyy')
+                                  .parse(FFAppState().filterData.first)) {
+                            return;
+                          }
+                          ;
                           setState(() {
                             FFAppState().updateFilterDataAtIndex(
                               1,
@@ -506,6 +532,10 @@ class _FiltersWidgetState extends State<FiltersWidget> {
                               ),
                             );
                           });
+                        }
+                        if (FFAppState().filterData.last != '' &&
+                            FFAppState().filterData.first != '') {
+                          initNotificationsForFilter();
                         }
                       }
                     },

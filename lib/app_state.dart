@@ -1,3 +1,5 @@
+import 'package:b_o_s_notifications/auth/firebase_auth/auth_util.dart';
+import 'package:b_o_s_notifications/auth/firebase_auth/firebase_auth_manager.dart';
 import 'package:b_o_s_notifications/backend/api_requests/api_calls.dart';
 import 'package:b_o_s_notifications/local_DataBase.dart';
 import 'package:flutter/material.dart';
@@ -11,11 +13,27 @@ import 'package:rxdart/rxdart.dart';
 import 'main.dart';
 
 class FFAppState extends ChangeNotifier {
+  int? currentTime;
+  int? blockHID;
+  int? firstTime;
+  int? endRes;
+  int? lastBlockHeight;
+
   static FFAppState _instance = FFAppState._internal();
 
   factory FFAppState() {
     return _instance;
   }
+
+  final BehaviorSubject<bool> streamConroller = BehaviorSubject<bool>()
+    ..add(false);
+
+  final BehaviorSubject<List> sortStreamNotifications = BehaviorSubject<List>();
+
+  final BehaviorSubject<List> streamBlockHeight = BehaviorSubject<List>()
+    ..add([]);
+  final BehaviorSubject<List<String>> listAccountForNotifications =
+      BehaviorSubject<List<String>>()..add([]);
 
   final BehaviorSubject<List> streamNotifications = BehaviorSubject<List>();
 
@@ -193,10 +211,16 @@ class FFAppState extends ChangeNotifier {
   @override
   void dispose() {
     // TODO: implement dispose
+    streamConroller.close();
+    sortStreamNotifications.close();
+    listAccountForNotifications.close();
+    streamBlockHeight.close();
     subsAccountList.close();
     deletedAccountList.close();
     historyOnOff.close();
     deletionAccountList.close();
+    streamNotifications.close();
+
     super.dispose();
   }
 }
@@ -223,9 +247,163 @@ Future _safeInitAsync(Function() initializeField) async {
   } catch (_) {}
 }
 
+Future initNotificationsForFilter() async {
+  FFAppState().lastBlockHeight = null;
+  DateTime start = DateFormat('MMM d, yyyy')
+      .parse(FFAppState().filterData.first)
+      .add(Duration(hours: 24))
+      .subtract(Duration(milliseconds: 1));
+  DateTime end = DateFormat('MMM d, yyyy').parse(FFAppState().filterData.last);
+  DateTime startNotifications =
+      DateTime.fromMillisecondsSinceEpoch(FFAppState().currentTime!);
+  print('$start - НАЧАЛО');
+  print('$end - КОНЕЦ');
+  print('$startNotifications - ПЕРВОЕ УВЕДОМЛЕНИЕ');
+  if (start > startNotifications) {
+    start = startNotifications;
+    print('Время было больше');
+  }
+  int secondsForStart = startNotifications.difference(start).inSeconds;
+  int secondsForEnd = startNotifications.difference(end).inSeconds;
+  print('$secondsForStart - Разница старта');
+  print('$secondsForEnd - разница конца');
+  int BlockHeightForStart = start == startNotifications
+      ? FFAppState().blockHID!
+      : FFAppState().blockHID! - secondsForStart;
+  FFAppState().endRes = FFAppState().blockHID! - secondsForEnd;
+
+  print('$BlockHeightForStart - блок старта');
+  print('${FFAppState().endRes} - блок конца');
+
+  FFAppState().listAccountForNotifications.add([]);
+  FFAppState().sortStreamNotifications.add([]);
+  FFAppState().streamNotifications.add([]);
+
+  await Future.forEach(currentUserDocument!.subscriptions, (elementAcc) async {
+    int timeUNIXresult;
+    ApiCallResponse valueApi =
+        await GetNotificationsByUserIdWithFromValueCall.call(
+            accountId: elementAcc, from: BlockHeightForStart);
+    List valueApiResult = valueApi.jsonBody;
+    if (valueApiResult.isEmpty) {
+      print('$elementAcc ------ IsEmpty');
+      return;
+    }
+
+    print('$elementAcc ------- ${valueApiResult[0]}');
+
+    if (valueApiResult.length == 20 &&
+        valueApiResult.last['blockHeight'] > FFAppState().endRes) {
+      if (FFAppState().lastBlockHeight == null ||
+          FFAppState().lastBlockHeight! < valueApiResult.last['blockHeight']) {
+        FFAppState().lastBlockHeight = valueApiResult.last['blockHeight'];
+      }
+      FFAppState().listAccountForNotifications.value.add(elementAcc);
+    }
+    await Future.forEach(valueApiResult, (element) {
+      DateTime originalDate =
+          DateTime.fromMillisecondsSinceEpoch(FFAppState().currentTime!);
+      Duration durationToSubtract = Duration(
+          seconds: (FFAppState().blockHID! - element['blockHeight']).toInt());
+      DateTime newDate = originalDate.subtract(durationToSubtract);
+      timeUNIXresult = newDate.millisecondsSinceEpoch;
+
+      FFAppState()
+          .sortStreamNotifications
+          .value
+          .add([element, timeUNIXresult, elementAcc]);
+      FFAppState()
+          .sortStreamNotifications
+          .add(FFAppState().sortStreamNotifications.value);
+    });
+  });
+  FFAppState().update(
+    () {
+      List sort = FFAppState().sortStreamNotifications.value;
+      sort.removeWhere(
+          (element) => element[0]['blockHeight'] < FFAppState().endRes);
+      sort.removeWhere((element) =>
+          element[0]['blockHeight'] < FFAppState().lastBlockHeight);
+      sort.sort((a, b) => b[0]['blockHeight'].compareTo(a[0]['blockHeight']));
+      FFAppState().streamNotifications.add(sort);
+      FFAppState().streamConroller.add(true);
+    },
+  );
+}
+
 Future initNotifications() async {
-  ApiCallResponse _notification =
-      await GetNotificationsByUserIdWithoutFromValueCall.call();
-  FFAppState().streamNotifications.add(_notification.jsonBody);
-  return _notification;
+  bool start = true;
+  List valueResult = [];
+  int timeUNIXresult;
+  FFAppState().lastBlockHeight = null;
+
+  int? blockH;
+  FFAppState().sortStreamNotifications.add([]);
+  FFAppState().streamNotifications.add([]);
+  FFAppState().listAccountForNotifications.add([]);
+  currentUserDocument!.subscriptions.forEach((e) async {
+    ApiCallResponse _notification =
+        await GetNotificationsByUserIdWithoutFromValueCall.call(accountId: e);
+    List value = _notification.jsonBody;
+    if (value.length == 20) {
+      FFAppState().listAccountForNotifications.value.add(e);
+
+      if (FFAppState().lastBlockHeight == null ||
+          FFAppState().lastBlockHeight! > value.last['blockHeight']) {
+        FFAppState().lastBlockHeight = value.last['blockHeight'];
+      }
+    }
+    await Future.forEach(value, (element) async {
+      if (start || ((FFAppState().blockHID! - element['blockHeight']) < 0)) {
+        var timeUNIX = await GetTimeForNotificationsByBlockHeight.call(
+            element['blockHeight']);
+        timeUNIXresult = timeUNIX.jsonBody;
+        if (FFAppState().currentTime == null ||
+            FFAppState().currentTime! < timeUNIX.jsonBody) {
+          FFAppState().currentTime = timeUNIX.jsonBody;
+          FFAppState().blockHID = element['blockHeight'];
+        }
+
+        DateTime date = DateTime.fromMillisecondsSinceEpoch(timeUNIX.jsonBody);
+        blockH = (date.hour * 3600 + date.minute * 60 + date.second);
+        start = false;
+      } else
+      // if (
+      //   blockH != null &&
+      //     FFAppState().blockHID != null &&
+      //     FFAppState().currentTime != null &&
+      //     !((FFAppState().blockHID! - element['blockHeight']) < blockH!) &&
+      //     ((FFAppState().blockHID! - element['blockHeight']) > 0))
+      {
+        DateTime originalDate =
+            DateTime.fromMillisecondsSinceEpoch(FFAppState().currentTime!);
+        Duration durationToSubtract = Duration(
+            seconds: (FFAppState().blockHID! - element['blockHeight']).toInt());
+        DateTime newDate =
+            originalDate.toUtc().subtract(durationToSubtract).toLocal();
+        timeUNIXresult = newDate.millisecondsSinceEpoch;
+      }
+
+      FFAppState().streamNotifications.value.add([element, timeUNIXresult, e]);
+      FFAppState()
+          .streamNotifications
+          .add(FFAppState().streamNotifications.value);
+
+      FFAppState().update(
+        () {
+          List sort = FFAppState().streamNotifications.value;
+          sort.removeWhere((element) =>
+              element[0]['blockHeight'] < FFAppState().lastBlockHeight);
+          sort.sort(
+              (a, b) => b[0]['blockHeight'].compareTo(a[0]['blockHeight']));
+          FFAppState().streamNotifications.add(sort);
+          FFAppState().streamConroller.add(false);
+        },
+      );
+    });
+    start = true;
+    print(DateTime.fromMillisecondsSinceEpoch(FFAppState().currentTime!,
+        isUtc: true));
+    print(FFAppState().listAccountForNotifications.value);
+  });
 }

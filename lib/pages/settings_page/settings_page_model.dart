@@ -12,7 +12,6 @@ import 'package:provider/provider.dart';
 
 class SettingsPageModel extends FlutterFlowModel<SettingsPageWidget> {
   ///  State fields for stateful widgets in this page.
-  final unfocusNode = FocusNode();
   // State field(s) for Switch widget.
   bool? history;
   bool? switchValue;
@@ -27,7 +26,6 @@ class SettingsPageModel extends FlutterFlowModel<SettingsPageWidget> {
   }
 
   void dispose() {
-    unfocusNode.dispose();
     historyAccountDeletedModel.dispose();
   }
 

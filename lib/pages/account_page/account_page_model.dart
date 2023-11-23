@@ -22,9 +22,7 @@ class AccountPageModel extends FlutterFlowModel<AccountPageWidget> {
 
   ///  State fields for stateful widgets in this page.
 
-  final unfocusNode = FocusNode();
   // State field(s) for TextField widget.
-  FocusNode? textFieldFocusNode;
   TextEditingController? textController;
   String? Function(BuildContext, String?)? textControllerValidator;
 
@@ -33,8 +31,6 @@ class AccountPageModel extends FlutterFlowModel<AccountPageWidget> {
   void initState(BuildContext context) {}
 
   void dispose() {
-    unfocusNode.dispose();
-    textFieldFocusNode?.dispose();
     textController?.dispose();
   }
 

@@ -1,3 +1,4 @@
+import '../../local_DataBase.dart';
 import '/auth/firebase_auth/auth_util.dart';
 import '/backend/api_requests/api_calls.dart';
 import '/backend/backend.dart';
@@ -45,8 +46,6 @@ class _SubscribeBottomBarWidgetState extends State<SubscribeBottomBarWidget> {
     });
 
     _model.textController ??= TextEditingController();
-    _model.textFieldFocusNode ??= FocusNode();
-
     WidgetsBinding.instance.addPostFrameCallback((_) => setState(() {}));
   }
 
@@ -266,7 +265,6 @@ class _SubscribeBottomBarWidgetState extends State<SubscribeBottomBarWidget> {
                                   width: MediaQuery.sizeOf(context).width * 1.0,
                                   child: TextField(
                                     controller: _model.textController,
-                                    focusNode: _model.textFieldFocusNode,
                                     onChanged: (_) => EasyDebounce.debounce(
                                       '_model.textController',
                                       Duration(milliseconds: 2000),
@@ -542,6 +540,17 @@ class _SubscribeBottomBarWidgetState extends State<SubscribeBottomBarWidget> {
                                     (_model.button?.bodyText ?? '') != '') &&
                                 ((_model.button?.bodyText ?? '') != '{}') &&
                                 (FFAppState().userfound != 0)) {
+                              DatabaseHelper dbHelper = DatabaseHelper();
+                              var db = await dbHelper.db;
+                              FFAppState().update(
+                                () async {
+                                  await dbHelper.deleteRecordByName(
+                                      _model.textController.text);
+                                  FFAppState()
+                                      .deletedAccountList
+                                      .add(await db.query('myDB'));
+                                },
+                              );
                               await currentUserReference!.update({
                                 ...mapToFirestore(
                                   {

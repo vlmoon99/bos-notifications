@@ -32,8 +32,6 @@ class _AccountIdSearchWidgetState extends State<AccountIdSearchWidget> {
     _model = createModel(context, () => AccountIdSearchModel());
 
     _model.textController ??= TextEditingController();
-    _model.textFieldFocusNode ??= FocusNode();
-
     WidgetsBinding.instance.addPostFrameCallback((_) => setState(() {}));
   }
 
@@ -92,7 +90,6 @@ class _AccountIdSearchWidgetState extends State<AccountIdSearchWidget> {
                   width: 350.0,
                   child: TextFormField(
                     controller: _model.textController,
-                    focusNode: _model.textFieldFocusNode,
                     onChanged: (_) => EasyDebounce.debounce(
                       '_model.textController',
                       Duration(milliseconds: 2000),
