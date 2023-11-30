@@ -47,15 +47,10 @@ class _FiltersWidgetState extends State<FiltersWidget> {
 
     return Container(
       width: MediaQuery.sizeOf(context).width * 1.0,
-      height: MediaQuery.sizeOf(context).height * 0.791,
+      height: MediaQuery.sizeOf(context).height * 0.8,
       decoration: BoxDecoration(
-        color: FlutterFlowTheme.of(context).secondaryBackground,
-        borderRadius: BorderRadius.only(
-          bottomLeft: Radius.circular(0.0),
-          bottomRight: Radius.circular(0.0),
-          topLeft: Radius.circular(16.0),
-          topRight: Radius.circular(16.0),
-        ),
+        color: Colors.white,
+        borderRadius: BorderRadius.vertical(top: Radius.circular(16)),
       ),
       child: Column(
         mainAxisSize: MainAxisSize.max,
@@ -189,60 +184,6 @@ class _FiltersWidgetState extends State<FiltersWidget> {
                   ),
                 ],
               ),
-            ),
-          ),
-          Padding(
-            padding: EdgeInsetsDirectional.fromSTEB(25.0, 0.0, 25.0, 0.0),
-            child: Row(
-              mainAxisSize: MainAxisSize.max,
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Text(
-                  'Group by Account',
-                  style: FlutterFlowTheme.of(context).bodyMedium.override(
-                        fontFamily:
-                            FlutterFlowTheme.of(context).bodyMediumFamily,
-                        color: Color(0xFF7E7E7E),
-                        fontSize: () {
-                          if (MediaQuery.sizeOf(context).width <
-                              valueOrDefault<double>(
-                                kBreakpointSmall,
-                                400.0,
-                              )) {
-                            return 14.0;
-                          } else if (MediaQuery.sizeOf(context).width <
-                              valueOrDefault<double>(
-                                kBreakpointMedium,
-                                1025.0,
-                              )) {
-                            return 17.0;
-                          } else if (MediaQuery.sizeOf(context).width <
-                              valueOrDefault<double>(
-                                kBreakpointLarge,
-                                1500.0,
-                              )) {
-                            return 20.0;
-                          } else {
-                            return 25.0;
-                          }
-                        }(),
-                        fontWeight: FontWeight.w500,
-                        useGoogleFonts: GoogleFonts.asMap().containsKey(
-                            FlutterFlowTheme.of(context).bodyMediumFamily),
-                      ),
-                ),
-                Switch.adaptive(
-                  value: _model.switchValue ??= true,
-                  onChanged: (newValue) async {
-                    setState(() => _model.switchValue = newValue!);
-                  },
-                  activeColor: Colors.black,
-                  activeTrackColor: Color(0xFF7EF4CA),
-                  inactiveTrackColor: FlutterFlowTheme.of(context).alternate,
-                  inactiveThumbColor:
-                      FlutterFlowTheme.of(context).secondaryText,
-                ),
-              ],
             ),
           ),
           Divider(

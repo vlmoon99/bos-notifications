@@ -64,7 +64,7 @@ class _SubscribeBottomBarWidgetState extends State<SubscribeBottomBarWidget> {
       alignment: AlignmentDirectional(0.00, -1.00),
       child: Container(
         width: MediaQuery.sizeOf(context).width * 1.0,
-        height: MediaQuery.sizeOf(context).height * 0.5,
+        height: MediaQuery.sizeOf(context).height * 0.8,
         decoration: BoxDecoration(
           color: FlutterFlowTheme.of(context).secondaryBackground,
           boxShadow: [
@@ -127,7 +127,7 @@ class _SubscribeBottomBarWidgetState extends State<SubscribeBottomBarWidget> {
                               )) {
                             return 18.0;
                           } else {
-                            return 29.0;
+                            return 20.0;
                           }
                         }(),
                         fontWeight: FontWeight.bold,
@@ -166,7 +166,7 @@ class _SubscribeBottomBarWidgetState extends State<SubscribeBottomBarWidget> {
                               )) {
                             return 16.0;
                           } else {
-                            return 20.0;
+                            return 17.0;
                           }
                         }(),
                         fontWeight: FontWeight.w500,
@@ -499,12 +499,13 @@ class _SubscribeBottomBarWidgetState extends State<SubscribeBottomBarWidget> {
               child: Align(
                 alignment: AlignmentDirectional(0.00, 1.00),
                 child: Padding(
-                  padding: EdgeInsetsDirectional.fromSTEB(0.0, 0.0, 0.0, 30.0),
+                  padding: EdgeInsetsDirectional.fromSTEB(0.0, 0.0, 0.0, 50.0),
                   child: Container(
                     width: MediaQuery.sizeOf(context).width * 0.9,
                     height: MediaQuery.sizeOf(context).height * 0.06,
                     constraints: BoxConstraints(
-                      maxWidth: 500.0,
+                      maxWidth: 400.0,
+                      maxHeight: 50,
                     ),
                     decoration: BoxDecoration(
                       color: FlutterFlowTheme.of(context).secondaryBackground,

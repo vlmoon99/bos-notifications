@@ -1,8 +1,12 @@
+import 'dart:async';
+
 import 'package:b_o_s_notifications/auth/firebase_auth/auth_util.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:b_o_s_notifications/backend/api_requests/api_calls.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:rxdart/subjects.dart';
+import 'package:url_launcher/url_launcher.dart';
+import 'package:url_launcher/url_launcher_string.dart';
 import '/components/filters/filters_widget.dart';
 import '/flutter_flow/flutter_flow_icon_button.dart';
 import '/flutter_flow/flutter_flow_theme.dart';
@@ -25,7 +29,9 @@ class HomePageWidget extends StatefulWidget {
 }
 
 class _HomePageWidgetState extends State<HomePageWidget> {
+  Timer? timer;
   late HomePageModel _model;
+  bool activeText = true;
 
   final scaffoldKey = GlobalKey<ScaffoldState>();
 
@@ -85,20 +91,44 @@ class _HomePageWidgetState extends State<HomePageWidget> {
           }
 
           //ДОБАВЛЕНИЕ ДЛЯ КАЖДОГО ЭЛЕМЕНТА ВРЕМЕНИ И ДОБАВЛЕНИЕ ЭЛЕМЕНТА В СОРТИРОВКУ.
-          await Future.forEach(notifications, (notif) {
+          await Future.forEach(notifications, (notif) async {
+            String name = '';
+            if (FFAppState().listNameId.value.any(
+                  (el) => el['id'] == notif['accountId'],
+                )) {
+              name = FFAppState()
+                  .listNameId
+                  .value
+                  .firstWhere((el) => el['id'] == notif['accountId'])['name'];
+            } else {
+              ApiCallResponse x = await GetNearSocialNameCall.call(
+                  accountId: notif['accountId']);
+              if (x.jsonBody[notif['accountId']] != null) {
+                print(x.jsonBody[notif['accountId']]);
+                name = x.jsonBody[notif['accountId']]['profile']['name'];
+                FFAppState()
+                    .listNameId
+                    .value
+                    .add({'id': notif['accountId'], 'name': name});
+              } else {
+                FFAppState()
+                    .listNameId
+                    .value
+                    .add({'id': notif['accountId'], 'name': ''});
+              }
+            }
             //Вычисление времени
             int blockHeightInNotification = notif['blockHeight'];
             int blockHeightInGlobal = FFAppState().blockHID!;
             int secondsForSubstract =
                 blockHeightInGlobal - blockHeightInNotification;
-            DateTime TimeForNomberOneNotify =
-                DateTime.fromMillisecondsSinceEpoch(FFAppState().currentTime!);
+            DateTime TimeForNomberOneNotify = FFAppState().currentTime!;
             DateTime TimeForCurrentNotify = TimeForNomberOneNotify.subtract(
                 Duration(seconds: secondsForSubstract));
-            int unixTimeForNotify = TimeForCurrentNotify.millisecondsSinceEpoch;
+            DateTime unixTimeForNotify = TimeForCurrentNotify;
 
             //Добавление элемента в сортировку
-            sortList.add([notif, unixTimeForNotify, account]);
+            sortList.add([notif, unixTimeForNotify, account, name]);
           });
         });
         //SORT
@@ -163,21 +193,46 @@ class _HomePageWidgetState extends State<HomePageWidget> {
           }
 
           //ДОБАВЛЕНИЕ ДЛЯ КАЖДОГО ЭЛЕМЕНТА ВРЕМЕНИ И ДОБАВЛЕНИЕ ЭЛЕМЕНТА В СОРТИРОВКУ.
-          await Future.forEach(notifications, (notif) {
+          await Future.forEach(notifications, (notif) async {
+            String name = '';
+            if (FFAppState().listNameId.value.any(
+                  (el) => el['id'] == notif['accountId'],
+                )) {
+              name = FFAppState()
+                  .listNameId
+                  .value
+                  .firstWhere((el) => el['id'] == notif['accountId'])['name'];
+            } else {
+              ApiCallResponse x = await GetNearSocialNameCall.call(
+                  accountId: notif['accountId']);
+              if (x.jsonBody[notif['accountId']] != null) {
+                print(x.jsonBody[notif['accountId']]);
+                name = x.jsonBody[notif['accountId']]['profile']['name'];
+                FFAppState()
+                    .listNameId
+                    .value
+                    .add({'id': notif['accountId'], 'name': name});
+              } else {
+                FFAppState()
+                    .listNameId
+                    .value
+                    .add({'id': notif['accountId'], 'name': ''});
+              }
+            }
+
             //Вычисление времени
             int blockHeightInNotification = notif['blockHeight'];
             int blockHeightInGlobal = FFAppState().blockHID!;
             int secondsForSubstract =
                 blockHeightInGlobal - blockHeightInNotification;
-            DateTime TimeForNomberOneNotify =
-                DateTime.fromMillisecondsSinceEpoch(FFAppState().currentTime!);
+            DateTime TimeForNomberOneNotify = FFAppState().currentTime!;
             DateTime TimeForCurrentNotify = TimeForNomberOneNotify.subtract(
                 Duration(seconds: secondsForSubstract));
-            int unixTimeForNotify = TimeForCurrentNotify.millisecondsSinceEpoch;
+            DateTime unixTimeForNotify = TimeForCurrentNotify;
 
             //Добавление элемента в сортировку
             timeSet.add(unixTimeForNotify);
-            sortList.add([notif, unixTimeForNotify, account]);
+            sortList.add([notif, unixTimeForNotify, account, name]);
           });
         });
         //сортировка
@@ -204,190 +259,6 @@ class _HomePageWidgetState extends State<HomePageWidget> {
         pause = true;
       }
     });
-
-    // scrollControllerForFilter.addListener(() async {
-    //   if (scrollControllerForFilter.position.pixels >=
-    //           scrollControllerForFilter.position.maxScrollExtent - 1500 &&
-    //       pause) {
-    //     int myLastBlockId = 0;
-    //     List accountList =
-    //         List.from(FFAppState().listAccountForNotifications.value);
-    //     // print(FFAppState().listAccountForNotifications.value);
-    //     // print(accountList);
-    //     // print(FFAppState().streamNotifications.value.length);
-
-    //     pause = false;
-
-    //     // print('hello');
-    //     FFAppState().sortStreamNotifications.add([]);
-    //     print('hello');
-    //     await Future.forEach(accountList, (element) async {
-    //       int timeUNIXresult;
-    //       ApiCallResponse value =
-    //           await GetNotificationsByUserIdWithFromValueCall.call(
-    //         accountId: element['name'],
-    //         from: element['lastBlockHeight'],
-    //       );
-    //       List result = value.jsonBody;
-    //       Future.forEach(result, (element) {
-    //         DateTime originalDate =
-    //             DateTime.fromMillisecondsSinceEpoch(FFAppState().currentTime!);
-    //         Duration durationToSubtract = Duration(
-    //             seconds:
-    //                 (FFAppState().blockHID! - element['blockHeight']).toInt());
-    //         DateTime newDate =
-    //             originalDate.toUtc().subtract(durationToSubtract).toLocal();
-    //         timeUNIXresult = newDate.millisecondsSinceEpoch;
-    //         FFAppState()
-    //             .sortStreamNotifications
-    //             .value
-    //             .add([element, timeUNIXresult]);
-
-    //         FFAppState()
-    //             .sortStreamNotifications
-    //             .add(FFAppState().sortStreamNotifications.value);
-    //       });
-
-    //       FFAppState().listAccountForNotifications.value.remove(element);
-    //       FFAppState()
-    //           .listAccountForNotifications
-    //           .add(FFAppState().listAccountForNotifications.value);
-    //       if (result.length >= 10) {
-    //         FFAppState().update(
-    //           () {
-    //             FFAppState().listAccountForNotifications.value.add({
-    //               'name': element['name'],
-    //               'lastBlockHeight': result.last['blockHeight'],
-    //             });
-    //             FFAppState()
-    //                 .listAccountForNotifications
-    //                 .add(FFAppState().listAccountForNotifications.value);
-    //           },
-    //         );
-
-    //         if (myLastBlockId < result.last['blockHeight']) {
-    //           myLastBlockId = result.last['blockHeight'];
-    //         }
-    //       }
-    //     });
-
-    //     FFAppState().sortStreamNotifications.value.removeWhere(
-    //         (element) => element[0]['blockHeight'] < myLastBlockId);
-    //     FFAppState()
-    //         .sortStreamNotifications
-    //         .value
-    //         .sort((a, b) => b[0]['blockHeight'].compareTo(a[0]['blockHeight']));
-    //     if (FFAppState().sortStreamNotifications.value.isEmpty) {
-    //       print('LOADING');
-    //       return;
-    //     }
-    //     FFAppState().update(
-    //       () {
-    //         FFAppState().streamNotifications.value.addAll(FFAppState()
-    //             .sortStreamNotifications
-    //             .value
-    //             .sublist(1, FFAppState().sortStreamNotifications.value.length));
-    //       },
-    //     );
-
-    //     await Future.delayed(Duration(milliseconds: 500));
-    //     pause = true;
-    //   }
-    // });
-
-    // scrollController.addListener(() async {
-    //   if (scrollController.position.pixels >=
-    //           scrollController.position.maxScrollExtent - 1500 &&
-    //       pause) {
-    //     List accountList =
-    //         List.from(FFAppState().listAccountForNotifications.value);
-    //     print(FFAppState().listAccountForNotifications.value);
-    //     print(accountList);
-    //     print(FFAppState().streamNotifications.value.length);
-
-    //     pause = false;
-    //     // FFAppState().sortStreamNotifications.value.clear();
-    //     // FFAppState()
-    //     //     .sortStreamNotifications
-    //     //     .add(FFAppState().sortStreamNotifications.value);
-    //     await Future.forEach(accountList, (element) async {
-    //       print(FFAppState().streamNotifications.value.length);
-    //       print(3);
-    //       int timeUNIXresult;
-    //       ApiCallResponse value =
-    //           await GetNotificationsByUserIdWithFromValueCall.call(
-    //         accountId: element['name'],
-    //         from: FFAppState().lastBlockHeight,
-    //       );
-    //       List result = value.jsonBody;
-    //       Future.forEach(result, (element) {
-    //         DateTime originalDate =
-    //             DateTime.fromMillisecondsSinceEpoch(FFAppState().currentTime!);
-    //         Duration durationToSubtract = Duration(
-    //             seconds:
-    //                 (FFAppState().blockHID! - element['blockHeight']).toInt());
-    //         DateTime newDate =
-    //             originalDate.toUtc().subtract(durationToSubtract).toLocal();
-    //         timeUNIXresult = newDate.millisecondsSinceEpoch;
-    //         FFAppState()
-    //             .sortStreamNotifications
-    //             .value
-    //             .add([element, timeUNIXresult]);
-    //       });
-
-    //       FFAppState()
-    //           .sortStreamNotifications
-    //           .add(FFAppState().sortStreamNotifications.value);
-
-    //       FFAppState().listAccountForNotifications.value.remove(element);
-    //       FFAppState()
-    //           .listAccountForNotifications
-    //           .add(FFAppState().listAccountForNotifications.value);
-    //       if (result.length >= 10) {
-    //         FFAppState().update(
-    //           () {
-    //             FFAppState().listAccountForNotifications.value.add({
-    //               'name': element['name'],
-    //             });
-    //             FFAppState()
-    //                 .listAccountForNotifications
-    //                 .add(FFAppState().listAccountForNotifications.value);
-    //           },
-    //         );
-
-    //         if (FFAppState().lastBlockHeight! > result.last['blockHeight']) {
-    //           FFAppState().lastBlockHeight = result.last['blockHeight'];
-    //         }
-    //       }
-    //     });
-
-    //     FFAppState().sortStreamNotifications.value.removeWhere((element) =>
-    //         element[0]['blockHeight'] < FFAppState().lastBlockHeight!);
-    //     FFAppState()
-    //         .sortStreamNotifications
-    //         .value
-    //         .sort((a, b) => b[0]['blockHeight'].compareTo(a[0]['blockHeight']));
-    //     if (FFAppState().sortStreamNotifications.value.isEmpty) {
-    //       print('LOADING');
-    //       return;
-    //     }
-    //     FFAppState().update(
-    //       () {
-    //         FFAppState().streamNotifications.value.addAll(FFAppState()
-    //             .sortStreamNotifications
-    //             .value
-    //             .sublist(1, FFAppState().sortStreamNotifications.value.length));
-    //         FFAppState()
-    //             .streamNotifications
-    //             .add(FFAppState().streamNotifications.value);
-    //       },
-    //     );
-
-    //     await Future.delayed(Duration(milliseconds: 500));
-
-    //     pause = true;
-    //   }
-    // });
   }
 
   @override
@@ -447,8 +318,8 @@ class _HomePageWidgetState extends State<HomePageWidget> {
           body: SafeArea(
             top: true,
             child: Container(
-              width: MediaQuery.sizeOf(context).width * 1.0,
-              height: MediaQuery.sizeOf(context).height * 1.0,
+              width: MediaQuery.sizeOf(context).width,
+              height: MediaQuery.sizeOf(context).height,
               decoration: BoxDecoration(
                 color: FlutterFlowTheme.of(context).secondaryBackground,
                 borderRadius: BorderRadius.only(
@@ -461,207 +332,161 @@ class _HomePageWidgetState extends State<HomePageWidget> {
               child: Column(
                 mainAxisSize: MainAxisSize.max,
                 mainAxisAlignment: MainAxisAlignment.start,
-                crossAxisAlignment: CrossAxisAlignment.start,
+                crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
-                  Padding(
-                    padding:
-                        EdgeInsetsDirectional.fromSTEB(24.0, 24.0, 0.0, 24.0),
-                    child: Text(
-                      'Notifications',
-                      style: FlutterFlowTheme.of(context).bodyMedium.override(
-                            fontFamily:
-                                FlutterFlowTheme.of(context).bodyMediumFamily,
-                            fontSize: 18.0,
-                            fontWeight: FontWeight.bold,
-                            useGoogleFonts: GoogleFonts.asMap().containsKey(
-                                FlutterFlowTheme.of(context).bodyMediumFamily),
-                          ),
+                  Align(
+                    alignment: Alignment.centerLeft,
+                    child: Padding(
+                      padding:
+                          EdgeInsetsDirectional.fromSTEB(24.0, 24.0, 0.0, 24.0),
+                      child: Text(
+                        'Notifications',
+                        style: FlutterFlowTheme.of(context).bodyMedium.override(
+                              fontFamily:
+                                  FlutterFlowTheme.of(context).bodyMediumFamily,
+                              fontSize: 18.0,
+                              fontWeight: FontWeight.bold,
+                              useGoogleFonts: GoogleFonts.asMap().containsKey(
+                                  FlutterFlowTheme.of(context)
+                                      .bodyMediumFamily),
+                            ),
+                      ),
                     ),
                   ),
-                  Padding(
-                    padding:
-                        EdgeInsetsDirectional.fromSTEB(24.0, 0.0, 24.0, 0.0),
-                    child: Row(
-                      mainAxisSize: MainAxisSize.max,
-                      mainAxisAlignment: MainAxisAlignment.start,
-                      children: [
-                        Padding(
-                          padding: EdgeInsetsDirectional.fromSTEB(
-                              0.0, 0.0, 24.0, 0.0),
-                          child: Container(
-                            width: () {
-                              if (MediaQuery.sizeOf(context).width <
-                                  valueOrDefault<double>(
-                                    kBreakpointSmall,
-                                    400.0,
-                                  )) {
-                                return 250.0;
-                              } else if (MediaQuery.sizeOf(context).width <
-                                  valueOrDefault<double>(
-                                    kBreakpointMedium,
-                                    1025.0,
-                                  )) {
-                                return 350.0;
-                              } else if (MediaQuery.sizeOf(context).width <
-                                  valueOrDefault<double>(
-                                    kBreakpointLarge,
-                                    1500.0,
-                                  )) {
-                                return 450.0;
-                              } else {
-                                return 600.0;
-                              }
-                            }(),
-                            height: 45.0,
-                            decoration: BoxDecoration(
-                              color: Color(0xFFF5F5EF),
-                              borderRadius: BorderRadius.circular(8.0),
-                            ),
-                            child: Row(
-                              mainAxisSize: MainAxisSize.min,
-                              mainAxisAlignment: MainAxisAlignment.start,
-                              crossAxisAlignment: CrossAxisAlignment.center,
-                              children: [
-                                SizedBox(
-                                  height: 45,
-                                  width: 45,
-                                  child: InkWell(
-                                    child: SvgPicture.asset(
-                                      'assets/icons/Icon_search.svg',
-                                      fit: BoxFit.none,
-                                    ),
-                                    onTap: () {},
-                                  ),
-                                ),
-                                Container(
-                                  width: () {
-                                    if (MediaQuery.sizeOf(context).width <
-                                        valueOrDefault<double>(
-                                          kBreakpointSmall,
-                                          400.0,
-                                        )) {
-                                      return 205.0;
-                                    } else if (MediaQuery.sizeOf(context)
-                                            .width <
-                                        valueOrDefault<double>(
-                                          kBreakpointMedium,
-                                          1025.0,
-                                        )) {
-                                      return 305.0;
-                                    } else if (MediaQuery.sizeOf(context)
-                                            .width <
-                                        valueOrDefault<double>(
-                                          kBreakpointLarge,
-                                          1500.0,
-                                        )) {
-                                      return 405.0;
-                                    } else {
-                                      return 555.0;
-                                    }
-                                  }(),
-                                  height: 100.0,
-                                  constraints: BoxConstraints(
-                                    maxWidth: 550.0,
-                                  ),
-                                  decoration: BoxDecoration(
-                                    borderRadius: BorderRadius.only(
-                                      bottomLeft: Radius.circular(0.0),
-                                      bottomRight: Radius.circular(8.0),
-                                      topLeft: Radius.circular(0.0),
-                                      topRight: Radius.circular(8.0),
-                                    ),
-                                  ),
-                                  child: Container(
-                                    width:
-                                        MediaQuery.sizeOf(context).width * 1.0,
-                                    child: TextFormField(
-                                      controller: _model.textController,
-                                      autofocus: true,
-                                      obscureText: false,
-                                      decoration: InputDecoration(
-                                        labelText:
-                                            'Search by Account ID or Name',
-                                        labelStyle: FlutterFlowTheme.of(context)
-                                            .labelMedium
-                                            .override(
-                                              fontFamily:
-                                                  FlutterFlowTheme.of(context)
-                                                      .labelMediumFamily,
-                                              color: Color(0xFFBDBDBD),
-                                              fontSize: 12.0,
-                                              useGoogleFonts: GoogleFonts
-                                                      .asMap()
-                                                  .containsKey(
-                                                      FlutterFlowTheme.of(
-                                                              context)
-                                                          .labelMediumFamily),
-                                            ),
-                                        hintStyle: FlutterFlowTheme.of(context)
-                                            .labelMedium,
-                                        floatingLabelBehavior:
-                                            FloatingLabelBehavior.never,
-                                        enabledBorder: InputBorder.none,
-                                        focusedBorder: InputBorder.none,
-                                        errorBorder: InputBorder.none,
-                                        focusedErrorBorder: InputBorder.none,
-                                      ),
-                                      style: FlutterFlowTheme.of(context)
-                                          .bodyMedium
-                                          .override(
-                                            fontFamily:
-                                                FlutterFlowTheme.of(context)
-                                                    .bodyMediumFamily,
-                                            fontSize: 14.0,
-                                            useGoogleFonts: GoogleFonts.asMap()
-                                                .containsKey(
-                                                    FlutterFlowTheme.of(context)
-                                                        .bodyMediumFamily),
-                                          ),
-                                      validator: _model.textControllerValidator
-                                          .asValidator(context),
-                                    ),
-                                  ),
-                                ),
-                              ],
-                            ),
-                          ),
+                  Row(
+                    mainAxisSize: MainAxisSize.min,
+                    mainAxisAlignment: MediaQuery.sizeOf(context).width > 600
+                        ? MainAxisAlignment.start
+                        : MainAxisAlignment.spaceBetween,
+                    children: [
+                      Container(
+                        constraints: BoxConstraints(
+                          maxWidth: 450,
                         ),
-                        Container(
-                          width: 45.0,
-                          height: 45.0,
-                          decoration: BoxDecoration(
-                            color: Colors.black,
-                            borderRadius: BorderRadius.circular(8),
-                          ),
+                        width: MediaQuery.sizeOf(context).width * 0.7,
+                        height: 45.0,
+                        decoration: BoxDecoration(
+                          color: Color(0xFFF5F5EF),
+                          borderRadius: BorderRadius.circular(8.0),
+                        ),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.start,
+                          crossAxisAlignment: CrossAxisAlignment.center,
+                          children: [
+                            SizedBox(
+                              height: 45,
+                              width: 45,
+                              child: InkWell(
+                                child: SvgPicture.asset(
+                                  'assets/icons/Icon_search.svg',
+                                  fit: BoxFit.none,
+                                ),
+                                onTap: () {},
+                              ),
+                            ),
+                            Container(
+                              constraints: BoxConstraints(
+                                maxWidth: 405,
+                              ),
+                              height: 100.0,
+                              width:
+                                  MediaQuery.sizeOf(context).width * 0.7 - 45,
+                              child: TextField(
+                                onSubmitted: (value) {
+                                  activeText = true;
+                                },
+                                onChanged: (value) async {
+                                  activeText = false;
+                                  timer?.cancel();
+                                  timer = Timer(Duration(seconds: 1), () {
+                                    bool empty =
+                                        RegExp(r'^\s*$').hasMatch(value);
+
+                                    FFAppState().filterID = empty
+                                        ? null
+                                        : value.replaceAll(RegExp(r'\s'), '');
+                                    print(FFAppState().filterID);
+                                    if (FFAppState().filterData.last != '' &&
+                                        FFAppState().filterData.first != '') {
+                                      initNotificationsForFilter();
+                                    } else {
+                                      initNotifications();
+                                    }
+                                    FFAppState().filterID = null;
+                                  });
+                                },
+                                controller: _model.textController,
+                                autofocus: true,
+                                obscureText: false,
+                                decoration: InputDecoration(
+                                  labelText: activeText
+                                      ? 'Search by Account ID or Name'
+                                      : null,
+                                  labelStyle: FlutterFlowTheme.of(context)
+                                      .labelMedium
+                                      .override(
+                                        fontFamily: FlutterFlowTheme.of(context)
+                                            .labelMediumFamily,
+                                        color: Color(0xFFBDBDBD),
+                                        fontSize: 12.0,
+                                        useGoogleFonts: GoogleFonts.asMap()
+                                            .containsKey(
+                                                FlutterFlowTheme.of(context)
+                                                    .labelMediumFamily),
+                                      ),
+                                  hintStyle:
+                                      FlutterFlowTheme.of(context).labelMedium,
+                                  floatingLabelBehavior:
+                                      FloatingLabelBehavior.never,
+                                  enabledBorder: InputBorder.none,
+                                  focusedBorder: InputBorder.none,
+                                ),
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                      Padding(
+                        padding: EdgeInsets.only(
+                            left: (MediaQuery.sizeOf(context).width > 600)
+                                ? 24
+                                : 0),
+                        child: Container(
+                          width: 55,
+                          height: 55,
                           child: Stack(
                             alignment: AlignmentDirectional(0.0, 0.0),
                             children: [
-                              OutlinedButton(
-                                child: SvgPicture.asset(
-                                  'assets/icons/Icon_filter.svg',
-                                  color: Colors.white,
-                                  fit: BoxFit.cover,
+                              Container(
+                                decoration: BoxDecoration(
+                                  borderRadius: BorderRadius.circular(8),
+                                  color: Colors.black,
                                 ),
-                                onPressed: () async {
-                                  await showModalBottomSheet(
-                                    isScrollControlled: true,
-                                    backgroundColor: Colors.white,
-                                    enableDrag: false,
-                                    context: context,
-                                    builder: (context) {
-                                      return Padding(
-                                        padding:
-                                            MediaQuery.viewInsetsOf(context),
-                                        child: Container(
+                                height: 45,
+                                width: 45,
+                                child: OutlinedButton(
+                                  child: SvgPicture.asset(
+                                    'assets/icons/Icon_filter.svg',
+                                    color: Colors.white,
+                                    fit: BoxFit.cover,
+                                  ),
+                                  onPressed: () async {
+                                    await showModalBottomSheet(
+                                      isScrollControlled: true,
+                                      backgroundColor: Colors.transparent,
+                                      enableDrag: false,
+                                      context: context,
+                                      builder: (context) {
+                                        return Container(
                                           height: MediaQuery.sizeOf(context)
                                                   .height *
                                               0.85,
                                           child: FiltersWidget(),
-                                        ),
-                                      );
-                                    },
-                                  ).then((value) => safeSetState(() {}));
-                                },
+                                        );
+                                      },
+                                    ).then((value) => safeSetState(() {}));
+                                  },
+                                ),
                               ),
                               Opacity(
                                 opacity: (FFAppState().filterData.first !=
@@ -711,250 +536,352 @@ class _HomePageWidgetState extends State<HomePageWidget> {
                             ],
                           ),
                         ),
-                      ],
-                    ),
+                      ),
+                    ],
                   ),
                   Visibility(
                     visible: currentUserDocument?.subscriptions.isEmpty ?? true,
-                    child: SizedBox(
-                      height: 450,
-                      child: Column(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          SvgPicture.asset(
-                            'assets/icons/accounts.svg',
-                            height: 120,
-                            color: Color(0xFFC6F5F4),
-                          ),
-                          Padding(
-                            padding: EdgeInsetsDirectional.fromSTEB(
-                                25.0, 0.0, 25.0, 0.0),
-                            child: RichText(
-                              textScaleFactor:
-                                  MediaQuery.of(context).textScaleFactor,
-                              text: TextSpan(
-                                children: [
-                                  TextSpan(
-                                    text:
-                                        'Oops! It seems you didn’t add any accounts yet. ',
-                                    style: FlutterFlowTheme.of(context)
-                                        .bodyMedium
-                                        .override(
-                                          fontFamily:
-                                              FlutterFlowTheme.of(context)
-                                                  .bodyMediumFamily,
-                                          color: Color(0xFFBDBDBD),
-                                          fontWeight: FontWeight.bold,
-                                          useGoogleFonts: GoogleFonts.asMap()
-                                              .containsKey(
-                                                  FlutterFlowTheme.of(context)
-                                                      .bodyMediumFamily),
-                                        ),
-                                  ),
-                                  TextSpan(
-                                    text: 'Add a new Account ',
-                                    style: TextStyle(
-                                      color: Color(0xFF65C3A2),
-                                      fontWeight: FontWeight.w600,
-                                    ),
-                                  ),
-                                  TextSpan(
-                                    text: 'to receive notifications',
-                                    style: TextStyle(
-                                      color: Color(0xFFBDBDBD),
-                                    ),
-                                  )
-                                ],
-                                style: FlutterFlowTheme.of(context).bodyMedium,
-                              ),
-                              textAlign: TextAlign.center,
+                    child: Center(
+                      child: SizedBox(
+                        height: MediaQuery.sizeOf(context).height * 0.5,
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            SvgPicture.asset(
+                              'assets/icons/accounts.svg',
+                              height: 120,
+                              color: Color(0xFFC6F5F4),
                             ),
-                          ),
-                        ],
+                            Padding(
+                              padding: EdgeInsetsDirectional.fromSTEB(
+                                  25.0, 0.0, 25.0, 0.0),
+                              child: RichText(
+                                textScaleFactor:
+                                    MediaQuery.of(context).textScaleFactor,
+                                text: TextSpan(
+                                  children: [
+                                    TextSpan(
+                                      text:
+                                          'Oops! It seems you didn’t add any accounts yet. ',
+                                      style: FlutterFlowTheme.of(context)
+                                          .bodyMedium
+                                          .override(
+                                            fontFamily:
+                                                FlutterFlowTheme.of(context)
+                                                    .bodyMediumFamily,
+                                            color: Color(0xFFBDBDBD),
+                                            fontWeight: FontWeight.bold,
+                                            useGoogleFonts: GoogleFonts.asMap()
+                                                .containsKey(
+                                                    FlutterFlowTheme.of(context)
+                                                        .bodyMediumFamily),
+                                          ),
+                                    ),
+                                    TextSpan(
+                                      text: 'Add a new Account ',
+                                      style: TextStyle(
+                                        color: Color(0xFF65C3A2),
+                                        fontWeight: FontWeight.w600,
+                                      ),
+                                    ),
+                                    TextSpan(
+                                      text: 'to receive notifications',
+                                      style: TextStyle(
+                                        color: Color(0xFFBDBDBD),
+                                      ),
+                                    )
+                                  ],
+                                  style:
+                                      FlutterFlowTheme.of(context).bodyMedium,
+                                ),
+                                textAlign: TextAlign.center,
+                              ),
+                            ),
+                          ],
+                        ),
                       ),
                     ),
                   ),
-                  Visibility(
-                    visible:
-                        !(currentUserDocument?.subscriptions.isEmpty ?? true),
-                    child: StreamBuilder(
-                        stream: FFAppState().streamNotifications,
-                        builder: (context, snapshot) {
-                          if (snapshot.hasData && snapshot.data!.isNotEmpty) {
-                            return Align(
-                              alignment: Alignment.topCenter,
-                              child: Padding(
-                                padding:
-                                    const EdgeInsets.symmetric(horizontal: 25),
-                                child: SizedBox(
-                                  height:
-                                      MediaQuery.sizeOf(context).height - 305,
-                                  width: MediaQuery.sizeOf(context).width >= 300
-                                      ? 400
-                                      : null,
-                                  child: ListView.builder(
-                                    controller:
-                                        FFAppState().streamConroller.value
-                                            ? scrollControllerForFilter
-                                            : scrollController,
-                                    itemCount: snapshot.data?.length ?? 0,
-                                    itemBuilder: (context, index) {
-                                      return snapshot.data!.isEmpty
-                                          ? SizedBox()
-                                          : Padding(
-                                              padding: EdgeInsets.symmetric(
-                                                  vertical: 10),
-                                              child: Container(
-                                                  decoration: BoxDecoration(
-                                                    color: Color(0xFFFAF9F8),
-                                                    borderRadius:
-                                                        BorderRadius.circular(
-                                                      8,
-                                                    ),
-                                                  ),
-                                                  height: 75,
-                                                  child: Padding(
-                                                    padding:
-                                                        const EdgeInsets.all(8),
-                                                    child: Row(
-                                                      mainAxisAlignment:
-                                                          MainAxisAlignment
-                                                              .spaceBetween,
-                                                      children: [
-                                                        Row(
-                                                          children: [
-                                                            Container(
-                                                              clipBehavior: Clip
-                                                                  .antiAliasWithSaveLayer,
-                                                              width: 60,
-                                                              height: 60,
-                                                              decoration: BoxDecoration(
-                                                                  color: Colors
-                                                                      .white,
-                                                                  borderRadius:
-                                                                      BorderRadius
-                                                                          .circular(
-                                                                              100)),
-                                                              child: snapshot
-                                                                      .data!
-                                                                      .isEmpty
-                                                                  ? SizedBox()
-                                                                  : CachedNetworkImage(
-                                                                      imageUrl:
-                                                                          'https://i.near.social/magic/large/https://near.social/magic/img/account/${snapshot.data![index][0]['accountId']}',
-                                                                      errorWidget:
-                                                                          (context,
-                                                                              url,
-                                                                              error) {
-                                                                        return Image
-                                                                            .asset(
-                                                                          'assets/images/nonAvatar.png',
-                                                                          fit: BoxFit
-                                                                              .cover,
-                                                                        );
-                                                                      },
-                                                                      fit: BoxFit
-                                                                          .cover,
-                                                                    ),
-                                                            ),
-                                                            Padding(
-                                                              padding: EdgeInsets
-                                                                  .symmetric(
-                                                                      horizontal:
-                                                                          10),
-                                                              child: SizedBox(
-                                                                width: 150,
-                                                                child: Column(
-                                                                  mainAxisAlignment:
-                                                                      MainAxisAlignment
-                                                                          .spaceBetween,
-                                                                  crossAxisAlignment:
-                                                                      CrossAxisAlignment
-                                                                          .start,
-                                                                  children: [
-                                                                    Text(
-                                                                      snapshot.data?[index]
-                                                                              [
-                                                                              0]
-                                                                          [
-                                                                          'accountId'],
-                                                                      maxLines:
-                                                                          1,
-                                                                      overflow:
-                                                                          TextOverflow
-                                                                              .ellipsis,
-                                                                    ),
-                                                                    Text(
-                                                                      snapshot.data?[index][0]
-                                                                              [
-                                                                              'value']
-                                                                          [
-                                                                          'type'],
-                                                                      maxLines:
-                                                                          1,
-                                                                      overflow:
-                                                                          TextOverflow
-                                                                              .ellipsis,
-                                                                      style: TextStyle(
-                                                                          color:
-                                                                              Color(0xFF7E7E7E)),
-                                                                    ),
-                                                                  ],
-                                                                ),
-                                                              ),
-                                                            ),
-                                                          ],
+                  Expanded(
+                    flex: 30,
+                    child: Visibility(
+                      visible:
+                          !(currentUserDocument?.subscriptions.isEmpty ?? true),
+                      child: StreamBuilder(
+                          stream: FFAppState().streamNotifications,
+                          builder: (context, snapshot) {
+                            if (snapshot.hasData && snapshot.data!.isNotEmpty) {
+                              return Align(
+                                alignment: Alignment.topCenter,
+                                child: Padding(
+                                  padding: const EdgeInsets.symmetric(
+                                      horizontal: 25),
+                                  child: Container(
+                                    constraints: BoxConstraints(
+                                        minWidth: 400, maxWidth: 524),
+                                    height: MediaQuery.sizeOf(context).height,
+                                    width:
+                                        MediaQuery.sizeOf(context).width * 0.7,
+                                    child: ListView.builder(
+                                      controller:
+                                          FFAppState().streamConroller.value
+                                              ? scrollControllerForFilter
+                                              : scrollController,
+                                      itemCount: snapshot.data?.length ?? 0,
+                                      itemBuilder: (context, index) {
+                                        return snapshot.data!.isEmpty
+                                            ? SizedBox()
+                                            : Padding(
+                                                padding: EdgeInsets.symmetric(
+                                                    vertical: (MediaQuery.sizeOf(
+                                                                        context)
+                                                                    .height *
+                                                                0.01) >
+                                                            12
+                                                        ? 12
+                                                        : (MediaQuery.sizeOf(
+                                                                    context)
+                                                                .height *
+                                                            0.01)),
+                                                child: InkWell(
+                                                  onTap: () async {
+                                                    String url;
+                                                    if (snapshot.data![index][0]
+                                                            ['value']['type']
+                                                        .toString()
+                                                        .startsWith(
+                                                            'devgovgigs')) {
+                                                      String idPost = snapshot
+                                                          .data![index][0]
+                                                              ['value']['post']
+                                                          .toString();
+                                                      url =
+                                                          'https://near.social/devhub.near/widget/app?page=post&id=$idPost';
+                                                    } else {
+                                                      if (snapshot.data![index]
+                                                                      [0]
+                                                                      ['value']
+                                                                      ['type']
+                                                                  .toString() !=
+                                                              'like' &&
+                                                          snapshot.data![index]
+                                                                      [0]
+                                                                      ['value']
+                                                                      ['type']
+                                                                  .toString() !=
+                                                              'repost' &&
+                                                          snapshot.data![index]
+                                                                      [0]
+                                                                      ['value']
+                                                                      ['type']
+                                                                  .toString() !=
+                                                              'comment') {
+                                                        return;
+                                                      }
+                                                      String id = snapshot
+                                                          .data![index][2]
+                                                          .toString();
+
+                                                      String block = snapshot
+                                                          .data![index][0]
+                                                              ['value']['item']
+                                                              ['blockHeight']
+                                                          .toString();
+                                                      url =
+                                                          'https://near.social/mob.near/widget/MainPage.N.Post.Page?accountId=$id&blockHeight=$block';
+                                                    }
+
+                                                    await launchUrlString(url);
+                                                  },
+                                                  child: Container(
+                                                      constraints:
+                                                          BoxConstraints(
+                                                        minHeight: 50,
+                                                        maxHeight: 100,
+                                                      ),
+                                                      decoration: BoxDecoration(
+                                                        color:
+                                                            Color(0xFFFAF9F8),
+                                                        borderRadius:
+                                                            BorderRadius
+                                                                .circular(
+                                                          8,
                                                         ),
-                                                        Column(
-                                                          crossAxisAlignment:
-                                                              CrossAxisAlignment
-                                                                  .end,
+                                                      ),
+                                                      height: MediaQuery.sizeOf(
+                                                                  context)
+                                                              .height *
+                                                          0.06,
+                                                      child: Padding(
+                                                        padding: EdgeInsets.all(MediaQuery
+                                                                        .sizeOf(
+                                                                            context)
+                                                                    .width >
+                                                                600
+                                                            ? 8
+                                                            : (MediaQuery.sizeOf(context)
+                                                                            .height *
+                                                                        0.001 <
+                                                                    2)
+                                                                ? 2
+                                                                : (MediaQuery.sizeOf(
+                                                                            context)
+                                                                        .height *
+                                                                    0.001)),
+                                                        child: Row(
                                                           mainAxisAlignment:
                                                               MainAxisAlignment
                                                                   .spaceBetween,
                                                           children: [
-                                                            Text(snapshot.data?[
-                                                                        index]
-                                                                        [2]
-                                                                    .toString() ??
-                                                                ''),
-                                                            Text(snapshot.data?[
-                                                                        index]
-                                                                        [0][
-                                                                        'blockHeight']
-                                                                    .toString() ??
-                                                                ''),
-                                                            Text(
-                                                              DateFormat(
-                                                                      'MMM dd')
-                                                                  .format(DateTime
-                                                                      .fromMillisecondsSinceEpoch(
-                                                                          snapshot.data?[index]
+                                                            Row(
+                                                              children: [
+                                                                Container(
+                                                                  constraints:
+                                                                      BoxConstraints(
+                                                                    minWidth:
+                                                                        45,
+                                                                    minHeight:
+                                                                        45,
+                                                                    maxHeight:
+                                                                        65,
+                                                                    maxWidth:
+                                                                        65,
+                                                                  ),
+                                                                  clipBehavior:
+                                                                      Clip.antiAliasWithSaveLayer,
+                                                                  width: MediaQuery.sizeOf(
+                                                                              context)
+                                                                          .height *
+                                                                      0.06,
+                                                                  height: MediaQuery.sizeOf(
+                                                                              context)
+                                                                          .height *
+                                                                      0.06,
+                                                                  decoration: BoxDecoration(
+                                                                      color: Colors
+                                                                          .white,
+                                                                      borderRadius:
+                                                                          BorderRadius.circular(
+                                                                              100)),
+                                                                  child: snapshot
+                                                                          .data!
+                                                                          .isEmpty
+                                                                      ? SizedBox()
+                                                                      : CachedNetworkImage(
+                                                                          imageUrl:
+                                                                              'https://i.near.social/magic/large/https://near.social/magic/img/account/${snapshot.data![index][0]['accountId']}',
+                                                                          errorWidget: (context,
+                                                                              url,
+                                                                              error) {
+                                                                            return Image.asset(
+                                                                              'assets/images/nonAvatar.png',
+                                                                              fit: BoxFit.cover,
+                                                                            );
+                                                                          },
+                                                                          fit: BoxFit
+                                                                              .cover,
+                                                                        ),
+                                                                ),
+                                                                Padding(
+                                                                  padding: EdgeInsets
+                                                                      .symmetric(
+                                                                          horizontal:
+                                                                              10),
+                                                                  child:
+                                                                      SizedBox(
+                                                                    width: 150,
+                                                                    child:
+                                                                        Column(
+                                                                      mainAxisAlignment:
+                                                                          MainAxisAlignment
+                                                                              .spaceBetween,
+                                                                      crossAxisAlignment:
+                                                                          CrossAxisAlignment
+                                                                              .start,
+                                                                      children: [
+                                                                        Text(
+                                                                          (snapshot.data?[index][3] != '')
+                                                                              ? snapshot.data![index][3]
+                                                                              : snapshot.data![index][0]['accountId'],
+                                                                          style:
+                                                                              TextStyle(
+                                                                            color:
+                                                                                Color(0xFF000000),
+                                                                            fontWeight:
+                                                                                FontWeight.w500,
+                                                                          ),
+                                                                          maxLines:
+                                                                              1,
+                                                                          overflow:
+                                                                              TextOverflow.ellipsis,
+                                                                        ),
+                                                                        Text(
+                                                                          snapshot.data?[index][0]['value']
                                                                               [
-                                                                              1]))
-                                                                  .toString(),
-                                                              style: TextStyle(
-                                                                  color: Color(
-                                                                      0xFFBDBDBD)),
+                                                                              'type'],
+                                                                          maxLines:
+                                                                              1,
+                                                                          overflow:
+                                                                              TextOverflow.ellipsis,
+                                                                          style:
+                                                                              TextStyle(color: Color(0xFF7E7E7E)),
+                                                                        ),
+                                                                      ],
+                                                                    ),
+                                                                  ),
+                                                                ),
+                                                              ],
+                                                            ),
+                                                            Column(
+                                                              crossAxisAlignment:
+                                                                  CrossAxisAlignment
+                                                                      .end,
+                                                              mainAxisAlignment:
+                                                                  MainAxisAlignment
+                                                                      .spaceBetween,
+                                                              children: [
+                                                                Text(
+                                                                  snapshot.data?[
+                                                                              index]
+                                                                              [
+                                                                              2]
+                                                                          .toString() ??
+                                                                      '',
+                                                                  style: TextStyle(
+                                                                      color: Color(
+                                                                          0xFF7E7E7E)),
+                                                                ),
+                                                                Text(
+                                                                  DateFormat(
+                                                                          'MMM dd')
+                                                                      .format(snapshot
+                                                                              .data?[
+                                                                          index][1])
+                                                                      .toString(),
+                                                                  style: TextStyle(
+                                                                      color: Color(
+                                                                          0xFFBDBDBD)),
+                                                                ),
+                                                              ],
                                                             ),
                                                           ],
                                                         ),
-                                                      ],
-                                                    ),
-                                                  )
-                                                  // Text(
-                                                  //     '${snapshot.data?[index].toString()} $index ${snapshot.data?.length}'),
-                                                  ),
-                                            );
-                                    },
+                                                      )
+                                                      // Text(
+                                                      //     '${snapshot.data?[index].toString()} $index ${snapshot.data?.length}'),
+                                                      ),
+                                                ),
+                                              );
+                                      },
+                                    ),
                                   ),
                                 ),
-                              ),
-                            );
-                          } else {
-                            return SizedBox();
-                          }
-                        }),
+                              );
+                            } else {
+                              return SizedBox();
+                            }
+                          }),
+                    ),
                   ),
                 ],
               ),

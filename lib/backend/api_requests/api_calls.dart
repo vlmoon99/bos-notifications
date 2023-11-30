@@ -224,6 +224,37 @@ class GetNearSocialInformationCall {
       );
 }
 
+class GetNearSocialNameCall {
+  static Future<ApiCallResponse> call({
+    String? accountId = 'vlmoon.near',
+  }) async {
+    final ffApiRequestBody = '''
+{
+  "keys": [
+    "${accountId}/profile/name"
+  ]
+}''';
+    return ApiManager.instance.makeApiCall(
+      callName: 'getNearSocialInformation',
+      apiUrl: 'https://api.near.social/get',
+      callType: ApiCallType.POST,
+      headers: {},
+      params: {},
+      body: ffApiRequestBody,
+      bodyType: BodyType.JSON,
+      returnBody: true,
+      encodeBodyUtf8: false,
+      decodeUtf8: false,
+      cache: false,
+    );
+  }
+
+  static dynamic all(dynamic response) => getJsonField(
+        response,
+        r'''$''',
+      );
+}
+
 class ApiPagingParams {
   int nextPageNumber = 0;
   int numItems = 0;
