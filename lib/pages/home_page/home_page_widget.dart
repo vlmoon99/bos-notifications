@@ -642,7 +642,7 @@ class _HomePageWidgetState extends State<HomePageWidget> {
                                                         : (MediaQuery.sizeOf(
                                                                     context)
                                                                 .height *
-                                                            0.01)),
+                                                            0.008)),
                                                 child: InkWell(
                                                   onTap: () async {
                                                     String url;
@@ -711,23 +711,15 @@ class _HomePageWidgetState extends State<HomePageWidget> {
                                                       height: MediaQuery.sizeOf(
                                                                   context)
                                                               .height *
-                                                          0.06,
+                                                          0.065,
                                                       child: Padding(
-                                                        padding: EdgeInsets.all(MediaQuery
-                                                                        .sizeOf(
+                                                        padding: EdgeInsets.all(
+                                                            MediaQuery.sizeOf(
                                                                             context)
-                                                                    .width >
-                                                                600
-                                                            ? 8
-                                                            : (MediaQuery.sizeOf(context)
-                                                                            .height *
-                                                                        0.001 <
-                                                                    2)
-                                                                ? 2
-                                                                : (MediaQuery.sizeOf(
-                                                                            context)
-                                                                        .height *
-                                                                    0.001)),
+                                                                        .width >
+                                                                    600
+                                                                ? 8
+                                                                : 2),
                                                         child: Row(
                                                           mainAxisAlignment:
                                                               MainAxisAlignment
