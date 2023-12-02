@@ -1,4 +1,4 @@
-package com.vlmoon.bosnotification
+package com.vlmoon.nearsocialnotifications
 
 import io.flutter.embedding.android.FlutterActivity
 

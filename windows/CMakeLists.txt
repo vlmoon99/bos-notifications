@@ -1,7 +1,7 @@
 cmake_minimum_required(VERSION 3.15)
-project(b_o_s_notifications LANGUAGES CXX)
+project(near_social_notifications LANGUAGES CXX)
 
-set(BINARY_NAME "b_o_s_notifications")
+set(BINARY_NAME "near_social_notifications")
 
 cmake_policy(SET CMP0063 NEW)
 

@@ -1,4 +1,4 @@
-# BOS Notifications
+# NearSocialNotifications
 
 A new Flutter project.
 

@@ -5,7 +5,7 @@
 	<key>CFBundleDevelopmentRegion</key>
 	<string>$(DEVELOPMENT_LANGUAGE)</string>
 	<key>CFBundleDisplayName</key>
-	<string>BOS Notifications</string>
+	<string>Near Social Notifications</string>
 	<key>CFBundleExecutable</key>
 	<string>$(EXECUTABLE_NAME)</string>
 	<key>CFBundleIdentifier</key>
@@ -13,7 +13,7 @@
 	<key>CFBundleInfoDictionaryVersion</key>
 	<string>6.0</string>
 	<key>CFBundleName</key>
-	<string>BOS Notifications</string>
+	<string>NearSocialNotifications</string>
 	<key>CFBundlePackageType</key>
 	<string>APPL</string>
 
@@ -37,10 +37,10 @@
         <key>CFBundleTypeRole</key>
         <string>Editor</string>
         <key>CFBundleURLName</key>
-        <string>bosnotifications.com</string>
+        <string>nearsocialnotifications.com</string>
         <key>CFBundleURLSchemes</key>
         <array>
-        <string>bosnotifications</string>
+        <string>nearsocialnotifications</string>
         </array>
         </dict>
     </array>

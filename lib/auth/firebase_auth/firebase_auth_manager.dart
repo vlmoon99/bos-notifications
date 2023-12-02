@@ -291,7 +291,8 @@ class FirebaseAuthManager extends AuthManager
       }
       return userCredential == null
           ? null
-          : BOSNotificationsFirebaseUser.fromUserCredential(userCredential);
+          : NearSocialNotificationsFirebaseUser.fromUserCredential(
+              userCredential);
     } on FirebaseAuthException catch (e) {
       ScaffoldMessenger.of(context).hideCurrentSnackBar();
       ScaffoldMessenger.of(context).showSnackBar(

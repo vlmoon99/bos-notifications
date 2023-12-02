@@ -89,13 +89,13 @@ BEGIN
     BEGIN
         BLOCK "040904e4"
         BEGIN
-            VALUE "CompanyName", "BOS Notifications" "\0"
+            VALUE "CompanyName", "NearSocialNotifications" "\0"
             VALUE "FileDescription", "A new Flutter project." "\0"
             VALUE "FileVersion", VERSION_AS_STRING "\0"
-            VALUE "InternalName", "BOS Notifications" "\0"
-            VALUE "LegalCopyright", "Copyright (C) 2022 BOS Notifications. All rights reserved." "\0"
-            VALUE "OriginalFilename", "b_o_s_notifications.exe" "\0"
-            VALUE "ProductName", "BOS Notifications" "\0"
+            VALUE "InternalName", "NearSocialNotifications" "\0"
+            VALUE "LegalCopyright", "Copyright (C) 2022 NearSocialNotifications. All rights reserved." "\0"
+            VALUE "OriginalFilename", "near_social_notifications.exe" "\0"
+            VALUE "ProductName", "NearSocialNotifications" "\0"
             VALUE "ProductVersion", VERSION_AS_STRING "\0"
         END
     END

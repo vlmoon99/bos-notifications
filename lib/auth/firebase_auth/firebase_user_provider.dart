@@ -5,8 +5,8 @@ import '../base_auth_user_provider.dart';
 
 export '../base_auth_user_provider.dart';
 
-class BOSNotificationsFirebaseUser extends BaseAuthUser {
-  BOSNotificationsFirebaseUser(this.user);
+class NearSocialNotificationsFirebaseUser extends BaseAuthUser {
+  NearSocialNotificationsFirebaseUser(this.user);
   User? user;
   bool get loggedIn => user != null;
 
@@ -54,10 +54,10 @@ class BOSNotificationsFirebaseUser extends BaseAuthUser {
   static BaseAuthUser fromUserCredential(UserCredential userCredential) =>
       fromFirebaseUser(userCredential.user);
   static BaseAuthUser fromFirebaseUser(User? user) =>
-      BOSNotificationsFirebaseUser(user);
+      NearSocialNotificationsFirebaseUser(user);
 }
 
-Stream<BaseAuthUser> bOSNotificationsFirebaseUserStream() =>
+Stream<BaseAuthUser> nearSocialNotificationsFirebaseUserStream() =>
     FirebaseAuth.instance
         .authStateChanges()
         .debounce((user) => user == null && !loggedIn
@@ -65,7 +65,7 @@ Stream<BaseAuthUser> bOSNotificationsFirebaseUserStream() =>
             : Stream.value(user))
         .map<BaseAuthUser>(
       (user) {
-        currentUser = BOSNotificationsFirebaseUser(user);
+        currentUser = NearSocialNotificationsFirebaseUser(user);
         return currentUser!;
       },
     );

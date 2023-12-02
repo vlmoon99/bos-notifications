@@ -1,6 +1,6 @@
 {
-    "name": "BOS Notifications",
-    "short_name": "BOS Notifications",
+    "name": "NearSocialNotifications",
+    "short_name": "NearSocialNotifications",
     "start_url": ".",
     "display": "standalone",
     "background_color": "#0175C2",
