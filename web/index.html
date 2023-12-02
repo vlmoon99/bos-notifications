@@ -1,6 +1,4 @@
-<!DOCTYPE html>
-<html>
-<head>
+<!DOCTYPE html><html><head>
   <!--
     If you are serving your web app in a path other than the root, change the
     href value below to reflect the base path you are serving from.
@@ -19,32 +17,32 @@
   <!-- iOS meta tags & icons -->
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="black">
-  <meta name="apple-mobile-web-app-title" content="Near Social Notifications">
+  <meta name="apple-mobile-web-app-title" content="BOS Notifications">
 
   
 
   
 
   <!-- Favicon -->
-  <link rel="icon" href="icon.png" sizes="any"/>
+  <link rel="icon" href="icon.png" sizes="any">
   
 
   <!-- Open Graph & SEO tags -->
-  <meta property="og:title" content="BOS Notifications" />
-  <meta property="og:description" content="App for getting push notifications from  Near Social smart contract" />
-  <meta property="og:image" content="/assets/assets/images/icon.png" /> 
-  <meta name="twitter:title" content="BOS Notifications" />
-  <meta name="twitter:description" content="App for getting push notifications from  Near Social smart contract" />
-  <meta name="twitter:image" content="/assets/assets/images/icon.png" />
-  <meta name="twitter:card" content="summary_large_image" />
+  <meta property="og:title" content="BOS Notifications">
+  <meta property="og:description" content="App for getting push notifications from  Near Social smart contract">
+  <meta property="og:image" content="/assets/assets/images/icon.png"> 
+  <meta name="twitter:title" content="BOS Notifications">
+  <meta name="twitter:description" content="App for getting push notifications from  Near Social smart contract">
+  <meta name="twitter:image" content="/assets/assets/images/icon.png">
+  <meta name="twitter:card" content="summary_large_image">
 
   <title> BOS Notifications </title>
-  <meta name="description" content="App for getting push notifications from  Near Social smart contract" />
+  <meta name="description" content="App for getting push notifications from  Near Social smart contract">
     
 
   <!-- Status Bar color in Safari browser (iOS) and PWA -->
   <meta name="theme-color" media="(prefers-color-scheme: light)" content="#f1f4f8">
-  <meta name="theme-color" media="(prefers-color-scheme: dark)"  content="#1d2428">
+  <meta name="theme-color" media="(prefers-color-scheme: dark)" content="#1d2428">
 
   <link rel="manifest" href="manifest.json">
   <script>
@@ -52,15 +50,91 @@
     var serviceWorkerVersion = null;
   </script>
   <!-- This script adds the flutter initialization JS code -->
-  <script src="flutter.js" defer></script>
+  <script src="flutter.js" defer=""></script>
+  
+  
+  <meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" name="viewport">
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  <style id="splash-screen-style">
+    html {
+      height: 100%
+    }
+
+    body {
+      margin: 0;
+      min-height: 100%;
+      background-color: #B1B1FC;
+          background-size: 100% 100%;
+    }
+
+    .center {
+      margin: 0;
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      -ms-transform: translate(-50%, -50%);
+      transform: translate(-50%, -50%);
+    }
+
+    .contain {
+      display:block;
+      width:100%; height:100%;
+      object-fit: contain;
+    }
+
+    .stretch {
+      display:block;
+      width:100%; height:100%;
+    }
+
+    .cover {
+      display:block;
+      width:100%; height:100%;
+      object-fit: cover;
+    }
+
+    .bottom {
+      position: absolute;
+      bottom: 0;
+      left: 50%;
+      -ms-transform: translate(-50%, 0);
+      transform: translate(-50%, 0);
+    }
+
+    .bottomLeft {
+      position: absolute;
+      bottom: 0;
+      left: 0;
+    }
+
+    .bottomRight {
+      position: absolute;
+      bottom: 0;
+      right: 0;
+    }
+  </style>
+  <script id="splash-screen-script">
+    function removeSplashFromWeb() {
+      document.getElementById("splash")?.remove();
+      document.getElementById("splash-branding")?.remove();
+      document.body.style.background = "transparent";
+    }
+  </script>
 </head>
 <body>
   
   
-  
-  
-  
   <script>
+    
     window.addEventListener('load', function (ev) {
       // Download main.dart.js
       _flutter.loader.loadEntrypoint({
@@ -80,5 +154,10 @@
       });
     });
   </script>
-</body>
-</html>
+  
+  
+  
+  
+
+
+</body></html>

@@ -3,7 +3,6 @@ import '/flutter_flow/flutter_flow_theme.dart';
 import '/flutter_flow/flutter_flow_util.dart';
 import '/flutter_flow/flutter_flow_widgets.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/scheduler.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -28,18 +27,15 @@ class _LoginPageWidgetState extends State<LoginPageWidget> {
     super.initState();
     _model = createModel(context, () => LoginPageModel());
 
-    // On page load action.
-    SchedulerBinding.instance.addPostFrameCallback((_) async {
-      GoRouter.of(context).prepareAuthEvent();
-      final user = await authManager.signInAnonymously(context);
-      if (user == null) {
-        return;
-      }
+    WidgetsBinding.instance.addPostFrameCallback((_) => setState(() async {
+          GoRouter.of(context).prepareAuthEvent();
+          final user = await authManager.signInAnonymously(context);
+          if (user == null) {
+            return;
+          }
 
-      context.pushNamedAuth('HomePage', context.mounted);
-    });
-
-    WidgetsBinding.instance.addPostFrameCallback((_) => setState(() {}));
+          context.pushNamedAuth('HomePage', context.mounted);
+        }));
   }
 
   @override
@@ -62,86 +58,13 @@ class _LoginPageWidgetState extends State<LoginPageWidget> {
 
     context.watch<FFAppState>();
 
-    return Title(
-        title: 'LoginPage',
-        color: FlutterFlowTheme.of(context).primary.withAlpha(0XFF),
-        child: Scaffold(
-          key: scaffoldKey,
-          backgroundColor: FlutterFlowTheme.of(context).primaryBackground,
-          body: SafeArea(
-            top: true,
-            child: Align(
-              alignment: AlignmentDirectional(0.00, 0.00),
-              child: Column(
-                mainAxisSize: MainAxisSize.max,
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  ClipRRect(
-                    borderRadius: BorderRadius.circular(8.0),
-                    child: SvgPicture.asset(
-                      'assets/images/icon.svg',
-                      width: 300.0,
-                      height: 200.0,
-                      fit: BoxFit.cover,
-                    ),
-                  ),
-                  Align(
-                    alignment: AlignmentDirectional(0.00, 0.00),
-                    child: Padding(
-                      padding:
-                          EdgeInsetsDirectional.fromSTEB(8.0, 0.0, 8.0, 20.0),
-                      child: Text(
-                        'BOS Notifications',
-                        textAlign: TextAlign.center,
-                        style: FlutterFlowTheme.of(context).displayMedium,
-                      ),
-                    ),
-                  ),
-                  Align(
-                    alignment: AlignmentDirectional(0.00, 0.00),
-                    child: Padding(
-                      padding:
-                          EdgeInsetsDirectional.fromSTEB(8.0, 0.0, 8.0, 20.0),
-                      child: Text(
-                        'Stay Informed, Stay Connected',
-                        textAlign: TextAlign.center,
-                        style: FlutterFlowTheme.of(context).headlineMedium,
-                      ),
-                    ),
-                  ),
-                  Padding(
-                    padding:
-                        EdgeInsetsDirectional.fromSTEB(16.0, 16.0, 16.0, 16.0),
-                    child: FFButtonWidget(
-                      onPressed: () async {
-                        GoRouter.of(context).prepareAuthEvent();
-                        final user =
-                            await authManager.signInAnonymously(context);
-                        if (user == null) {
-                          return;
-                        }
-
-                        context.pushNamedAuth('HomePage', context.mounted);
-                      },
-                      text: 'Getting Started',
-                      options: FFButtonOptions(
-                        width: 300.0,
-                        height: 50.0,
-                        padding:
-                            EdgeInsetsDirectional.fromSTEB(0.0, 0.0, 0.0, 0.0),
-                        iconPadding:
-                            EdgeInsetsDirectional.fromSTEB(0.0, 0.0, 0.0, 0.0),
-                        color: FlutterFlowTheme.of(context).secondaryBackground,
-                        textStyle: FlutterFlowTheme.of(context).titleLarge,
-                        elevation: 0.0,
-                        borderRadius: BorderRadius.circular(8.0),
-                      ),
-                    ),
-                  ),
-                ],
-              ),
-            ),
-          ),
-        ));
+    return Container(
+      width: MediaQuery.sizeOf(context).width,
+      height: MediaQuery.sizeOf(context).height,
+      child: SvgPicture.asset(
+        'assets/images/Loading2.png',
+        fit: BoxFit.cover,
+      ),
+    );
   }
 }

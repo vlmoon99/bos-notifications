@@ -541,72 +541,67 @@ class _HomePageWidgetState extends State<HomePageWidget> {
                   ),
                   Visibility(
                     visible: currentUserDocument?.subscriptions.isEmpty ?? true,
-                    child: Center(
-                      child: SizedBox(
-                        height: MediaQuery.sizeOf(context).height * 0.5,
-                        child: Column(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            SvgPicture.asset(
-                              'assets/icons/accounts.svg',
-                              height: 120,
-                              color: Color(0xFFC6F5F4),
-                            ),
-                            Padding(
-                              padding: EdgeInsetsDirectional.fromSTEB(
-                                  25.0, 0.0, 25.0, 0.0),
-                              child: RichText(
-                                textScaleFactor:
-                                    MediaQuery.of(context).textScaleFactor,
-                                text: TextSpan(
-                                  children: [
-                                    TextSpan(
-                                      text:
-                                          'Oops! It seems you didn’t add any accounts yet. ',
-                                      style: FlutterFlowTheme.of(context)
-                                          .bodyMedium
-                                          .override(
-                                            fontFamily:
-                                                FlutterFlowTheme.of(context)
-                                                    .bodyMediumFamily,
-                                            color: Color(0xFFBDBDBD),
-                                            fontWeight: FontWeight.bold,
-                                            useGoogleFonts: GoogleFonts.asMap()
-                                                .containsKey(
-                                                    FlutterFlowTheme.of(context)
-                                                        .bodyMediumFamily),
-                                          ),
+                    child: Expanded(
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          SvgPicture.asset(
+                            'assets/icons/accounts.svg',
+                            height: 120,
+                            color: Color(0xFFC6F5F4),
+                          ),
+                          Padding(
+                            padding: EdgeInsetsDirectional.fromSTEB(
+                                25.0, 0.0, 25.0, 0.0),
+                            child: RichText(
+                              textScaleFactor:
+                                  MediaQuery.of(context).textScaleFactor,
+                              text: TextSpan(
+                                children: [
+                                  TextSpan(
+                                    text:
+                                        'Oops! It seems you didn’t add any accounts yet. ',
+                                    style: FlutterFlowTheme.of(context)
+                                        .bodyMedium
+                                        .override(
+                                          fontFamily:
+                                              FlutterFlowTheme.of(context)
+                                                  .bodyMediumFamily,
+                                          color: Color(0xFFBDBDBD),
+                                          fontWeight: FontWeight.bold,
+                                          useGoogleFonts: GoogleFonts.asMap()
+                                              .containsKey(
+                                                  FlutterFlowTheme.of(context)
+                                                      .bodyMediumFamily),
+                                        ),
+                                  ),
+                                  TextSpan(
+                                    text: 'Add a new Account ',
+                                    style: TextStyle(
+                                      color: Color(0xFF65C3A2),
+                                      fontWeight: FontWeight.w600,
                                     ),
-                                    TextSpan(
-                                      text: 'Add a new Account ',
-                                      style: TextStyle(
-                                        color: Color(0xFF65C3A2),
-                                        fontWeight: FontWeight.w600,
-                                      ),
+                                  ),
+                                  TextSpan(
+                                    text: 'to receive notifications',
+                                    style: TextStyle(
+                                      color: Color(0xFFBDBDBD),
                                     ),
-                                    TextSpan(
-                                      text: 'to receive notifications',
-                                      style: TextStyle(
-                                        color: Color(0xFFBDBDBD),
-                                      ),
-                                    )
-                                  ],
-                                  style:
-                                      FlutterFlowTheme.of(context).bodyMedium,
-                                ),
-                                textAlign: TextAlign.center,
+                                  )
+                                ],
+                                style: FlutterFlowTheme.of(context).bodyMedium,
                               ),
+                              textAlign: TextAlign.center,
                             ),
-                          ],
-                        ),
+                          ),
+                        ],
                       ),
                     ),
                   ),
-                  Expanded(
-                    flex: 30,
-                    child: Visibility(
-                      visible:
-                          !(currentUserDocument?.subscriptions.isEmpty ?? true),
+                  Visibility(
+                    visible:
+                        !(currentUserDocument?.subscriptions.isEmpty ?? true),
+                    child: Expanded(
                       child: StreamBuilder(
                           stream: FFAppState().streamNotifications,
                           builder: (context, snapshot) {
