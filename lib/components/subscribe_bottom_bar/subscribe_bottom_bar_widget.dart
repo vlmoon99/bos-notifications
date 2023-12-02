@@ -158,7 +158,7 @@ class _SubscribeBottomBarWidgetState extends State<SubscribeBottomBarWidget> {
                                 kBreakpointMedium,
                                 1025.0,
                               )) {
-                            return 165.0;
+                            return 15.0;
                           } else if (MediaQuery.sizeOf(context).width <
                               valueOrDefault<double>(
                                 kBreakpointLarge,
