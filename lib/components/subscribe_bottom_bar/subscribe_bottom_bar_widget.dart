@@ -531,6 +531,11 @@ class _SubscribeBottomBarWidgetState extends State<SubscribeBottomBarWidget> {
                                 : null;
                         return FFButtonWidget(
                           onPressed: () async {
+                            if (currentUserDocument?.subscriptions.length ==
+                                1) {
+                              ScaffoldMessenger.of(context).showSnackBar(
+                                  SnackBar(content: Text('limit')));
+                            }
                             var _shouldSetState = false;
                             _model.button =
                                 await GetNearSocialInformationCall.call(
