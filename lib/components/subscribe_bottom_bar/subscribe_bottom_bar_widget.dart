@@ -532,7 +532,7 @@ class _SubscribeBottomBarWidgetState extends State<SubscribeBottomBarWidget> {
                         return FFButtonWidget(
                           onPressed: () async {
                             if (currentUserDocument?.subscriptions.length ==
-                                1) {
+                                50) {
                               ScaffoldMessenger.of(context).showSnackBar(
                                   SnackBar(content: Text('limit')));
                             }
