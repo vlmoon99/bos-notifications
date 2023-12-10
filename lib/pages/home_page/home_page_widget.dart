@@ -464,13 +464,15 @@ class _HomePageWidgetState extends State<HomePageWidget> {
                                 ),
                                 height: 45,
                                 width: 45,
-                                child: OutlinedButton(
+                                child: InkWell(
                                   child: SvgPicture.asset(
                                     'assets/icons/Icon_filter.svg',
+                                    height: 25,
+                                    width: 25,
+                                    fit: BoxFit.none,
                                     color: Colors.white,
-                                    fit: BoxFit.cover,
                                   ),
-                                  onPressed: () async {
+                                  onTap: () async {
                                     await showModalBottomSheet(
                                       isScrollControlled: true,
                                       backgroundColor: Colors.transparent,
@@ -554,8 +556,6 @@ class _HomePageWidgetState extends State<HomePageWidget> {
                             padding: EdgeInsetsDirectional.fromSTEB(
                                 25.0, 0.0, 25.0, 0.0),
                             child: RichText(
-                              textScaleFactor:
-                                  MediaQuery.of(context).textScaleFactor,
                               text: TextSpan(
                                 children: [
                                   TextSpan(

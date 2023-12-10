@@ -57,21 +57,21 @@
     },
     {
       "name": "cached_network_image",
-      "rootUri": "file:///Users/emirsuyunasanov/.pub-cache/hosted/pub.dev/cached_network_image-3.2.1",
+      "rootUri": "file:///Users/emirsuyunasanov/.pub-cache/hosted/pub.dev/cached_network_image-3.3.0",
       "packageUri": "lib/",
-      "languageVersion": "2.17"
+      "languageVersion": "3.0"
     },
     {
       "name": "cached_network_image_platform_interface",
-      "rootUri": "file:///Users/emirsuyunasanov/.pub-cache/hosted/pub.dev/cached_network_image_platform_interface-1.0.0",
+      "rootUri": "file:///Users/emirsuyunasanov/.pub-cache/hosted/pub.dev/cached_network_image_platform_interface-3.0.0",
       "packageUri": "lib/",
-      "languageVersion": "2.12"
+      "languageVersion": "3.0"
     },
     {
       "name": "cached_network_image_web",
-      "rootUri": "file:///Users/emirsuyunasanov/.pub-cache/hosted/pub.dev/cached_network_image_web-1.0.1",
+      "rootUri": "file:///Users/emirsuyunasanov/.pub-cache/hosted/pub.dev/cached_network_image_web-1.1.0",
       "packageUri": "lib/",
-      "languageVersion": "2.12"
+      "languageVersion": "3.0"
     },
     {
       "name": "characters",
@@ -135,7 +135,7 @@
     },
     {
       "name": "collection",
-      "rootUri": "file:///Users/emirsuyunasanov/.pub-cache/hosted/pub.dev/collection-1.17.2",
+      "rootUri": "file:///Users/emirsuyunasanov/.pub-cache/hosted/pub.dev/collection-1.18.0",
       "packageUri": "lib/",
       "languageVersion": "2.18"
     },
@@ -251,7 +251,7 @@
       "name": "flutter",
       "rootUri": "file:///Users/emirsuyunasanov/Documents/flutter/packages/flutter",
       "packageUri": "lib/",
-      "languageVersion": "3.0"
+      "languageVersion": "3.2"
     },
     {
       "name": "flutter_animate",
@@ -260,16 +260,10 @@
       "languageVersion": "2.17"
     },
     {
-      "name": "flutter_blurhash",
-      "rootUri": "file:///Users/emirsuyunasanov/.pub-cache/hosted/pub.dev/flutter_blurhash-0.7.0",
-      "packageUri": "lib/",
-      "languageVersion": "2.15"
-    },
-    {
       "name": "flutter_cache_manager",
-      "rootUri": "file:///Users/emirsuyunasanov/.pub-cache/hosted/pub.dev/flutter_cache_manager-3.3.0",
+      "rootUri": "file:///Users/emirsuyunasanov/.pub-cache/hosted/pub.dev/flutter_cache_manager-3.3.1",
       "packageUri": "lib/",
-      "languageVersion": "2.12"
+      "languageVersion": "2.17"
     },
     {
       "name": "flutter_launcher_icons",
@@ -281,7 +275,7 @@
       "name": "flutter_localizations",
       "rootUri": "file:///Users/emirsuyunasanov/Documents/flutter/packages/flutter_localizations",
       "packageUri": "lib/",
-      "languageVersion": "3.0"
+      "languageVersion": "3.2"
     },
     {
       "name": "flutter_native_splash",
@@ -299,13 +293,13 @@
       "name": "flutter_test",
       "rootUri": "file:///Users/emirsuyunasanov/Documents/flutter/packages/flutter_test",
       "packageUri": "lib/",
-      "languageVersion": "3.0"
+      "languageVersion": "3.2"
     },
     {
       "name": "flutter_web_plugins",
       "rootUri": "file:///Users/emirsuyunasanov/Documents/flutter/packages/flutter_web_plugins",
       "packageUri": "lib/",
-      "languageVersion": "3.0"
+      "languageVersion": "3.2"
     },
     {
       "name": "font_awesome_flutter",
@@ -459,7 +453,7 @@
     },
     {
       "name": "meta",
-      "rootUri": "file:///Users/emirsuyunasanov/.pub-cache/hosted/pub.dev/meta-1.9.1",
+      "rootUri": "file:///Users/emirsuyunasanov/.pub-cache/hosted/pub.dev/meta-1.10.0",
       "packageUri": "lib/",
       "languageVersion": "2.12"
     },
@@ -477,7 +471,7 @@
     },
     {
       "name": "octo_image",
-      "rootUri": "file:///Users/emirsuyunasanov/.pub-cache/hosted/pub.dev/octo_image-1.0.2",
+      "rootUri": "file:///Users/emirsuyunasanov/.pub-cache/hosted/pub.dev/octo_image-2.0.0",
       "packageUri": "lib/",
       "languageVersion": "2.12"
     },
@@ -540,12 +534,6 @@
       "rootUri": "file:///Users/emirsuyunasanov/.pub-cache/hosted/pub.dev/path_provider_windows-2.1.7",
       "packageUri": "lib/",
       "languageVersion": "2.18"
-    },
-    {
-      "name": "pedantic",
-      "rootUri": "file:///Users/emirsuyunasanov/.pub-cache/hosted/pub.dev/pedantic-1.11.1",
-      "packageUri": "lib/",
-      "languageVersion": "2.12"
     },
     {
       "name": "petitparser",
@@ -677,7 +665,7 @@
       "name": "sky_engine",
       "rootUri": "file:///Users/emirsuyunasanov/Documents/flutter/bin/cache/pkg/sky_engine",
       "packageUri": "lib/",
-      "languageVersion": "3.0"
+      "languageVersion": "3.2"
     },
     {
       "name": "source_span",
@@ -699,15 +687,15 @@
     },
     {
       "name": "stack_trace",
-      "rootUri": "file:///Users/emirsuyunasanov/.pub-cache/hosted/pub.dev/stack_trace-1.11.0",
+      "rootUri": "file:///Users/emirsuyunasanov/.pub-cache/hosted/pub.dev/stack_trace-1.11.1",
       "packageUri": "lib/",
       "languageVersion": "2.18"
     },
     {
       "name": "stream_channel",
-      "rootUri": "file:///Users/emirsuyunasanov/.pub-cache/hosted/pub.dev/stream_channel-2.1.1",
+      "rootUri": "file:///Users/emirsuyunasanov/.pub-cache/hosted/pub.dev/stream_channel-2.1.2",
       "packageUri": "lib/",
-      "languageVersion": "2.14"
+      "languageVersion": "2.19"
     },
     {
       "name": "stream_transform",
@@ -741,9 +729,9 @@
     },
     {
       "name": "test_api",
-      "rootUri": "file:///Users/emirsuyunasanov/.pub-cache/hosted/pub.dev/test_api-0.6.0",
+      "rootUri": "file:///Users/emirsuyunasanov/.pub-cache/hosted/pub.dev/test_api-0.6.1",
       "packageUri": "lib/",
-      "languageVersion": "2.18"
+      "languageVersion": "3.0"
     },
     {
       "name": "timeago",
@@ -849,9 +837,9 @@
     },
     {
       "name": "web",
-      "rootUri": "file:///Users/emirsuyunasanov/.pub-cache/hosted/pub.dev/web-0.1.4-beta",
+      "rootUri": "file:///Users/emirsuyunasanov/.pub-cache/hosted/pub.dev/web-0.3.0",
       "packageUri": "lib/",
-      "languageVersion": "3.1"
+      "languageVersion": "3.2"
     },
     {
       "name": "win32",
@@ -884,7 +872,7 @@
       "languageVersion": "3.0"
     }
   ],
-  "generated": "2023-12-02T12:22:56.531245Z",
+  "generated": "2023-12-10T19:37:01.570448Z",
   "generator": "pub",
-  "generatorVersion": "3.1.1"
+  "generatorVersion": "3.2.3"
 }

@@ -27,7 +27,7 @@ dependencies:
     sdk: flutter
   aligned_dialog: 0.0.6
   auto_size_text: 3.0.0
-  cached_network_image: 3.2.1
+  cached_network_image: 3.3.0
   cloud_firestore: 4.8.0
   cloud_firestore_platform_interface: 5.15.0
   cloud_firestore_web: 3.6.0
@@ -46,7 +46,7 @@ dependencies:
   firebase_messaging_platform_interface: 4.5.2
   firebase_messaging_web: 3.5.2
   flutter_animate: 4.1.1+1
-  flutter_cache_manager: 3.3.0
+  flutter_cache_manager: ^3.3.1
   flutter_svg: 2.0.4
   font_awesome_flutter: 10.1.0
   from_css_color: 2.0.0
