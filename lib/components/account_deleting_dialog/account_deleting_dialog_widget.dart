@@ -184,7 +184,7 @@ class _AccountDeletingDialogWidgetState
                           width: MediaQuery.sizeOf(context).width * 0.7,
                           height: 45.0,
                           padding: EdgeInsetsDirectional.fromSTEB(
-                              24.0, 0.0, 24.0, 0.0),
+                              20.0, 0.0, 20.0, 0.0),
                           iconPadding: EdgeInsetsDirectional.fromSTEB(
                               0.0, 0.0, 0.0, 0.0),
                           color: Colors.black,
@@ -280,7 +280,7 @@ class _AccountDeletingDialogWidgetState
                             },
                             text: 'Yes, remove',
                             options: FFButtonOptions(
-                              width: MediaQuery.sizeOf(context).width * 1.0,
+                              width: MediaQuery.sizeOf(context).width * 0.7,
                               height: 45.0,
                               padding: EdgeInsetsDirectional.fromSTEB(
                                   24.0, 0.0, 24.0, 0.0),

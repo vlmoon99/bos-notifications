@@ -237,7 +237,7 @@ class _FiltersWidgetState extends State<FiltersWidget> {
                           kBreakpointSmall,
                           400.0,
                         )) {
-                      return 200.0;
+                      return 180.0;
                     } else if (MediaQuery.sizeOf(context).width <
                         valueOrDefault<double>(
                           kBreakpointMedium,
@@ -311,7 +311,7 @@ class _FiltersWidgetState extends State<FiltersWidget> {
                                     kBreakpointSmall,
                                     400.0,
                                   )) {
-                                return 14.0;
+                                return 10.0;
                               } else if (MediaQuery.sizeOf(context).width <
                                   valueOrDefault<double>(
                                     kBreakpointMedium,
@@ -353,13 +353,13 @@ class _FiltersWidgetState extends State<FiltersWidget> {
             iconColor: Color(0xFF65C3A2),
             weekFormat: false,
             weekStartsMonday: false,
-            rowHeight: 60.0,
+            rowHeight: 50.0,
             onChange: (DateTimeRange? newSelectedDate) {
               setState(() => _model.calendarSelectedDay = newSelectedDate);
             },
             titleStyle: FlutterFlowTheme.of(context).headlineSmall.override(
                   fontFamily: FlutterFlowTheme.of(context).headlineSmallFamily,
-                  fontSize: 20.0,
+                  fontSize: 18.0,
                   useGoogleFonts: GoogleFonts.asMap().containsKey(
                       FlutterFlowTheme.of(context).headlineSmallFamily),
                 ),

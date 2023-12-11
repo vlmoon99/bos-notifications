@@ -500,162 +500,94 @@ class _SubscribeBottomBarWidgetState extends State<SubscribeBottomBarWidget> {
                 alignment: AlignmentDirectional(0.00, 1.00),
                 child: Padding(
                   padding: EdgeInsetsDirectional.fromSTEB(0.0, 0.0, 0.0, 50.0),
-                  child: Container(
-                    width: MediaQuery.sizeOf(context).width * 0.9,
-                    height: MediaQuery.sizeOf(context).height * 0.06,
-                    constraints: BoxConstraints(
-                      maxWidth: 400.0,
-                      maxHeight: 50,
-                    ),
-                    decoration: BoxDecoration(
-                      color: FlutterFlowTheme.of(context).secondaryBackground,
-                    ),
-                    child: StreamBuilder<List<UsersRecord>>(
-                      stream: queryUsersRecord(
-                        queryBuilder: (usersRecord) => usersRecord.where(
-                          'uid',
-                          isEqualTo: currentUserUid,
-                        ),
-                        singleRecord: true,
-                      ),
-                      builder: (context, snapshot) {
-                        // Customize what your widget looks like when it's loading.
-
-                        List<UsersRecord> buttonUsersRecordList =
-                            snapshot.data!;
-                        // Return an empty Container when the item does not exist.
-
-                        final buttonUsersRecord =
-                            buttonUsersRecordList.isNotEmpty
-                                ? buttonUsersRecordList.first
-                                : null;
-                        return FFButtonWidget(
-                          onPressed: () async {
-                            if (currentUserDocument?.subscriptions.length ==
-                                50) {
-                              ScaffoldMessenger.of(context).showSnackBar(
-                                  SnackBar(content: Text('limit')));
-                            }
-                            var _shouldSetState = false;
-                            _model.button =
-                                await GetNearSocialInformationCall.call(
-                              accountId: _model.textController.text,
-                            );
-                            _shouldSetState = true;
-                            if (((_model.button?.bodyText ?? '') != null &&
-                                    (_model.button?.bodyText ?? '') != '') &&
-                                ((_model.button?.bodyText ?? '') != '{}') &&
-                                (FFAppState().userfound != 0)) {
-                              DatabaseHelper dbHelper = DatabaseHelper();
-                              var db = await dbHelper.db;
-                              FFAppState().update(
-                                () async {
-                                  await dbHelper.deleteRecordByName(
-                                      _model.textController.text);
-                                  FFAppState()
-                                      .deletedAccountList
-                                      .add(await db.query('myDB'));
-                                },
-                              );
-                              await currentUserReference!.update({
-                                ...mapToFirestore(
-                                  {
-                                    'subscriptions': FieldValue.arrayUnion(
-                                        [_model.textController.text]),
-                                  },
-                                ),
-                              });
-                            } else {
-                              if (_shouldSetState) setState(() {});
-                              return;
-                            }
-
-                            await buttonUsersRecord!.reference.update({
-                              ...mapToFirestore(
-                                {
-                                  'subscriptions': (currentUserDocument
-                                          ?.subscriptions
-                                          ?.toList() ??
-                                      []),
-                                },
-                              ),
-                            });
-
-                            await currentUserReference!.update({
-                              ...mapToFirestore(
-                                {
-                                  'accountDeleted': FieldValue.arrayRemove([
-                                    getAccountsDeletedFirestoreData(
-                                      updateAccountsDeletedStruct(
-                                        (currentUserDocument?.accountDeleted
-                                                    ?.toList() ??
-                                                [])
-                                            .where((e) =>
-                                                e.name ==
-                                                _model.textController.text)
-                                            .toList()
-                                            .first,
-                                        clearUnsetFields: false,
-                                      ),
-                                      true,
-                                    )
-                                  ]),
-                                },
-                              ),
-                            });
-
-                            await buttonUsersRecord!.reference.update({
-                              ...mapToFirestore(
-                                {
-                                  'accountDeleted': FieldValue.arrayRemove([
-                                    getAccountsDeletedFirestoreData(
-                                      updateAccountsDeletedStruct(
-                                        buttonUsersRecord?.accountDeleted
-                                            ?.where((e) =>
-                                                e.name ==
-                                                _model.textController.text)
-                                            .toList()
-                                            ?.first,
-                                        clearUnsetFields: true,
-                                      ),
-                                      true,
-                                    )
-                                  ]),
-                                },
-                              ),
-                            });
-                            if (_shouldSetState) setState(() {});
+                  child: InkWell(
+                    onTap: () async {
+                      if (currentUserDocument?.subscriptions.length == 50) {
+                        ScaffoldMessenger.of(context)
+                            .showSnackBar(SnackBar(content: Text('limit')));
+                      }
+                      var _shouldSetState = false;
+                      _model.button = await GetNearSocialInformationCall.call(
+                        accountId: _model.textController.text,
+                      );
+                      _shouldSetState = true;
+                      if (((_model.button?.bodyText ?? '') != null &&
+                              (_model.button?.bodyText ?? '') != '') &&
+                          ((_model.button?.bodyText ?? '') != '{}') &&
+                          (FFAppState().userfound != 0)) {
+                        DatabaseHelper dbHelper = DatabaseHelper();
+                        var db = await dbHelper.db;
+                        FFAppState().update(
+                          () async {
+                            await dbHelper
+                                .deleteRecordByName(_model.textController.text);
+                            FFAppState()
+                                .deletedAccountList
+                                .add(await db.query('myDB'));
                           },
-                          text: 'Subscribe',
-                          options: FFButtonOptions(
-                            width: MediaQuery.sizeOf(context).width * 1.0,
-                            height: 40.0,
-                            padding: EdgeInsetsDirectional.fromSTEB(
-                                0.0, 0.0, 0.0, 0.0),
-                            iconPadding: EdgeInsetsDirectional.fromSTEB(
-                                0.0, 0.0, 0.0, 0.0),
-                            color: FFAppState().userfound == 1
+                        );
+                        await currentUserReference!.update({
+                          ...mapToFirestore(
+                            {
+                              'subscriptions': FieldValue.arrayUnion(
+                                  [_model.textController.text]),
+                            },
+                          ),
+                        });
+                      } else {
+                        if (_shouldSetState) setState(() {});
+                        return;
+                      }
+
+                      await currentUserReference!.update({
+                        ...mapToFirestore(
+                          {
+                            'accountDeleted': FieldValue.arrayRemove([
+                              getAccountsDeletedFirestoreData(
+                                updateAccountsDeletedStruct(
+                                  (currentUserDocument?.accountDeleted
+                                              ?.toList() ??
+                                          [])
+                                      .where((e) =>
+                                          e.name == _model.textController.text)
+                                      .toList()
+                                      .first,
+                                  clearUnsetFields: false,
+                                ),
+                                true,
+                              )
+                            ]),
+                          },
+                        ),
+                      });
+
+                      if (_shouldSetState) setState(() {});
+                    },
+                    child: Container(
+                      width: MediaQuery.sizeOf(context).width * 0.9,
+                      height: 50,
+                      constraints: BoxConstraints(
+                        maxWidth: 400.0,
+                        maxHeight: 50,
+                      ),
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(8),
+                        color: FFAppState().userfound == 1
+                            ? Colors.black
+                            : Color(0xFFF5F5EF),
+                      ),
+                      child: Align(
+                        alignment: Alignment.center,
+                        child: Text(
+                          'Subscribe',
+                          style: TextStyle(
+                            fontSize: 18,
+                            color: !(FFAppState().userfound == 1)
                                 ? Colors.black
                                 : Color(0xFFF5F5EF),
-                            textStyle: FlutterFlowTheme.of(context)
-                                .titleSmall
-                                .override(
-                                  fontFamily: FlutterFlowTheme.of(context)
-                                      .titleSmallFamily,
-                                  color: Colors.white,
-                                  useGoogleFonts: GoogleFonts.asMap()
-                                      .containsKey(FlutterFlowTheme.of(context)
-                                          .titleSmallFamily),
-                                ),
-                            elevation: 0.0,
-                            borderSide: BorderSide(
-                              color: Colors.transparent,
-                              width: 1.0,
-                            ),
-                            borderRadius: BorderRadius.circular(8.0),
                           ),
-                        );
-                      },
+                        ),
+                      ),
                     ),
                   ),
                 ),

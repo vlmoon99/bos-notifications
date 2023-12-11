@@ -52,7 +52,9 @@ class _HomePageWidgetState extends State<HomePageWidget> {
     _model = createModel(context, () => HomePageModel());
 
     _model.textController ??= TextEditingController();
-    WidgetsBinding.instance.addPostFrameCallback((_) => setState(() {}));
+    WidgetsBinding.instance.addPostFrameCallback((_) => setState(() {
+          print(MediaQuery.of(context).viewInsets.bottom);
+        }));
     bool pause = true;
     scrollControllerForFilter.addListener(() async {
       if (scrollControllerForFilter.position.pixels >=
@@ -542,14 +544,21 @@ class _HomePageWidgetState extends State<HomePageWidget> {
                     ],
                   ),
                   Visibility(
-                    visible: currentUserDocument?.subscriptions.isEmpty ?? true,
-                    child: Expanded(
+                    visible:
+                        (currentUserDocument?.subscriptions.isEmpty ?? true),
+                    child: Padding(
+                      padding: EdgeInsets.only(
+                          top: MediaQuery.sizeOf(context).height < 900
+                              ? 20
+                              : 100),
                       child: Column(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
                           SvgPicture.asset(
                             'assets/icons/accounts.svg',
-                            height: 120,
+                            height: MediaQuery.sizeOf(context).height < 900
+                                ? 80
+                                : 120,
                             color: Color(0xFFC6F5F4),
                           ),
                           Padding(
@@ -564,6 +573,11 @@ class _HomePageWidgetState extends State<HomePageWidget> {
                                     style: FlutterFlowTheme.of(context)
                                         .bodyMedium
                                         .override(
+                                          fontSize: MediaQuery.sizeOf(context)
+                                                      .height <
+                                                  900
+                                              ? 11
+                                              : 14,
                                           fontFamily:
                                               FlutterFlowTheme.of(context)
                                                   .bodyMediumFamily,
@@ -586,10 +600,20 @@ class _HomePageWidgetState extends State<HomePageWidget> {
                                     text: 'to receive notifications',
                                     style: TextStyle(
                                       color: Color(0xFFBDBDBD),
+                                      fontSize:
+                                          MediaQuery.sizeOf(context).height <
+                                                  900
+                                              ? 11
+                                              : 14,
                                     ),
                                   )
                                 ],
-                                style: FlutterFlowTheme.of(context).bodyMedium,
+                                style: TextStyle(
+                                  fontSize:
+                                      MediaQuery.sizeOf(context).height < 900
+                                          ? 11
+                                          : 14,
+                                ),
                               ),
                               textAlign: TextAlign.center,
                             ),
@@ -827,16 +851,23 @@ class _HomePageWidgetState extends State<HomePageWidget> {
                                                                   MainAxisAlignment
                                                                       .spaceBetween,
                                                               children: [
-                                                                Text(
-                                                                  snapshot.data?[
-                                                                              index]
-                                                                              [
-                                                                              2]
-                                                                          .toString() ??
-                                                                      '',
-                                                                  style: TextStyle(
-                                                                      color: Color(
-                                                                          0xFF7E7E7E)),
+                                                                SizedBox(
+                                                                  width: 50,
+                                                                  height: 20,
+                                                                  child:
+                                                                      FittedBox(
+                                                                    child: Text(
+                                                                      snapshot.data?[index][2]
+                                                                              .toString() ??
+                                                                          '',
+                                                                      style: TextStyle(
+                                                                          fontSize: MediaQuery.sizeOf(context).height < 900
+                                                                              ? 11
+                                                                              : 14,
+                                                                          color:
+                                                                              Color(0xFF7E7E7E)),
+                                                                    ),
+                                                                  ),
                                                                 ),
                                                                 Text(
                                                                   DateFormat(
@@ -846,6 +877,10 @@ class _HomePageWidgetState extends State<HomePageWidget> {
                                                                           index][1])
                                                                       .toString(),
                                                                   style: TextStyle(
+                                                                      fontSize: MediaQuery.sizeOf(context).height <
+                                                                              900
+                                                                          ? 11
+                                                                          : 14,
                                                                       color: Color(
                                                                           0xFFBDBDBD)),
                                                                 ),
