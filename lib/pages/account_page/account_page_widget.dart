@@ -1,3 +1,4 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
 import '/auth/firebase_auth/auth_util.dart';
@@ -191,32 +192,11 @@ class _AccountPageWidgetState extends State<AccountPageWidget> {
                 children: [
                   Padding(
                     padding:
-                        EdgeInsetsDirectional.fromSTEB(15.0, 25.0, 15.0, 15.0),
+                        EdgeInsetsDirectional.fromSTEB(25.0, 25.0, 25.0, 15.0),
                     child: Container(
-                      width: () {
-                        if (MediaQuery.sizeOf(context).width <
-                            valueOrDefault<double>(
-                              kBreakpointSmall,
-                              400.0,
-                            )) {
-                          return 250.0;
-                        } else if (MediaQuery.sizeOf(context).width <
-                            valueOrDefault<double>(
-                              kBreakpointMedium,
-                              1025.0,
-                            )) {
-                          return 350.0;
-                        } else if (MediaQuery.sizeOf(context).width <
-                            valueOrDefault<double>(
-                              kBreakpointLarge,
-                              1500.0,
-                            )) {
-                          return 350.0;
-                        } else {
-                          return 400.0;
-                        }
-                      }(),
-                      height: 40.0,
+                      constraints: BoxConstraints(minWidth: 400, maxWidth: 524),
+                      width: MediaQuery.sizeOf(context).width * 0.7,
+                      height: 45.0,
                       decoration: BoxDecoration(
                         color: Color(0xFFF5F5EF),
                         borderRadius: BorderRadius.circular(8.0),
@@ -226,61 +206,18 @@ class _AccountPageWidgetState extends State<AccountPageWidget> {
                         mainAxisAlignment: MainAxisAlignment.start,
                         crossAxisAlignment: CrossAxisAlignment.center,
                         children: [
-                          Flexible(
-                            child: FlutterFlowIconButton(
-                              borderColor: Color(0x004B39EF),
-                              borderRadius: 30.0,
-                              buttonSize: 45.0,
-                              fillColor: Color(0x004B39EF),
-                              icon: Icon(
-                                Icons.search,
-                                color: FlutterFlowTheme.of(context).primaryText,
-                                size: 24.0,
+                          SizedBox(
+                            height: 45,
+                            width: 45,
+                            child: InkWell(
+                              child: SvgPicture.asset(
+                                'assets/icons/Icon_search.svg',
+                                fit: BoxFit.none,
                               ),
-                              onPressed: () async {
-                                setState(() {
-                                  FFAppState().searchAccount =
-                                      _model.textController.text;
-                                });
-                              },
+                              onTap: () {},
                             ),
                           ),
-                          Container(
-                            width: () {
-                              if (MediaQuery.sizeOf(context).width <
-                                  valueOrDefault<double>(
-                                    kBreakpointSmall,
-                                    400.0,
-                                  )) {
-                                return 205.0;
-                              } else if (MediaQuery.sizeOf(context).width <
-                                  valueOrDefault<double>(
-                                    kBreakpointMedium,
-                                    1025.0,
-                                  )) {
-                                return 305.0;
-                              } else if (MediaQuery.sizeOf(context).width <
-                                  valueOrDefault<double>(
-                                    kBreakpointLarge,
-                                    1500.0,
-                                  )) {
-                                return 305.0;
-                              } else {
-                                return 355.0;
-                              }
-                            }(),
-                            height: 100.0,
-                            constraints: BoxConstraints(
-                              maxWidth: 550.0,
-                            ),
-                            decoration: BoxDecoration(
-                              borderRadius: BorderRadius.only(
-                                bottomLeft: Radius.circular(0.0),
-                                bottomRight: Radius.circular(8.0),
-                                topLeft: Radius.circular(0.0),
-                                topRight: Radius.circular(8.0),
-                              ),
-                            ),
+                          Expanded(
                             child: Container(
                               width: MediaQuery.sizeOf(context).width * 1.0,
                               child: TextField(
@@ -295,7 +232,7 @@ class _AccountPageWidgetState extends State<AccountPageWidget> {
                                     });
                                   },
                                 ),
-                                autofocus: true,
+                                autofocus: false,
                                 obscureText: false,
                                 decoration: InputDecoration(
                                   labelText: 'Search by Account ID or Name',
@@ -340,34 +277,10 @@ class _AccountPageWidgetState extends State<AccountPageWidget> {
                   ),
                   Padding(
                     padding:
-                        EdgeInsetsDirectional.fromSTEB(15.0, 0.0, 0.0, 10.0),
+                        EdgeInsetsDirectional.fromSTEB(25.0, 0.0, 25.0, 10.0),
                     child: Container(
-                      width: valueOrDefault<double>(
-                        () {
-                          if (MediaQuery.sizeOf(context).width <
-                              valueOrDefault<double>(
-                                kBreakpointSmall,
-                                400.0,
-                              )) {
-                            return 270.0;
-                          } else if (MediaQuery.sizeOf(context).width <
-                              valueOrDefault<double>(
-                                kBreakpointMedium,
-                                1025.0,
-                              )) {
-                            return 370.0;
-                          } else if (MediaQuery.sizeOf(context).width <
-                              valueOrDefault<double>(
-                                kBreakpointLarge,
-                                1500.0,
-                              )) {
-                            return 350.0;
-                          } else {
-                            return 400.0;
-                          }
-                        }(),
-                        270.0,
-                      ),
+                      constraints: BoxConstraints(minWidth: 400, maxWidth: 524),
+                      width: MediaQuery.sizeOf(context).width * 0.7,
                       height: 30.0,
                       decoration: BoxDecoration(
                         color: FlutterFlowTheme.of(context).secondaryBackground,
@@ -411,12 +324,15 @@ class _AccountPageWidgetState extends State<AccountPageWidget> {
                                       FFAppState().deletionAccountList.value);
                                 });
                                 setState(() {
-                                  _model.select = !_model.select!;
+                                  FFAppState().selectAccounts =
+                                      !FFAppState().selectAccounts;
                                 });
                               },
                               child: Text(
                                 valueOrDefault<String>(
-                                  _model.select! ? 'Cancel' : 'Select',
+                                  FFAppState().selectAccounts
+                                      ? 'Cancel'
+                                      : 'Select',
                                   'Select',
                                 ),
                                 style: FlutterFlowTheme.of(context)
@@ -441,13 +357,12 @@ class _AccountPageWidgetState extends State<AccountPageWidget> {
                   Expanded(
                     child: Padding(
                       padding:
-                          EdgeInsetsDirectional.fromSTEB(15.0, 0.0, 15.0, 0.0),
+                          EdgeInsetsDirectional.fromSTEB(25.0, 0.0, 25.0, 0.0),
                       child: Container(
+                        height: MediaQuery.sizeOf(context).height,
+                        constraints:
+                            BoxConstraints(minWidth: 400, maxWidth: 524),
                         width: MediaQuery.sizeOf(context).width * 0.7,
-                        height: MediaQuery.sizeOf(context).height * 1.0,
-                        constraints: BoxConstraints(
-                          maxWidth: 370.0,
-                        ),
                         decoration: BoxDecoration(
                           color:
                               FlutterFlowTheme.of(context).secondaryBackground,
@@ -527,7 +442,8 @@ class _AccountPageWidgetState extends State<AccountPageWidget> {
                                                   .height *
                                               0.06,
                                           constraints: BoxConstraints(
-                                            maxWidth: 300.0,
+                                            minWidth: 400,
+                                            maxWidth: 524,
                                             maxHeight: 60.0,
                                             minHeight: 50,
                                           ),
@@ -550,23 +466,30 @@ class _AccountPageWidgetState extends State<AccountPageWidget> {
                                                   child: Container(
                                                     width: 50.0,
                                                     height: 50.0,
+                                                    clipBehavior: Clip
+                                                        .antiAliasWithSaveLayer,
                                                     decoration: BoxDecoration(
                                                       color: FlutterFlowTheme
                                                               .of(context)
                                                           .secondaryBackground,
-                                                      image: DecorationImage(
-                                                        fit: BoxFit.cover,
-                                                        image: Image.network(
-                                                          valueOrDefault<
-                                                              String>(
-                                                            functions.imageReturn(
-                                                                accountsItem),
-                                                            'https://i.near.social/magic/large/https://near.social/magic/img/account/sesona.near',
-                                                          ),
-                                                        ).image,
-                                                      ),
                                                       shape: BoxShape.circle,
                                                     ),
+                                                    child:
+                                                        //
+                                                        CachedNetworkImage(
+                                                      imageUrl:
+                                                          'https://i.near.social/magic/large/https://near.social/magic/img/account/$accountsItem',
+                                                      errorWidget: (context,
+                                                          url, error) {
+                                                        return SvgPicture
+                                                            .network(
+                                                          'https://i.near.social/magic/large/https://near.social/magic/img/account/$accountsItem',
+                                                          fit: BoxFit.cover,
+                                                        );
+                                                      },
+                                                      fit: BoxFit.cover,
+                                                    ),
+                                                    // //
                                                   ),
                                                 ),
                                                 Column(
@@ -602,7 +525,8 @@ class _AccountPageWidgetState extends State<AccountPageWidget> {
                                                                   0.0),
                                                       child: Stack(
                                                         children: [
-                                                          if (_model.select! &&
+                                                          if (FFAppState()
+                                                                  .selectAccounts &&
                                                               FFAppState()
                                                                   .deletionAccountList
                                                                   .value
@@ -671,7 +595,8 @@ class _AccountPageWidgetState extends State<AccountPageWidget> {
                                                                         'assets/icons/boxon.svg'),
                                                               ),
                                                             ),
-                                                          if (_model.select! &&
+                                                          if (FFAppState()
+                                                                  .selectAccounts &&
                                                               !FFAppState()
                                                                   .accountSelected
                                                                   .contains(
@@ -744,7 +669,8 @@ class _AccountPageWidgetState extends State<AccountPageWidget> {
                                                     ),
                                                   ),
                                                 ),
-                                                if (!_model.select!)
+                                                if (!FFAppState()
+                                                    .selectAccounts)
                                                   Expanded(
                                                     child: Align(
                                                       alignment:

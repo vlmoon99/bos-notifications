@@ -174,6 +174,20 @@ class _AccountsDeletingDialogWidgetState
                           EdgeInsetsDirectional.fromSTEB(20.0, 0.0, 20.0, 0.0),
                       child: FFButtonWidget(
                         onPressed: () async {
+                          setState(() {
+                            FFAppState().accountSelected = [];
+                          });
+                          FFAppState().update(() {
+                            FFAppState().deletionAccountList.value.clear();
+                            FFAppState()
+                                .deletionAccountList
+                                .add(FFAppState().deletionAccountList.value);
+                          });
+                          FFAppState().update(
+                            () {
+                              FFAppState().selectAccounts = false;
+                            },
+                          );
                           Navigator.pop(context);
                         },
                         text: 'No, keep it',
@@ -347,6 +361,19 @@ class _AccountsDeletingDialogWidgetState
                                 FFAppState().deletionAccountList.add(
                                     FFAppState().deletionAccountList.value);
                               });
+                              setState(() {
+                                FFAppState().accountSelected = [];
+                              });
+                              FFAppState().update(() {
+                                FFAppState().deletionAccountList.value.clear();
+                                FFAppState().deletionAccountList.add(
+                                    FFAppState().deletionAccountList.value);
+                              });
+                              FFAppState().update(
+                                () {
+                                  FFAppState().selectAccounts = false;
+                                },
+                              );
                               Navigator.pop(context);
                             },
                             text: 'Yes, remove',

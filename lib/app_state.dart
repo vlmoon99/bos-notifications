@@ -20,6 +20,7 @@ class FFAppState extends ChangeNotifier {
   int? lastBlockHeight;
   String? filterID;
   bool cycle = true;
+  bool selectAccounts = false;
 
   static FFAppState _instance = FFAppState._internal();
 
@@ -29,7 +30,8 @@ class FFAppState extends ChangeNotifier {
 
   final BehaviorSubject<List<Map>> listNameId = BehaviorSubject<List<Map>>()
     ..add([]);
-
+  final BehaviorSubject<List<int>> listTapNotifications =
+      BehaviorSubject<List<int>>()..add([]);
   final BehaviorSubject<bool> streamConroller = BehaviorSubject<bool>()
     ..add(false);
 

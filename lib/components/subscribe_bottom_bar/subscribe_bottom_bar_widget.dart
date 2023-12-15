@@ -317,8 +317,6 @@ class _SubscribeBottomBarWidgetState extends State<SubscribeBottomBarWidget> {
                                             return;
                                           }
                                         }
-
-                                        if (_shouldSetState) setState(() {});
                                       },
                                     ),
                                     obscureText: false,
@@ -502,66 +500,67 @@ class _SubscribeBottomBarWidgetState extends State<SubscribeBottomBarWidget> {
                   padding: EdgeInsetsDirectional.fromSTEB(0.0, 0.0, 0.0, 50.0),
                   child: InkWell(
                     onTap: () async {
-                      if (currentUserDocument?.subscriptions.length == 50) {
-                        ScaffoldMessenger.of(context)
-                            .showSnackBar(SnackBar(content: Text('limit')));
-                      }
-                      var _shouldSetState = false;
-                      _model.button = await GetNearSocialInformationCall.call(
-                        accountId: _model.textController.text,
+                      Future.microtask(
+                        () async {
+                          if (currentUserDocument?.subscriptions.length == 50) {
+                            ScaffoldMessenger.of(context)
+                                .showSnackBar(SnackBar(content: Text('limit')));
+                          }
+                          _model.button =
+                              await GetNearSocialInformationCall.call(
+                            accountId: _model.textController.text,
+                          );
+                          if (((_model.button?.bodyText ?? '') != null &&
+                                  (_model.button?.bodyText ?? '') != '') &&
+                              ((_model.button?.bodyText ?? '') != '{}') &&
+                              (FFAppState().userfound != 0)) {
+                            DatabaseHelper dbHelper = DatabaseHelper();
+                            var db = await dbHelper.db;
+                            FFAppState().update(
+                              () async {
+                                await dbHelper.deleteRecordByName(
+                                    _model.textController.text);
+                                FFAppState()
+                                    .deletedAccountList
+                                    .add(await db.query('myDB'));
+                              },
+                            );
+                            await currentUserReference!.update({
+                              ...mapToFirestore(
+                                {
+                                  'subscriptions': FieldValue.arrayUnion(
+                                      [_model.textController.text]),
+                                },
+                              ),
+                            });
+                          }
+
+                          await currentUserReference!.update({
+                            ...mapToFirestore(
+                              {
+                                'accountDeleted': FieldValue.arrayRemove([
+                                  getAccountsDeletedFirestoreData(
+                                    updateAccountsDeletedStruct(
+                                      (currentUserDocument?.accountDeleted
+                                                  ?.toList() ??
+                                              [])
+                                          .where((e) =>
+                                              e.name ==
+                                              _model.textController.text)
+                                          .toList()
+                                          .first,
+                                      clearUnsetFields: false,
+                                    ),
+                                    true,
+                                  )
+                                ]),
+                              },
+                            ),
+                          });
+                        },
                       );
-                      _shouldSetState = true;
-                      if (((_model.button?.bodyText ?? '') != null &&
-                              (_model.button?.bodyText ?? '') != '') &&
-                          ((_model.button?.bodyText ?? '') != '{}') &&
-                          (FFAppState().userfound != 0)) {
-                        DatabaseHelper dbHelper = DatabaseHelper();
-                        var db = await dbHelper.db;
-                        FFAppState().update(
-                          () async {
-                            await dbHelper
-                                .deleteRecordByName(_model.textController.text);
-                            FFAppState()
-                                .deletedAccountList
-                                .add(await db.query('myDB'));
-                          },
-                        );
-                        await currentUserReference!.update({
-                          ...mapToFirestore(
-                            {
-                              'subscriptions': FieldValue.arrayUnion(
-                                  [_model.textController.text]),
-                            },
-                          ),
-                        });
-                      } else {
-                        if (_shouldSetState) setState(() {});
-                        return;
-                      }
-
-                      await currentUserReference!.update({
-                        ...mapToFirestore(
-                          {
-                            'accountDeleted': FieldValue.arrayRemove([
-                              getAccountsDeletedFirestoreData(
-                                updateAccountsDeletedStruct(
-                                  (currentUserDocument?.accountDeleted
-                                              ?.toList() ??
-                                          [])
-                                      .where((e) =>
-                                          e.name == _model.textController.text)
-                                      .toList()
-                                      .first,
-                                  clearUnsetFields: false,
-                                ),
-                                true,
-                              )
-                            ]),
-                          },
-                        ),
-                      });
-
-                      if (_shouldSetState) setState(() {});
+                      await Future.delayed(Duration(milliseconds: 300));
+                      Navigator.pop(context);
                     },
                     child: Container(
                       width: MediaQuery.sizeOf(context).width * 0.9,

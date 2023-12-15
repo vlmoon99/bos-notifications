@@ -249,6 +249,7 @@ class _AccountDeletingDialogWidgetState
                                   : null;
                           return FFButtonWidget(
                             onPressed: () async {
+                              FFAppState().selectAccounts = false;
                               print(currentUserDocument?.uid);
                               var dbHelper = DatabaseHelper();
                               var db = await dbHelper.db;

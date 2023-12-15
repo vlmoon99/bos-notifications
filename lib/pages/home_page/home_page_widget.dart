@@ -42,6 +42,9 @@ class _HomePageWidgetState extends State<HomePageWidget> {
   List detectDuplicate = [];
   @override
   void initState() {
+    FFAppState().update(() {
+      FFAppState().listTapNotifications.value.clear();
+    });
     if (FFAppState().filterData.first != '' &&
         FFAppState().filterData.last != '') {
       initNotificationsForFilter();
@@ -407,7 +410,9 @@ class _HomePageWidgetState extends State<HomePageWidget> {
                                     FFAppState().filterID = empty
                                         ? null
                                         : value.replaceAll(RegExp(r'\s'), '');
-                                    print(FFAppState().filterID);
+                                    if (FFAppState().filterID == null) {
+                                      return;
+                                    }
                                     if (FFAppState().filterData.last != '' &&
                                         FFAppState().filterData.first != '') {
                                       initNotificationsForFilter();
@@ -418,7 +423,7 @@ class _HomePageWidgetState extends State<HomePageWidget> {
                                   });
                                 },
                                 controller: _model.textController,
-                                autofocus: true,
+                                autofocus: false,
                                 obscureText: false,
                                 decoration: InputDecoration(
                                   labelText: activeText
@@ -636,9 +641,9 @@ class _HomePageWidgetState extends State<HomePageWidget> {
                                   padding: const EdgeInsets.symmetric(
                                       horizontal: 25),
                                   child: Container(
+                                    height: MediaQuery.sizeOf(context).height,
                                     constraints: BoxConstraints(
                                         minWidth: 400, maxWidth: 524),
-                                    height: MediaQuery.sizeOf(context).height,
                                     width:
                                         MediaQuery.sizeOf(context).width * 0.7,
                                     child: ListView.builder(
@@ -664,6 +669,24 @@ class _HomePageWidgetState extends State<HomePageWidget> {
                                                             0.008)),
                                                 child: InkWell(
                                                   onTap: () async {
+                                                    FFAppState().update(
+                                                      () {
+                                                        FFAppState()
+                                                            .listTapNotifications
+                                                            .value
+                                                            .add(index);
+                                                      },
+                                                    );
+
+                                                    Timer(Duration(seconds: 2),
+                                                        () {
+                                                      FFAppState().update(() {
+                                                        FFAppState()
+                                                            .listTapNotifications
+                                                            .value
+                                                            .remove(index);
+                                                      });
+                                                    });
                                                     String url;
                                                     if (snapshot.data![index][0]
                                                             ['value']['type']
@@ -712,186 +735,193 @@ class _HomePageWidgetState extends State<HomePageWidget> {
 
                                                     await launchUrlString(url);
                                                   },
-                                                  child: Container(
-                                                      constraints:
-                                                          BoxConstraints(
-                                                        minHeight: 50,
-                                                        maxHeight: 100,
+                                                  child: AnimatedContainer(
+                                                    duration: Duration(
+                                                        milliseconds: 100),
+                                                    constraints: BoxConstraints(
+                                                      minHeight: 50,
+                                                      maxHeight: 100,
+                                                    ),
+                                                    decoration: BoxDecoration(
+                                                      color: FFAppState()
+                                                              .listTapNotifications
+                                                              .value
+                                                              .contains(index)
+                                                          ? Color.fromARGB(255,
+                                                              232, 249, 230)
+                                                          : Color(0xFFFAF9F8),
+                                                      borderRadius:
+                                                          BorderRadius.circular(
+                                                        8,
                                                       ),
-                                                      decoration: BoxDecoration(
-                                                        color:
-                                                            Color(0xFFFAF9F8),
-                                                        borderRadius:
-                                                            BorderRadius
-                                                                .circular(
-                                                          8,
-                                                        ),
-                                                      ),
-                                                      height: MediaQuery.sizeOf(
-                                                                  context)
-                                                              .height *
-                                                          0.065,
-                                                      child: Padding(
-                                                        padding: EdgeInsets.all(
-                                                            MediaQuery.sizeOf(
+                                                    ),
+                                                    height: MediaQuery.sizeOf(
+                                                                context)
+                                                            .height *
+                                                        0.065,
+                                                    child: Padding(
+                                                      padding: EdgeInsets.all(
+                                                          MediaQuery.sizeOf(
+                                                                          context)
+                                                                      .width >
+                                                                  600
+                                                              ? 8
+                                                              : 2),
+                                                      child: Row(
+                                                        mainAxisAlignment:
+                                                            MainAxisAlignment
+                                                                .spaceBetween,
+                                                        children: [
+                                                          Row(
+                                                            children: [
+                                                              Container(
+                                                                constraints:
+                                                                    BoxConstraints(
+                                                                  minWidth: 45,
+                                                                  minHeight: 45,
+                                                                  maxHeight: 65,
+                                                                  maxWidth: 65,
+                                                                ),
+                                                                clipBehavior: Clip
+                                                                    .antiAliasWithSaveLayer,
+                                                                width: MediaQuery.sizeOf(
                                                                             context)
-                                                                        .width >
-                                                                    600
-                                                                ? 8
-                                                                : 2),
-                                                        child: Row(
-                                                          mainAxisAlignment:
-                                                              MainAxisAlignment
-                                                                  .spaceBetween,
-                                                          children: [
-                                                            Row(
-                                                              children: [
-                                                                Container(
-                                                                  constraints:
-                                                                      BoxConstraints(
-                                                                    minWidth:
-                                                                        45,
-                                                                    minHeight:
-                                                                        45,
-                                                                    maxHeight:
-                                                                        65,
-                                                                    maxWidth:
-                                                                        65,
-                                                                  ),
-                                                                  clipBehavior:
-                                                                      Clip.antiAliasWithSaveLayer,
-                                                                  width: MediaQuery.sizeOf(
-                                                                              context)
-                                                                          .height *
-                                                                      0.06,
-                                                                  height: MediaQuery.sizeOf(
-                                                                              context)
-                                                                          .height *
-                                                                      0.06,
-                                                                  decoration: BoxDecoration(
-                                                                      color: Colors
-                                                                          .white,
-                                                                      borderRadius:
-                                                                          BorderRadius.circular(
-                                                                              100)),
-                                                                  child: snapshot
-                                                                          .data!
-                                                                          .isEmpty
-                                                                      ? SizedBox()
-                                                                      : CachedNetworkImage(
-                                                                          imageUrl:
-                                                                              'https://i.near.social/magic/large/https://near.social/magic/img/account/${snapshot.data![index][0]['accountId']}',
-                                                                          errorWidget: (context,
-                                                                              url,
-                                                                              error) {
-                                                                            return Image.asset(
-                                                                              'assets/images/nonAvatar.png',
-                                                                              fit: BoxFit.cover,
-                                                                            );
-                                                                          },
-                                                                          fit: BoxFit
-                                                                              .cover,
-                                                                        ),
-                                                                ),
-                                                                Padding(
-                                                                  padding: EdgeInsets
-                                                                      .symmetric(
-                                                                          horizontal:
-                                                                              10),
-                                                                  child:
-                                                                      SizedBox(
-                                                                    width: 150,
-                                                                    child:
-                                                                        Column(
-                                                                      mainAxisAlignment:
-                                                                          MainAxisAlignment
-                                                                              .spaceBetween,
-                                                                      crossAxisAlignment:
-                                                                          CrossAxisAlignment
-                                                                              .start,
-                                                                      children: [
-                                                                        Text(
-                                                                          (snapshot.data?[index][3] != '')
-                                                                              ? snapshot.data![index][3]
-                                                                              : snapshot.data![index][0]['accountId'],
-                                                                          style:
-                                                                              TextStyle(
-                                                                            color:
-                                                                                Color(0xFF000000),
-                                                                            fontWeight:
-                                                                                FontWeight.w500,
-                                                                          ),
-                                                                          maxLines:
-                                                                              1,
-                                                                          overflow:
-                                                                              TextOverflow.ellipsis,
-                                                                        ),
-                                                                        Text(
-                                                                          snapshot.data?[index][0]['value']
-                                                                              [
-                                                                              'type'],
-                                                                          maxLines:
-                                                                              1,
-                                                                          overflow:
-                                                                              TextOverflow.ellipsis,
-                                                                          style:
-                                                                              TextStyle(color: Color(0xFF7E7E7E)),
-                                                                        ),
-                                                                      ],
-                                                                    ),
-                                                                  ),
-                                                                ),
-                                                              ],
-                                                            ),
-                                                            Column(
-                                                              crossAxisAlignment:
-                                                                  CrossAxisAlignment
-                                                                      .end,
-                                                              mainAxisAlignment:
-                                                                  MainAxisAlignment
-                                                                      .spaceBetween,
-                                                              children: [
-                                                                SizedBox(
-                                                                  width: 50,
-                                                                  height: 20,
-                                                                  child:
-                                                                      FittedBox(
-                                                                    child: Text(
-                                                                      snapshot.data?[index][2]
-                                                                              .toString() ??
-                                                                          '',
-                                                                      style: TextStyle(
-                                                                          fontSize: MediaQuery.sizeOf(context).height < 900
-                                                                              ? 11
-                                                                              : 14,
+                                                                        .height *
+                                                                    0.06,
+                                                                height: MediaQuery.sizeOf(
+                                                                            context)
+                                                                        .height *
+                                                                    0.06,
+                                                                decoration: BoxDecoration(
+                                                                    color: Colors
+                                                                        .white,
+                                                                    borderRadius:
+                                                                        BorderRadius.circular(
+                                                                            100)),
+                                                                child: snapshot
+                                                                        .data!
+                                                                        .isEmpty
+                                                                    ? SizedBox()
+                                                                    : CachedNetworkImage(
+                                                                        imageUrl:
+                                                                            'https://i.near.social/magic/large/https://near.social/magic/img/account/${snapshot.data![index][0]['accountId']}',
+                                                                        errorWidget: (context,
+                                                                            url,
+                                                                            error) {
+                                                                          return Image
+                                                                              .asset(
+                                                                            'assets/images/nonAvatar.png',
+                                                                            fit:
+                                                                                BoxFit.cover,
+                                                                          );
+                                                                        },
+                                                                        fit: BoxFit
+                                                                            .cover,
+                                                                      ),
+                                                              ),
+                                                              Padding(
+                                                                padding: EdgeInsets
+                                                                    .symmetric(
+                                                                        horizontal:
+                                                                            10),
+                                                                child: SizedBox(
+                                                                  width: 150,
+                                                                  child: Column(
+                                                                    mainAxisAlignment:
+                                                                        MainAxisAlignment
+                                                                            .spaceBetween,
+                                                                    crossAxisAlignment:
+                                                                        CrossAxisAlignment
+                                                                            .start,
+                                                                    children: [
+                                                                      Text(
+                                                                        (snapshot.data?[index][3] !=
+                                                                                '')
+                                                                            ? snapshot.data![index][
+                                                                                3]
+                                                                            : snapshot.data![index][0]['accountId'] ??
+                                                                                '',
+                                                                        style:
+                                                                            TextStyle(
                                                                           color:
-                                                                              Color(0xFF7E7E7E)),
-                                                                    ),
+                                                                              Color(0xFF000000),
+                                                                          fontWeight:
+                                                                              FontWeight.w500,
+                                                                        ),
+                                                                        maxLines:
+                                                                            1,
+                                                                        overflow:
+                                                                            TextOverflow.ellipsis,
+                                                                      ),
+                                                                      Text(
+                                                                        snapshot.data?[index][0]['value']['type'] ??
+                                                                            '',
+                                                                        maxLines:
+                                                                            1,
+                                                                        overflow:
+                                                                            TextOverflow.ellipsis,
+                                                                        style: TextStyle(
+                                                                            color:
+                                                                                Color(0xFF7E7E7E)),
+                                                                      ),
+                                                                    ],
                                                                   ),
                                                                 ),
-                                                                Text(
-                                                                  DateFormat(
-                                                                          'MMM dd')
-                                                                      .format(snapshot
-                                                                              .data?[
-                                                                          index][1])
-                                                                      .toString(),
+                                                              ),
+                                                            ],
+                                                          ),
+                                                          Column(
+                                                            crossAxisAlignment:
+                                                                CrossAxisAlignment
+                                                                    .end,
+                                                            mainAxisAlignment:
+                                                                MainAxisAlignment
+                                                                    .spaceBetween,
+                                                            children: [
+                                                              SizedBox(
+                                                                width: 50,
+                                                                height: 20,
+                                                                child: Text(
+                                                                  snapshot.data?[
+                                                                              index]
+                                                                              [
+                                                                              2]
+                                                                          .toString() ??
+                                                                      '',
+                                                                  overflow:
+                                                                      TextOverflow
+                                                                          .ellipsis,
                                                                   style: TextStyle(
                                                                       fontSize: MediaQuery.sizeOf(context).height <
                                                                               900
                                                                           ? 11
                                                                           : 14,
                                                                       color: Color(
-                                                                          0xFFBDBDBD)),
+                                                                          0xFF7E7E7E)),
                                                                 ),
-                                                              ],
-                                                            ),
-                                                          ],
-                                                        ),
-                                                      )
-                                                      // Text(
-                                                      //     '${snapshot.data?[index].toString()} $index ${snapshot.data?.length}'),
+                                                              ),
+                                                              Text(
+                                                                DateFormat(
+                                                                        'MMM dd')
+                                                                    .format(snapshot
+                                                                            .data?[
+                                                                        index][1])
+                                                                    .toString(),
+                                                                style: TextStyle(
+                                                                    fontSize:
+                                                                        MediaQuery.sizeOf(context).height <
+                                                                                900
+                                                                            ? 11
+                                                                            : 14,
+                                                                    color: Color(
+                                                                        0xFFBDBDBD)),
+                                                              ),
+                                                            ],
+                                                          ),
+                                                        ],
                                                       ),
+                                                    ),
+                                                  ),
                                                 ),
                                               );
                                       },

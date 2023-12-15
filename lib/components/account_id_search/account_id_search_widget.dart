@@ -117,7 +117,7 @@ class _AccountIdSearchWidgetState extends State<AccountIdSearchWidget> {
                         );
                       },
                     ),
-                    autofocus: true,
+                    autofocus: false,
                     textCapitalization: TextCapitalization.none,
                     obscureText: false,
                     decoration: InputDecoration(
