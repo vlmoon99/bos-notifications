@@ -21,7 +21,7 @@ class FFAppState extends ChangeNotifier {
   String? filterID;
   bool cycle = true;
   bool selectAccounts = false;
-
+  bool pause = false;
   static FFAppState _instance = FFAppState._internal();
 
   factory FFAppState() {
@@ -256,6 +256,7 @@ Future _safeInitAsync(Function() initializeField) async {
 }
 
 Future initNotificationsForFilter() async {
+  FFAppState().pause = false;
   if (!FFAppState().cycle) {
     return;
   }
@@ -365,11 +366,13 @@ Future initNotificationsForFilter() async {
       sort.sort((a, b) => b[0]['blockHeight'].compareTo(a[0]['blockHeight']));
       FFAppState().streamNotifications.add(sort);
       FFAppState().streamConroller.add(true);
+      FFAppState().pause = true;
     },
   );
 }
 
 Future initNotifications() async {
+  FFAppState().pause = false;
   bool start = true;
   List valueResult = [];
   DateTime timeUNIXresult;
@@ -463,6 +466,7 @@ Future initNotifications() async {
               (a, b) => b[0]['blockHeight'].compareTo(a[0]['blockHeight']));
           FFAppState().streamNotifications.add(sort);
           FFAppState().streamConroller.add(false);
+          FFAppState().pause = true;
         },
       );
     });

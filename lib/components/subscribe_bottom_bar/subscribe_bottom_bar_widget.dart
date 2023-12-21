@@ -1,3 +1,6 @@
+import 'package:cached_network_image/cached_network_image.dart';
+import 'package:flutter_svg/flutter_svg.dart';
+
 import '../../local_DataBase.dart';
 import '/auth/firebase_auth/auth_util.dart';
 import '/backend/api_requests/api_calls.dart';
@@ -63,7 +66,7 @@ class _SubscribeBottomBarWidgetState extends State<SubscribeBottomBarWidget> {
     return Align(
       alignment: AlignmentDirectional(0.00, -1.00),
       child: Container(
-        width: MediaQuery.sizeOf(context).width * 1.0,
+        width: MediaQuery.sizeOf(context).width,
         height: MediaQuery.sizeOf(context).height * 0.8,
         decoration: BoxDecoration(
           color: FlutterFlowTheme.of(context).secondaryBackground,
@@ -143,6 +146,7 @@ class _SubscribeBottomBarWidgetState extends State<SubscribeBottomBarWidget> {
                 padding: EdgeInsetsDirectional.fromSTEB(25.0, 5.0, 0.0, 20.0),
                 child: Text(
                   'Enter Account ID in the field below',
+                  textScaler: TextScaler.noScaling,
                   style: FlutterFlowTheme.of(context).bodyMedium.override(
                         fontFamily:
                             FlutterFlowTheme.of(context).bodyMediumFamily,
@@ -182,6 +186,7 @@ class _SubscribeBottomBarWidgetState extends State<SubscribeBottomBarWidget> {
                 padding: EdgeInsetsDirectional.fromSTEB(25.0, 0.0, 0.0, 10.0),
                 child: Text(
                   'Add an Account:',
+                  textScaler: TextScaler.noScaling,
                   style: FlutterFlowTheme.of(context).bodyMedium.override(
                         fontFamily:
                             FlutterFlowTheme.of(context).bodyMediumFamily,
@@ -218,154 +223,100 @@ class _SubscribeBottomBarWidgetState extends State<SubscribeBottomBarWidget> {
             ),
             Align(
               alignment: AlignmentDirectional(0.00, 0.00),
-              child: Padding(
-                padding: EdgeInsetsDirectional.fromSTEB(15.0, 0.0, 15.0, 5.0),
-                child: Container(
-                  width: MediaQuery.sizeOf(context).width * 0.9,
-                  height: 40.0,
-                  constraints: BoxConstraints(
-                    maxWidth: 350.0,
-                  ),
-                  decoration: BoxDecoration(
-                    color: Color(0xFFF5F5EF),
-                    borderRadius: BorderRadius.circular(16.0),
-                    border: Border.all(
-                      color: Color(0xFFBDBDBD),
-                      width: 1.0,
-                    ),
-                  ),
-                  child: Align(
-                    alignment: AlignmentDirectional(0.00, 0.00),
-                    child: Row(
-                      mainAxisSize: MainAxisSize.min,
-                      mainAxisAlignment: MainAxisAlignment.start,
-                      crossAxisAlignment: CrossAxisAlignment.center,
-                      children: [
-                        Expanded(
-                          child: Align(
-                            alignment: AlignmentDirectional(0.00, 0.00),
-                            child: Container(
-                              width: MediaQuery.sizeOf(context).width * 1.0,
-                              height: 100.0,
-                              constraints: BoxConstraints(
-                                maxWidth: 550.0,
-                              ),
-                              decoration: BoxDecoration(
-                                borderRadius: BorderRadius.only(
-                                  bottomLeft: Radius.circular(0.0),
-                                  bottomRight: Radius.circular(8.0),
-                                  topLeft: Radius.circular(0.0),
-                                  topRight: Radius.circular(8.0),
-                                ),
-                              ),
-                              child: Padding(
-                                padding: EdgeInsetsDirectional.fromSTEB(
-                                    6.0, 0.0, 6.0, 0.0),
-                                child: Container(
-                                  width: MediaQuery.sizeOf(context).width * 1.0,
-                                  child: TextField(
-                                    controller: _model.textController,
-                                    onChanged: (_) => EasyDebounce.debounce(
-                                      '_model.textController',
-                                      Duration(milliseconds: 2000),
-                                      () async {
-                                        var _shouldSetState = false;
-                                        if (_model.textController.text == '') {
-                                          setState(() {
-                                            FFAppState().userfound = 0;
-                                          });
-                                          if (_shouldSetState) setState(() {});
-                                          return;
-                                        } else {
-                                          if (functions.nearDetect(
-                                              _model.textController.text)) {
-                                            _model.getNearSocialInfoResult =
-                                                await GetNearSocialInformationCall
-                                                    .call(
-                                              accountId:
-                                                  _model.textController.text,
-                                            );
-                                            _shouldSetState = true;
-                                            if (((_model.getNearSocialInfoResult
-                                                            ?.bodyText ??
-                                                        '') ==
-                                                    '') ||
-                                                ((_model.getNearSocialInfoResult
-                                                            ?.bodyText ??
-                                                        '') ==
-                                                    '{}')) {
-                                              setState(() {
-                                                FFAppState().userfound = 2;
-                                              });
-                                              if (_shouldSetState)
-                                                setState(() {});
-                                              return;
-                                            } else {
-                                              setState(() {
-                                                FFAppState().userfound = 1;
-                                              });
-                                              if (_shouldSetState)
-                                                setState(() {});
-                                              return;
-                                            }
-                                          } else {
-                                            setState(() {
-                                              FFAppState().userfound = 2;
-                                            });
-                                            if (_shouldSetState)
-                                              setState(() {});
-                                            return;
-                                          }
-                                        }
-                                      },
-                                    ),
-                                    obscureText: false,
-                                    decoration: InputDecoration(
-                                      labelText: 'Enter Account ID here...',
-                                      labelStyle: FlutterFlowTheme.of(context)
-                                          .labelMedium
-                                          .override(
-                                            fontFamily:
-                                                FlutterFlowTheme.of(context)
-                                                    .labelMediumFamily,
-                                            color: Color(0xFFBDBDBD),
-                                            fontSize: 12.0,
-                                            useGoogleFonts: GoogleFonts.asMap()
-                                                .containsKey(
-                                                    FlutterFlowTheme.of(context)
-                                                        .labelMediumFamily),
-                                          ),
-                                      hintStyle: FlutterFlowTheme.of(context)
-                                          .labelMedium,
-                                      enabledBorder: InputBorder.none,
-                                      floatingLabelBehavior:
-                                          FloatingLabelBehavior.never,
-                                      focusedBorder: InputBorder.none,
-                                      errorBorder: InputBorder.none,
-                                      focusedErrorBorder: InputBorder.none,
-                                    ),
-                                    style: FlutterFlowTheme.of(context)
-                                        .bodyMedium
-                                        .override(
-                                          fontFamily:
-                                              FlutterFlowTheme.of(context)
-                                                  .bodyMediumFamily,
-                                          fontSize: 14.0,
-                                          useGoogleFonts: GoogleFonts.asMap()
-                                              .containsKey(
-                                                  FlutterFlowTheme.of(context)
-                                                      .bodyMediumFamily),
-                                        ),
-                                  ),
-                                ),
-                              ),
-                            ),
-                          ),
+              child: Stack(
+                children: [
+                  Padding(
+                    padding:
+                        const EdgeInsets.only(top: 15, left: 20, right: 20),
+                    child: Container(
+                      height: 42,
+                      width: MediaQuery.sizeOf(context).width,
+                      alignment: Alignment.center,
+                      constraints: BoxConstraints(
+                        maxWidth: 350.0,
+                      ),
+                      decoration: BoxDecoration(
+                        color: Color(0xFFF5F5EF),
+                        borderRadius: BorderRadius.circular(16.0),
+                        border: Border.all(
+                          color: Color(0xFFBDBDBD),
+                          width: 1.0,
                         ),
-                      ],
+                      ),
                     ),
                   ),
-                ),
+                  Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 25),
+                    child: Container(
+                      constraints: BoxConstraints(maxWidth: 340),
+                      child: TextField(
+                        controller: _model.textController,
+                        onChanged: (_) => EasyDebounce.debounce(
+                          '_model.textController',
+                          Duration(seconds: 1),
+                          () async {
+                            var _shouldSetState = false;
+                            if (_model.textController.text == '') {
+                              setState(() {
+                                FFAppState().userfound = 0;
+                              });
+                              if (_shouldSetState) setState(() {});
+                              return;
+                            } else {
+                              _model.getNearSocialInfoResult =
+                                  await GetNearSocialInformationCall.call(
+                                accountId: _model.textController.text,
+                              );
+                              _shouldSetState = true;
+                              if (((_model.getNearSocialInfoResult?.bodyText ??
+                                          '') ==
+                                      '') ||
+                                  ((_model.getNearSocialInfoResult?.bodyText ??
+                                          '') ==
+                                      '{}')) {
+                                setState(() {
+                                  FFAppState().userfound = 2;
+                                });
+                                if (_shouldSetState) setState(() {});
+                                return;
+                              } else {
+                                setState(() {
+                                  FFAppState().userfound = 1;
+                                });
+                                if (_shouldSetState) setState(() {});
+                                return;
+                              }
+                            }
+                          },
+                        ),
+                        textAlignVertical: TextAlignVertical.top,
+                        style: FlutterFlowTheme.of(context)
+                            .labelMedium
+                            .copyWith(fontSize: 12),
+                        decoration: InputDecoration(
+                          labelText: 'Enter Account ID here...',
+                          labelStyle: FlutterFlowTheme.of(context)
+                              .labelMedium
+                              .override(
+                                fontFamily: FlutterFlowTheme.of(context)
+                                    .labelMediumFamily,
+                                color: Color(0xFFBDBDBD),
+                                fontSize: 12.0,
+                                useGoogleFonts: GoogleFonts.asMap().containsKey(
+                                    FlutterFlowTheme.of(context)
+                                        .labelMediumFamily),
+                              ),
+                          hintStyle: FlutterFlowTheme.of(context).labelMedium,
+                          enabledBorder: InputBorder.none,
+                          floatingLabelBehavior: FloatingLabelBehavior.never,
+                          focusedBorder: InputBorder.none,
+                          errorBorder: InputBorder.none,
+                          focusedErrorBorder: InputBorder.none,
+                        ),
+                      ),
+                    ),
+                  ),
+                ],
               ),
             ),
             Align(
@@ -400,6 +351,7 @@ class _SubscribeBottomBarWidgetState extends State<SubscribeBottomBarWidget> {
                                   FFAppState().userfound == 1
                                       ? 'An account has been found:'
                                       : 'No account with this ID has been found',
+                                  textScaler: TextScaler.noScaling,
                                   style: FlutterFlowTheme.of(context)
                                       .bodyMedium
                                       .override(
@@ -445,22 +397,19 @@ class _SubscribeBottomBarWidgetState extends State<SubscribeBottomBarWidget> {
                           padding: EdgeInsetsDirectional.fromSTEB(
                               0.0, 4.0, 0.0, 4.0),
                           child: Container(
+                            clipBehavior: Clip.antiAliasWithSaveLayer,
                             width: 45.0,
                             height: 45.0,
                             decoration: BoxDecoration(
                               color: Color(0x00815757),
-                              image: DecorationImage(
-                                fit: BoxFit.cover,
-                                image: Image.network(
-                                  valueOrDefault<String>(
-                                    functions.imageReturn(
-                                        _model.textController.text),
-                                    'https://i.near.social/magic/large/https://near.social/magic/img/account/sesona.near',
-                                  ),
-                                ).image,
-                              ),
                               shape: BoxShape.circle,
                             ),
+                            child: CachedNetworkImage(
+                                fit: BoxFit.cover,
+                                errorWidget: (context, url, error) =>
+                                    SvgPicture.network(url),
+                                imageUrl:
+                                    "https://i.near.social/magic/large/https://near.social/magic/img/account/${_model.textController.text}"),
                           ),
                         ),
                         Padding(
@@ -471,19 +420,27 @@ class _SubscribeBottomBarWidgetState extends State<SubscribeBottomBarWidget> {
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
-                              Text(
-                                '@${_model.textController.text}',
-                                style: FlutterFlowTheme.of(context)
-                                    .bodyMedium
-                                    .override(
-                                      fontFamily: FlutterFlowTheme.of(context)
-                                          .bodyMediumFamily,
-                                      fontWeight: FontWeight.w500,
-                                      useGoogleFonts: GoogleFonts.asMap()
-                                          .containsKey(
-                                              FlutterFlowTheme.of(context)
-                                                  .bodyMediumFamily),
-                                    ),
+                              Container(
+                                width: MediaQuery.sizeOf(context).width * 0.7,
+                                constraints: BoxConstraints(
+                                  maxWidth: 300.0,
+                                ),
+                                child: Text(
+                                  '@${_model.textController.text}',
+                                  textScaler: TextScaler.noScaling,
+                                  overflow: TextOverflow.ellipsis,
+                                  style: FlutterFlowTheme.of(context)
+                                      .bodyMedium
+                                      .override(
+                                        fontFamily: FlutterFlowTheme.of(context)
+                                            .bodyMediumFamily,
+                                        fontWeight: FontWeight.w500,
+                                        useGoogleFonts: GoogleFonts.asMap()
+                                            .containsKey(
+                                                FlutterFlowTheme.of(context)
+                                                    .bodyMediumFamily),
+                                      ),
+                                ),
                               ),
                             ],
                           ),
@@ -579,6 +536,7 @@ class _SubscribeBottomBarWidgetState extends State<SubscribeBottomBarWidget> {
                         alignment: Alignment.center,
                         child: Text(
                           'Subscribe',
+                          textScaler: TextScaler.noScaling,
                           style: TextStyle(
                             fontSize: 18,
                             color: !(FFAppState().userfound == 1)

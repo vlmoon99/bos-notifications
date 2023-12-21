@@ -343,13 +343,7 @@ class _FiltersWidgetState extends State<FiltersWidget> {
             ),
           ),
           FlutterFlowCalendar(
-            color: !(_model.calendarSelectedDay!.start > DateTime.timestamp() ||
-                    FFAppState().filterData.first != '' &&
-                        _model.calendarSelectedDay!.start >
-                            DateFormat('MMM d, yyyy')
-                                .parse(FFAppState().filterData.first))
-                ? Color(0xFF65C3A2)
-                : Color.fromARGB(255, 198, 198, 198),
+            color: Color(0xFF65C3A2),
             iconColor: Color(0xFF65C3A2),
             weekFormat: false,
             weekStartsMonday: false,
@@ -437,48 +431,27 @@ class _FiltersWidgetState extends State<FiltersWidget> {
                   ),
                   FFButtonWidget(
                     onPressed: () async {
-                      if (_model.calendarSelectedDay!.start >
-                          DateTime.timestamp()) {
-                        return;
-                      }
-                      if (FFAppState().filterData.first == null ||
-                          FFAppState().filterData.first == '') {
-                        setState(() {
-                          FFAppState().updateFilterDataAtIndex(
-                            0,
-                            (_) => dateTimeFormat(
-                              'yMMMd',
-                              _model.calendarSelectedDay!.start,
-                              locale: FFLocalizations.of(context).languageCode,
-                            ),
+                      await Future.microtask(
+                        () {
+                          FFAppState().filterData.last = dateTimeFormat(
+                            'yMMMd',
+                            _model.calendarSelectedDay!.start,
+                            locale: FFLocalizations.of(context).languageCode,
                           );
-                        });
-                      } else {
-                        if (FFAppState().filterData.last == null ||
-                            FFAppState().filterData.last == '') {
-                          if (_model.calendarSelectedDay!.start >
-                              DateFormat('MMM d, yyyy')
-                                  .parse(FFAppState().filterData.first)) {
-                            return;
-                          }
-                          ;
-                          setState(() {
-                            FFAppState().updateFilterDataAtIndex(
-                              1,
-                              (_) => dateTimeFormat(
-                                'yMMMd',
-                                _model.calendarSelectedDay!.start,
-                                locale:
-                                    FFLocalizations.of(context).languageCode,
-                              ),
-                            );
-                          });
-                        }
-                        if (FFAppState().filterData.last != '' &&
-                            FFAppState().filterData.first != '') {
-                          initNotificationsForFilter();
-                        }
-                      }
+
+                          FFAppState().filterData.first = dateTimeFormat(
+                            'yMMMd',
+                            _model.calendarSelectedDay!.end >
+                                    DateTime.timestamp()
+                                ? DateTime.timestamp()
+                                : _model.calendarSelectedDay!.end,
+                            locale: FFLocalizations.of(context).languageCode,
+                          );
+                          print(FFAppState().filterData);
+                        },
+                      );
+
+                      initNotificationsForFilter();
                     },
                     text: 'Apply',
                     options: FFButtonOptions(

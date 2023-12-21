@@ -5,6 +5,7 @@ import 'package:table_calendar/table_calendar.dart';
 
 DateTime kFirstDay = DateTime(1970, 1, 1);
 DateTime kLastDay = DateTime(2100, 1, 1);
+bool dayNum = true;
 
 extension DateTimeExtension on DateTime {
   DateTime get startOfDay => DateTime(year, month, day);
@@ -53,6 +54,7 @@ class FlutterFlowCalendar extends StatefulWidget {
 class _FlutterFlowCalendarState extends State<FlutterFlowCalendar> {
   late DateTime focusedDay;
   late DateTime selectedDay;
+  late DateTime selectedDay2;
   late DateTimeRange selectedRange;
 
   @override
@@ -60,12 +62,16 @@ class _FlutterFlowCalendarState extends State<FlutterFlowCalendar> {
     super.initState();
     focusedDay = widget.initialDate ?? DateTime.now();
     selectedDay = widget.initialDate ?? DateTime.now();
-    selectedRange = DateTimeRange(
-      start: selectedDay.startOfDay,
-      end: selectedDay.endOfDay,
-    );
-    SchedulerBinding.instance
-        .addPostFrameCallback((_) => setSelectedDay(selectedRange.start));
+    selectedDay2 = widget.initialDate ?? DateTime.now();
+    selectedRange = selectedDay2.isAfter(selectedDay)
+        ? DateTimeRange(
+            start: selectedDay.startOfDay,
+            end: selectedDay2.endOfDay,
+          )
+        : DateTimeRange(
+            start: selectedDay2.startOfDay,
+            end: selectedDay.endOfDay,
+          );
   }
 
   CalendarFormat get calendarFormat =>
@@ -81,18 +87,41 @@ class _FlutterFlowCalendarState extends State<FlutterFlowCalendar> {
 
   Color get lighterColor => widget.color.withOpacity(0.60);
 
-  void setSelectedDay(
-    DateTime? newSelectedDay, [
-    DateTime? newSelectedEnd,
-  ]) {
+  void setSelectedDay(DateTime? newSelectedDay) {
     final newRange = newSelectedDay == null
         ? null
-        : DateTimeRange(
-            start: newSelectedDay.startOfDay,
-            end: newSelectedEnd ?? newSelectedDay.endOfDay,
-          );
+        : selectedDay2.isAfter(newSelectedDay)
+            ? DateTimeRange(
+                start: newSelectedDay.startOfDay,
+                end: selectedDay2.endOfDay,
+              )
+            : DateTimeRange(
+                start: selectedDay2.startOfDay,
+                end: newSelectedDay.endOfDay,
+              );
     setState(() {
       selectedDay = newSelectedDay ?? selectedDay;
+      selectedRange = newRange ?? selectedRange;
+      if (widget.onChange != null) {
+        widget.onChange!(newRange);
+      }
+    });
+  }
+
+  void setSelectedDay2(DateTime? newSelectedDay) {
+    final newRange = newSelectedDay == null
+        ? null
+        : selectedDay.isAfter(newSelectedDay)
+            ? DateTimeRange(
+                start: newSelectedDay.startOfDay,
+                end: selectedDay.endOfDay,
+              )
+            : DateTimeRange(
+                start: selectedDay.startOfDay,
+                end: newSelectedDay.endOfDay,
+              );
+    setState(() {
+      selectedDay2 = newSelectedDay ?? selectedDay;
       selectedRange = newRange ?? selectedRange;
       if (widget.onChange != null) {
         widget.onChange!(newRange);
@@ -126,7 +155,9 @@ class _FlutterFlowCalendarState extends State<FlutterFlowCalendar> {
           ),
           TableCalendar(
             focusedDay: focusedDay,
-            selectedDayPredicate: (date) => isSameDay(selectedDay, date),
+            selectedDayPredicate: (date) =>
+                selectedRange.start.isBefore(date) &&
+                selectedRange.end.isAfter(date),
             firstDay: kFirstDay,
             lastDay: kLastDay,
             calendarFormat: calendarFormat,
@@ -177,11 +208,17 @@ class _FlutterFlowCalendarState extends State<FlutterFlowCalendar> {
               }
             },
             onDaySelected: (newSelectedDay, focused) {
-              if (!isSameDay(selectedDay, newSelectedDay)) {
+              if (newSelectedDay.isAfter(DateTime.now())) {
+                return;
+              }
+              if (dayNum) {
                 setSelectedDay(newSelectedDay);
-                if (focusedDay.startOfDay != focused.startOfDay) {
-                  setState(() => focusedDay = focused);
-                }
+              } else {
+                setSelectedDay2(newSelectedDay);
+              }
+              dayNum = !dayNum;
+              if (focusedDay.startOfDay != focused.startOfDay) {
+                setState(() => focusedDay = focused);
               }
             },
           ),

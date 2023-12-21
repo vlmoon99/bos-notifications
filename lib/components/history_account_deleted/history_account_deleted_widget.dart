@@ -53,7 +53,10 @@ class _HistoryAccountDeletedWidgetState
     return PopScope(
       onPopInvoked: (didPop) {
         if (didPop) {
-          Navigator.pop(context);
+          print('hello');
+          FFAppState().update(() {
+            FFAppState().historyOnOff.add(false);
+          });
         }
       },
       child: Align(
@@ -101,6 +104,7 @@ class _HistoryAccountDeletedWidgetState
                       ),
                       Text(
                         'History of deleted accounts',
+                        textScaler: TextScaler.noScaling,
                         style: FlutterFlowTheme.of(context).bodyMedium.override(
                               fontFamily:
                                   FlutterFlowTheme.of(context).bodyMediumFamily,

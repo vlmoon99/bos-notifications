@@ -1,6 +1,6 @@
 import 'package:b_o_s_notifications/local_DataBase.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-
+import 'package:cached_network_image/cached_network_image.dart';
 import '/auth/firebase_auth/auth_util.dart';
 import '/backend/backend.dart';
 import '/flutter_flow/flutter_flow_icon_button.dart';
@@ -77,20 +77,20 @@ class _AccountDeletedWidgetState extends State<AccountDeletedWidget> {
             Padding(
               padding: EdgeInsetsDirectional.fromSTEB(3.0, 0.0, 7.0, 0.0),
               child: Container(
+                clipBehavior: Clip.antiAliasWithSaveLayer,
                 width: 50.0,
                 height: 50.0,
                 decoration: BoxDecoration(
                   color: FlutterFlowTheme.of(context).secondaryBackground,
-                  image: DecorationImage(
-                    fit: BoxFit.cover,
-                    image: Image.network(
-                      valueOrDefault<String>(
-                        functions.imageReturn(widget.name!),
-                        'https://i.near.social/magic/large/https://near.social/magic/img/account/sesona.near',
-                      ),
-                    ).image,
-                  ),
                   shape: BoxShape.circle,
+                ),
+                child: CachedNetworkImage(
+                  imageUrl:
+                      'https://i.near.social/magic/large/https://near.social/magic/img/account/${widget.name}',
+                  errorWidget: (context, url, error) {
+                    return SvgPicture.network(url);
+                  },
+                  fit: BoxFit.cover,
                 ),
               ),
             ),
@@ -99,9 +99,13 @@ class _AccountDeletedWidgetState extends State<AccountDeletedWidget> {
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text(
-                  widget.name!,
-                  style: FlutterFlowTheme.of(context).bodyMedium,
+                SizedBox(
+                  width: 100,
+                  child: Text(
+                    widget.name!,
+                    overflow: TextOverflow.ellipsis,
+                    style: FlutterFlowTheme.of(context).bodyMedium,
+                  ),
                 ),
               ],
             ),

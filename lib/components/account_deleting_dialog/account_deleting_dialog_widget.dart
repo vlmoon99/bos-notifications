@@ -84,20 +84,8 @@ class _AccountDeletingDialogWidgetState
           }(),
           320.0,
         ),
-        height: valueOrDefault<double>(
-          () {
-            if (MediaQuery.sizeOf(context).width < kBreakpointSmall) {
-              return 260.0;
-            } else if (MediaQuery.sizeOf(context).width < kBreakpointMedium) {
-              return 280.0;
-            } else if (MediaQuery.sizeOf(context).width < kBreakpointLarge) {
-              return 300.0;
-            } else {
-              return 330.0;
-            }
-          }(),
-          260.0,
-        ),
+        height: MediaQuery.sizeOf(context).height * 0.6,
+        constraints: BoxConstraints(maxHeight: 400),
         decoration: BoxDecoration(
           color: FlutterFlowTheme.of(context).secondaryBackground,
           boxShadow: [
@@ -118,6 +106,7 @@ class _AccountDeletingDialogWidgetState
                 padding: EdgeInsetsDirectional.fromSTEB(20.0, 15.0, 20.0, 15.0),
                 child: Text(
                   'Remove an Account',
+                  textScaler: TextScaler.noScaling,
                   style: FlutterFlowTheme.of(context).bodyMedium.override(
                         fontFamily:
                             FlutterFlowTheme.of(context).bodyMediumFamily,

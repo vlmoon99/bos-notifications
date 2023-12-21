@@ -255,6 +255,7 @@ class _NavBarPageState extends State<NavBarPage> {
                                   ),
                                 ),
                                 Text('Home',
+                                    textScaler: TextScaler.noScaling,
                                     style: TextStyle(
                                       fontSize: 13,
                                       fontWeight: currentIndex == 0
@@ -306,6 +307,7 @@ class _NavBarPageState extends State<NavBarPage> {
                                   ),
                                 ),
                                 Text('Accounts',
+                                    textScaler: TextScaler.noScaling,
                                     style: TextStyle(
                                       fontSize: 13,
                                       fontWeight: currentIndex == 1
@@ -358,6 +360,7 @@ class _NavBarPageState extends State<NavBarPage> {
                                 ),
                                 Text(
                                   'Settings',
+                                  textScaler: TextScaler.noScaling,
                                   style: TextStyle(
                                     fontSize: 13,
                                     fontWeight: currentIndex == 2

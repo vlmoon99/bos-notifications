@@ -42,9 +42,7 @@ class _HomePageWidgetState extends State<HomePageWidget> {
   List detectDuplicate = [];
   @override
   void initState() {
-    FFAppState().update(() {
-      FFAppState().listTapNotifications.value.clear();
-    });
+    FFAppState().listTapNotifications.value.clear();
     if (FFAppState().filterData.first != '' &&
         FFAppState().filterData.last != '') {
       initNotificationsForFilter();
@@ -55,15 +53,11 @@ class _HomePageWidgetState extends State<HomePageWidget> {
     _model = createModel(context, () => HomePageModel());
 
     _model.textController ??= TextEditingController();
-    WidgetsBinding.instance.addPostFrameCallback((_) => setState(() {
-          print(MediaQuery.of(context).viewInsets.bottom);
-        }));
-    bool pause = true;
     scrollControllerForFilter.addListener(() async {
       if (scrollControllerForFilter.position.pixels >=
               scrollControllerForFilter.position.maxScrollExtent - 1500 &&
-          pause) {
-        pause = false;
+          FFAppState().pause) {
+        FFAppState().pause = false;
         // ИСПОЛНЯЕМЫЙ КОД
 
         //СОЗДАНИЕ СОРТИРОВОЧНОГО ЛИСТА, ЛОКАЛЬНОГО ПРЕДЕЛЬНОГО БЛОКА И ОБНУЛЕНИЕ ГЛОБАЛЬНОГО ПРЕДЕЛЬНОГО БЛОКА.
@@ -156,14 +150,14 @@ class _HomePageWidgetState extends State<HomePageWidget> {
             .add(FFAppState().streamNotifications.value + sortList);
         //ПАУЗА
         await Future.delayed(Duration(milliseconds: 500));
-        pause = true;
+        FFAppState().pause = true;
       }
     });
     scrollController.addListener(() async {
       if (scrollController.position.pixels >=
               scrollController.position.maxScrollExtent - 1500 &&
-          pause) {
-        pause = false;
+          FFAppState().pause) {
+        FFAppState().pause = false;
         // ИСПОЛНЯЕМЫЙ КОД
 
         //СОЗДАНИЕ СОРТИРОВОЧНОГО ЛИСТА, ЛОКАЛЬНОГО ПРЕДЕЛЬНОГО БЛОКА И ОБНУЛЕНИЕ ГЛОБАЛЬНОГО ПРЕДЕЛЬНОГО БЛОКА.
@@ -261,7 +255,7 @@ class _HomePageWidgetState extends State<HomePageWidget> {
             .add(FFAppState().streamNotifications.value + sortList);
         //ПАУЗА
         await Future.delayed(Duration(milliseconds: 500));
-        pause = true;
+        FFAppState().pause = true;
       }
     });
   }
@@ -304,6 +298,7 @@ class _HomePageWidgetState extends State<HomePageWidget> {
                 children: [
                   Text(
                     'Home',
+                    textScaler: TextScaler.noScaling,
                     style: FlutterFlowTheme.of(context).bodyMedium.override(
                           fontFamily:
                               FlutterFlowTheme.of(context).bodyMediumFamily,
@@ -346,6 +341,7 @@ class _HomePageWidgetState extends State<HomePageWidget> {
                           EdgeInsetsDirectional.fromSTEB(24.0, 24.0, 0.0, 24.0),
                       child: Text(
                         'Notifications',
+                        textScaler: TextScaler.noScaling,
                         style: FlutterFlowTheme.of(context).bodyMedium.override(
                               fontFamily:
                                   FlutterFlowTheme.of(context).bodyMediumFamily,
@@ -389,13 +385,7 @@ class _HomePageWidgetState extends State<HomePageWidget> {
                                 onTap: () {},
                               ),
                             ),
-                            Container(
-                              constraints: BoxConstraints(
-                                maxWidth: 405,
-                              ),
-                              height: 100.0,
-                              width:
-                                  MediaQuery.sizeOf(context).width * 0.7 - 45,
+                            Expanded(
                               child: TextField(
                                 onSubmitted: (value) {
                                   activeText = true;
@@ -404,15 +394,8 @@ class _HomePageWidgetState extends State<HomePageWidget> {
                                   activeText = false;
                                   timer?.cancel();
                                   timer = Timer(Duration(seconds: 1), () {
-                                    bool empty =
-                                        RegExp(r'^\s*$').hasMatch(value);
-
-                                    FFAppState().filterID = empty
-                                        ? null
-                                        : value.replaceAll(RegExp(r'\s'), '');
-                                    if (FFAppState().filterID == null) {
-                                      return;
-                                    }
+                                    FFAppState().filterID =
+                                        value.replaceAll(RegExp(r'\s'), '');
                                     if (FFAppState().filterData.last != '' &&
                                         FFAppState().filterData.first != '') {
                                       initNotificationsForFilter();
@@ -522,6 +505,7 @@ class _HomePageWidgetState extends State<HomePageWidget> {
                                           AlignmentDirectional(0.00, -1.00),
                                       child: Text(
                                         '1',
+                                        textScaler: TextScaler.noScaling,
                                         style: FlutterFlowTheme.of(context)
                                             .bodyMedium
                                             .override(
@@ -699,6 +683,21 @@ class _HomePageWidgetState extends State<HomePageWidget> {
                                                           .toString();
                                                       url =
                                                           'https://near.social/devhub.near/widget/app?page=post&id=$idPost';
+                                                    } else if (snapshot
+                                                            .data![index][0]
+                                                                ['value']
+                                                                ['type']
+                                                            .toString() ==
+                                                        'mention') {
+                                                      String id = snapshot
+                                                          .data![index][2]
+                                                          .toString();
+                                                      String block = snapshot
+                                                          .data![index][0]
+                                                              ['blockHeight']
+                                                          .toString();
+                                                      url =
+                                                          'https://near.social/mob.near/widget/MainPage.N.Post.Page?accountId=$id&blockHeight=$block';
                                                     } else {
                                                       if (snapshot.data![index]
                                                                       [0]
@@ -808,12 +807,8 @@ class _HomePageWidgetState extends State<HomePageWidget> {
                                                                         errorWidget: (context,
                                                                             url,
                                                                             error) {
-                                                                          return Image
-                                                                              .asset(
-                                                                            'assets/images/nonAvatar.png',
-                                                                            fit:
-                                                                                BoxFit.cover,
-                                                                          );
+                                                                          return SvgPicture.network(
+                                                                              url);
                                                                         },
                                                                         fit: BoxFit
                                                                             .cover,
@@ -841,6 +836,8 @@ class _HomePageWidgetState extends State<HomePageWidget> {
                                                                                 3]
                                                                             : snapshot.data![index][0]['accountId'] ??
                                                                                 '',
+                                                                        textScaler:
+                                                                            TextScaler.noScaling,
                                                                         style:
                                                                             TextStyle(
                                                                           color:
@@ -858,6 +855,8 @@ class _HomePageWidgetState extends State<HomePageWidget> {
                                                                             '',
                                                                         maxLines:
                                                                             1,
+                                                                        textScaler:
+                                                                            TextScaler.noScaling,
                                                                         overflow:
                                                                             TextOverflow.ellipsis,
                                                                         style: TextStyle(
@@ -891,6 +890,9 @@ class _HomePageWidgetState extends State<HomePageWidget> {
                                                                   overflow:
                                                                       TextOverflow
                                                                           .ellipsis,
+                                                                  textScaler:
+                                                                      TextScaler
+                                                                          .noScaling,
                                                                   style: TextStyle(
                                                                       fontSize: MediaQuery.sizeOf(context).height <
                                                                               900
@@ -907,6 +909,9 @@ class _HomePageWidgetState extends State<HomePageWidget> {
                                                                             .data?[
                                                                         index][1])
                                                                     .toString(),
+                                                                textScaler:
+                                                                    TextScaler
+                                                                        .noScaling,
                                                                 style: TextStyle(
                                                                     fontSize:
                                                                         MediaQuery.sizeOf(context).height <
