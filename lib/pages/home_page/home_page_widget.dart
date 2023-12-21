@@ -613,6 +613,19 @@ class _HomePageWidgetState extends State<HomePageWidget> {
                   ),
                   Visibility(
                     visible:
+                        !(currentUserDocument?.subscriptions.isEmpty ?? true) &&
+                            FFAppState().streamNotifications.value.isEmpty,
+                    child: Expanded(
+                      child: Center(
+                        child: CircularProgressIndicator(
+                          backgroundColor: Colors.white,
+                          color: Colors.green,
+                        ),
+                      ),
+                    ),
+                  ),
+                  Visibility(
+                    visible:
                         !(currentUserDocument?.subscriptions.isEmpty ?? true),
                     child: Expanded(
                       child: StreamBuilder(

@@ -134,6 +134,7 @@ class _FiltersWidgetState extends State<FiltersWidget> {
                       } else {
                         print('TIME TIME TIME');
                       }
+                      Navigator.pop(context);
                     },
                     text: 'Clear All',
                     options: FFButtonOptions(
@@ -452,6 +453,7 @@ class _FiltersWidgetState extends State<FiltersWidget> {
                       );
 
                       initNotificationsForFilter();
+                      Navigator.pop(context);
                     },
                     text: 'Apply',
                     options: FFButtonOptions(

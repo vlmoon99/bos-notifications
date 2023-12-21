@@ -1,4 +1,5 @@
 import 'package:b_o_s_notifications/local_DataBase.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:provider/provider.dart';
 import 'package:flutter/gestures.dart';
@@ -21,6 +22,11 @@ import 'flutter_flow/nav/nav.dart';
 import 'index.dart';
 
 void main() async {
+  SystemChrome.setPreferredOrientations([
+    DeviceOrientation.portraitUp,
+    DeviceOrientation.portraitDown,
+  ]);
+
   WidgetsFlutterBinding.ensureInitialized();
   usePathUrlStrategy();
   await initFirebase();
@@ -220,14 +226,12 @@ class _NavBarPageState extends State<NavBarPage> {
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceAround,
                 children: [
-                  InkWell(
-                    onTap: () => setState(() {
-                      _currentPage = null;
-                      _currentPageName = tabs.keys.toList()[0];
-                    }),
-                    child: SizedBox(
-                      height: 70,
-                      width: 65,
+                  Expanded(
+                    child: InkWell(
+                      onTap: () => setState(() {
+                        _currentPage = null;
+                        _currentPageName = tabs.keys.toList()[0];
+                      }),
                       child: Column(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
@@ -256,6 +260,7 @@ class _NavBarPageState extends State<NavBarPage> {
                                 ),
                                 Text('Home',
                                     textScaler: TextScaler.noScaling,
+                                    maxLines: 1,
                                     style: TextStyle(
                                       fontSize: 13,
                                       fontWeight: currentIndex == 0
@@ -272,14 +277,12 @@ class _NavBarPageState extends State<NavBarPage> {
                       ),
                     ),
                   ),
-                  InkWell(
-                    onTap: () => setState(() {
-                      _currentPage = null;
-                      _currentPageName = tabs.keys.toList()[1];
-                    }),
-                    child: SizedBox(
-                      height: 70,
-                      width: 65,
+                  Expanded(
+                    child: InkWell(
+                      onTap: () => setState(() {
+                        _currentPage = null;
+                        _currentPageName = tabs.keys.toList()[1];
+                      }),
                       child: Column(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
@@ -308,6 +311,7 @@ class _NavBarPageState extends State<NavBarPage> {
                                 ),
                                 Text('Accounts',
                                     textScaler: TextScaler.noScaling,
+                                    maxLines: 1,
                                     style: TextStyle(
                                       fontSize: 13,
                                       fontWeight: currentIndex == 1
@@ -324,14 +328,12 @@ class _NavBarPageState extends State<NavBarPage> {
                       ),
                     ),
                   ),
-                  InkWell(
-                    onTap: () => setState(() {
-                      _currentPage = null;
-                      _currentPageName = tabs.keys.toList()[2];
-                    }),
-                    child: SizedBox(
-                      height: 70,
-                      width: 65,
+                  Expanded(
+                    child: InkWell(
+                      onTap: () => setState(() {
+                        _currentPage = null;
+                        _currentPageName = tabs.keys.toList()[2];
+                      }),
                       child: Column(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
@@ -361,6 +363,7 @@ class _NavBarPageState extends State<NavBarPage> {
                                 Text(
                                   'Settings',
                                   textScaler: TextScaler.noScaling,
+                                  maxLines: 1,
                                   style: TextStyle(
                                     fontSize: 13,
                                     fontWeight: currentIndex == 2
