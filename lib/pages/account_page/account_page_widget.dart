@@ -474,9 +474,7 @@ class _AccountPageWidgetState extends State<AccountPageWidget> {
                                                           .secondaryBackground,
                                                       shape: BoxShape.circle,
                                                     ),
-                                                    child:
-                                                        //
-                                                        CachedNetworkImage(
+                                                    child: CachedNetworkImage(
                                                       imageUrl:
                                                           'https://i.near.social/magic/large/https://near.social/magic/img/account/$accountsItem',
                                                       errorWidget: (context,
@@ -489,7 +487,6 @@ class _AccountPageWidgetState extends State<AccountPageWidget> {
                                                       },
                                                       fit: BoxFit.cover,
                                                     ),
-                                                    // //
                                                   ),
                                                 ),
                                                 Column(
