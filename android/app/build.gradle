@@ -51,7 +51,7 @@ android {
         applicationId "com.vlmoon.nearsocialnotifications"
         minSdkVersion 21
         targetSdkVersion 33
-        versionCode 4
+        versionCode 7
         versionName flutterVersionName
     }
 

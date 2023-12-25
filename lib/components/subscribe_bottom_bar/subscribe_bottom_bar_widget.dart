@@ -95,7 +95,7 @@ class _SubscribeBottomBarWidgetState extends State<SubscribeBottomBarWidget> {
                   width: MediaQuery.sizeOf(context).width * 0.15,
                   height: 5.0,
                   decoration: BoxDecoration(
-                    color: Color(0xFFBDBDBD),
+                    color: Colors.white,
                     borderRadius: BorderRadius.circular(30.0),
                   ),
                 ),
@@ -223,32 +223,27 @@ class _SubscribeBottomBarWidgetState extends State<SubscribeBottomBarWidget> {
             ),
             Align(
               alignment: AlignmentDirectional(0.00, 0.00),
-              child: Stack(
-                children: [
-                  Padding(
-                    padding:
-                        const EdgeInsets.only(top: 15, left: 20, right: 20),
-                    child: Container(
-                      height: 42,
-                      width: MediaQuery.sizeOf(context).width,
-                      alignment: Alignment.center,
-                      constraints: BoxConstraints(
-                        maxWidth: 350.0,
-                      ),
-                      decoration: BoxDecoration(
-                        color: Color(0xFFF5F5EF),
-                        borderRadius: BorderRadius.circular(16.0),
-                        border: Border.all(
-                          color: Color(0xFFBDBDBD),
-                          width: 1.0,
-                        ),
-                      ),
+              child: Padding(
+                padding: const EdgeInsets.only(top: 15, left: 20, right: 20),
+                child: Container(
+                  padding: EdgeInsets.symmetric(horizontal: 16),
+                  height: 40,
+                  width: MediaQuery.sizeOf(context).width,
+                  alignment: Alignment.center,
+                  constraints: BoxConstraints(
+                    maxWidth: 350.0,
+                  ),
+                  decoration: BoxDecoration(
+                    color: Color(0xFFFAF9F8),
+                    borderRadius: BorderRadius.circular(8.0),
+                    border: Border.all(
+                      color: Color(0xFFBDBDBD),
+                      width: 1.0,
                     ),
                   ),
-                  Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 25),
-                    child: Container(
-                      constraints: BoxConstraints(maxWidth: 340),
+                  child: Expanded(
+                    child: OverflowBox(
+                      maxHeight: 1000,
                       child: TextField(
                         controller: _model.textController,
                         onChanged: (_) => EasyDebounce.debounce(
@@ -292,21 +287,20 @@ class _SubscribeBottomBarWidgetState extends State<SubscribeBottomBarWidget> {
                         textAlignVertical: TextAlignVertical.top,
                         style: FlutterFlowTheme.of(context)
                             .labelMedium
-                            .copyWith(fontSize: 12),
+                            .copyWith(fontSize: 14),
                         decoration: InputDecoration(
-                          labelText: 'Enter Account ID here...',
-                          labelStyle: FlutterFlowTheme.of(context)
+                          hintText: 'Enter Account ID here...',
+                          hintStyle: FlutterFlowTheme.of(context)
                               .labelMedium
                               .override(
                                 fontFamily: FlutterFlowTheme.of(context)
                                     .labelMediumFamily,
                                 color: Color(0xFFBDBDBD),
-                                fontSize: 12.0,
+                                fontSize: 14.0,
                                 useGoogleFonts: GoogleFonts.asMap().containsKey(
                                     FlutterFlowTheme.of(context)
                                         .labelMediumFamily),
                               ),
-                          hintStyle: FlutterFlowTheme.of(context).labelMedium,
                           enabledBorder: InputBorder.none,
                           floatingLabelBehavior: FloatingLabelBehavior.never,
                           focusedBorder: InputBorder.none,
@@ -316,7 +310,7 @@ class _SubscribeBottomBarWidgetState extends State<SubscribeBottomBarWidget> {
                       ),
                     ),
                   ),
-                ],
+                ),
               ),
             ),
             Align(
