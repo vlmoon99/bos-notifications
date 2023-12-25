@@ -1,4 +1,5 @@
 import 'package:b_o_s_notifications/local_DataBase.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:provider/provider.dart';
@@ -30,6 +31,11 @@ void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   usePathUrlStrategy();
   await initFirebase();
+  await FirebaseMessaging.instance.setForegroundNotificationPresentationOptions(
+    alert: true,
+    badge: true,
+    sound: true,
+  );
 
   await DatabaseHelper().initDb();
   final appState = FFAppState(); // Initialize FFAppState
