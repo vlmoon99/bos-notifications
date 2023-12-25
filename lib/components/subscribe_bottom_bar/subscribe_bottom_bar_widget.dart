@@ -1,4 +1,6 @@
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
 import '../../local_DataBase.dart';
@@ -484,6 +486,31 @@ class _SubscribeBottomBarWidgetState extends State<SubscribeBottomBarWidget> {
                                 },
                               ),
                             });
+                          }
+
+                          final uid = FirebaseAuth.instance.currentUser!.uid;
+                          final token =
+                              await FirebaseMessaging.instance.getToken();
+
+                          final isThisAccountIdChannelExist =
+                              (await FirebaseFirestore.instance
+                                          .collection('subscriptions_channels')
+                                          .doc(_model.textController.text)
+                                          .get())
+                                      .data()
+                                      ?.isNotEmpty ??
+                                  false;
+
+                          if (isThisAccountIdChannelExist) {
+                            await FirebaseFirestore.instance
+                                .collection('subscriptions_channels')
+                                .doc(_model.textController.text)
+                                .update({uid: token});
+                          } else {
+                            await FirebaseFirestore.instance
+                                .collection('subscriptions_channels')
+                                .doc(_model.textController.text)
+                                .set({uid: token});
                           }
 
                           await currentUserReference!.update({

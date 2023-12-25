@@ -1,4 +1,6 @@
 import 'package:b_o_s_notifications/local_DataBase.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import '/auth/firebase_auth/auth_util.dart';
@@ -159,12 +161,6 @@ class _AccountDeletedWidgetState extends State<AccountDeletedWidget> {
                               },
                             );
 
-                            // await currentUserReference?.update({
-                            //   ...mapToFirestore(
-                            //     {'accountDeleted': XXXXXXX},
-                            //   ),
-                            // });
-
                             await currentUserReference?.update({
                               ...mapToFirestore(
                                 {
@@ -173,6 +169,31 @@ class _AccountDeletedWidgetState extends State<AccountDeletedWidget> {
                                 },
                               ),
                             });
+                            final uid = FirebaseAuth.instance.currentUser!.uid;
+                            final token =
+                                await FirebaseMessaging.instance.getToken();
+
+                            final isThisAccountIdChannelExist =
+                                (await FirebaseFirestore.instance
+                                            .collection(
+                                                'subscriptions_channels')
+                                            .doc(widget.name)
+                                            .get())
+                                        .data()
+                                        ?.isNotEmpty ??
+                                    false;
+
+                            if (isThisAccountIdChannelExist) {
+                              await FirebaseFirestore.instance
+                                  .collection('subscriptions_channels')
+                                  .doc(widget.name)
+                                  .update({uid: token});
+                            } else {
+                              await FirebaseFirestore.instance
+                                  .collection('subscriptions_channels')
+                                  .doc(widget.name)
+                                  .set({uid: token});
+                            }
                           },
                         ),
                       );
