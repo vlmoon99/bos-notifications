@@ -411,34 +411,26 @@ class _SubscribeBottomBarWidgetState extends State<SubscribeBottomBarWidget> {
                         Padding(
                           padding: EdgeInsetsDirectional.fromSTEB(
                               5.0, 0.0, 0.0, 0.0),
-                          child: Column(
-                            mainAxisSize: MainAxisSize.max,
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Container(
-                                width: MediaQuery.sizeOf(context).width * 0.7,
-                                constraints: BoxConstraints(
-                                  maxWidth: 300.0,
-                                ),
-                                child: Text(
-                                  '@${_model.textController.text}',
-                                  textScaler: TextScaler.noScaling,
-                                  overflow: TextOverflow.ellipsis,
-                                  style: FlutterFlowTheme.of(context)
-                                      .bodyMedium
-                                      .override(
-                                        fontFamily: FlutterFlowTheme.of(context)
-                                            .bodyMediumFamily,
-                                        fontWeight: FontWeight.w500,
-                                        useGoogleFonts: GoogleFonts.asMap()
-                                            .containsKey(
-                                                FlutterFlowTheme.of(context)
-                                                    .bodyMediumFamily),
-                                      ),
-                                ),
+                          child: Expanded(
+                            child: Align(
+                              alignment: Alignment.topLeft,
+                              child: Text(
+                                '@${_model.textController.text}',
+                                textScaler: TextScaler.noScaling,
+                                overflow: TextOverflow.ellipsis,
+                                style: FlutterFlowTheme.of(context)
+                                    .bodyMedium
+                                    .override(
+                                      fontFamily: FlutterFlowTheme.of(context)
+                                          .bodyMediumFamily,
+                                      fontWeight: FontWeight.w500,
+                                      useGoogleFonts: GoogleFonts.asMap()
+                                          .containsKey(
+                                              FlutterFlowTheme.of(context)
+                                                  .bodyMediumFamily),
+                                    ),
                               ),
-                            ],
+                            ),
                           ),
                         ),
                       ],

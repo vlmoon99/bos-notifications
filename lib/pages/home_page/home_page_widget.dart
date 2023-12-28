@@ -1,6 +1,8 @@
 import 'dart:async';
 
 import 'package:b_o_s_notifications/auth/firebase_auth/auth_util.dart';
+import 'package:b_o_s_notifications/notifications.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:b_o_s_notifications/backend/api_requests/api_calls.dart';
 import 'package:cached_network_image/cached_network_image.dart';
@@ -40,8 +42,54 @@ class _HomePageWidgetState extends State<HomePageWidget> {
 
   List pastAccounts = [];
   List detectDuplicate = [];
+  bool isNotificationsListenerInited = false;
+
+  Future<void> setupInteractedMessage() async {
+    // Get any messages which caused the application to open from
+    // a terminated state.
+    RemoteMessage? initialMessage =
+        await FirebaseMessaging.instance.getInitialMessage();
+
+    // If the message also contains a data property with a "type" of "chat",
+    // navigate to a chat screen
+    if (initialMessage != null) {
+      _handleMessage(initialMessage);
+    }
+
+    // Also handle any interaction when the app is in the background via a
+    // Stream listener
+    FirebaseMessaging.onMessageOpenedApp.listen(_handleMessage);
+    FirebaseMessaging.onMessage.listen((RemoteMessage message) {
+      final title = message.notification?.title ?? 'Title';
+      final body = message.notification?.body ?? 'Body';
+      print('Got a message whilst in the foreground!');
+      setState(
+        () {
+          initNotifications();
+        },
+      );
+      print('Message data: ${message.data}');
+      //(Notifi 2)Got a message whilst in the foreground
+
+      LocalNotificationService.showNotificationOnForeground(
+          LocalNotificationMessage(title, body, {}));
+    });
+  }
+
+  void _handleMessage(RemoteMessage message) {
+    //(Notifi 3)Got a message whilst in the foreground
+
+    // Modular.to.pushNamedAndRemoveUntil(
+    //     Routes.home.getRoute(Routes.home.notifications), (route) {
+    //   log("route ${route.settings.name}");
+    //   return route.settings.name == '/home/';
+    // });
+  }
+
   @override
   void initState() {
+    setupInteractedMessage();
+
     FFAppState().listTapNotifications.value.clear();
     if (FFAppState().filterData.first != '' &&
         FFAppState().filterData.last != '') {
@@ -54,6 +102,13 @@ class _HomePageWidgetState extends State<HomePageWidget> {
 
     _model.textController ??= TextEditingController();
     scrollControllerForFilter.addListener(() async {
+      if (scrollControllerForFilter.position.pixels <=
+              scrollControllerForFilter.position.maxScrollExtent + 300 &&
+          DateTime.parse(FFAppState().filterData.first) >= DateTime.now() &&
+          FFAppState().newMessage) {
+        FFAppState().newMessage = false;
+        initNotificationsForFilter();
+      }
       if (scrollControllerForFilter.position.pixels >=
               scrollControllerForFilter.position.maxScrollExtent - 1500 &&
           FFAppState().pause) {
@@ -155,6 +210,12 @@ class _HomePageWidgetState extends State<HomePageWidget> {
       }
     });
     scrollController.addListener(() async {
+      if (scrollController.position.pixels <=
+              scrollController.position.maxScrollExtent + 300 &&
+          FFAppState().newMessage) {
+        FFAppState().newMessage = false;
+        initNotifications();
+      }
       if (scrollController.position.pixels >=
               scrollController.position.maxScrollExtent - 1500 &&
           FFAppState().pause) {

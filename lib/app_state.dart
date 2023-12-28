@@ -22,6 +22,7 @@ class FFAppState extends ChangeNotifier {
   bool cycle = true;
   bool selectAccounts = false;
   bool pause = false;
+  bool newMessage = false;
   static FFAppState _instance = FFAppState._internal();
 
   factory FFAppState() {

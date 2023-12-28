@@ -1,4 +1,5 @@
 import 'package:b_o_s_notifications/local_DataBase.dart';
+import 'package:b_o_s_notifications/notifications.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_svg/flutter_svg.dart';
@@ -22,13 +23,18 @@ import 'package:google_fonts/google_fonts.dart';
 import 'flutter_flow/nav/nav.dart';
 import 'index.dart';
 
+Future<void> _firebaseMessagingBackgroundHandler(RemoteMessage message) async {
+  print("Handling a background message: ${message.messageId}");
+}
+
 void main() async {
-  SystemChrome.setPreferredOrientations([
+  WidgetsFlutterBinding.ensureInitialized();
+
+  await SystemChrome.setPreferredOrientations([
     DeviceOrientation.portraitUp,
     DeviceOrientation.portraitDown,
   ]);
 
-  WidgetsFlutterBinding.ensureInitialized();
   usePathUrlStrategy();
   await initFirebase();
   await FirebaseMessaging.instance.setForegroundNotificationPresentationOptions(
@@ -41,6 +47,16 @@ void main() async {
   final appState = FFAppState(); // Initialize FFAppState
   await appState.initializePersistedState();
 
+  await LocalNotificationService.init();
+
+  // FirebaseMessaging.onMessage.listen((RemoteMessage message) {
+  //   LocalNotificationService.showNotificationOnForeground(
+  //       LocalNotificationMessage(
+  //           message.notification?.title, message.notification?.body, {}));
+  //   print('go');
+  // });
+
+  // FirebaseMessaging.onBackgroundMessage(_firebaseMessagingBackgroundHandler);
   runApp(ChangeNotifierProvider(
     create: (context) => appState,
     child: MyApp(),
