@@ -94,7 +94,7 @@ class _AccountPageWidgetState extends State<AccountPageWidget> {
                   children: [
                     Text(
                       'Account',
-                      textScaler: TextScaler.noScaling,
+                      textScaleFactor: 1,
                       style: FlutterFlowTheme.of(context).bodyMedium.override(
                             fontFamily:
                                 FlutterFlowTheme.of(context).bodyMediumFamily,
@@ -131,16 +131,11 @@ class _AccountPageWidgetState extends State<AccountPageWidget> {
                             FFAppState().tapButton = true;
                           });
                           await showModalBottomSheet(
-                            isScrollControlled: true,
                             backgroundColor: Colors.transparent,
                             enableDrag: false,
                             context: context,
                             builder: (context) {
-                              return Container(
-                                width: MediaQuery.sizeOf(context).width,
-                                height: MediaQuery.sizeOf(context).height * 0.8,
-                                child: SubscribeBottomBarWidget(),
-                              );
+                              return SubscribeBottomBarWidget();
                             },
                           ).then((value) => safeSetState(() {}));
 
@@ -311,7 +306,7 @@ class _AccountPageWidgetState extends State<AccountPageWidget> {
                           children: [
                             Text(
                               'Accounts',
-                              textScaler: TextScaler.noScaling,
+                              textScaleFactor: 1,
                               style: FlutterFlowTheme.of(context)
                                   .bodyMedium
                                   .override(
@@ -356,7 +351,7 @@ class _AccountPageWidgetState extends State<AccountPageWidget> {
                                         : 'Select',
                                     'Select',
                                   ),
-                                  textScaler: TextScaler.noScaling,
+                                  textScaleFactor: 1,
                                   style: FlutterFlowTheme.of(context)
                                       .bodyMedium
                                       .override(
@@ -579,8 +574,7 @@ class _AccountPageWidgetState extends State<AccountPageWidget> {
                                                       children: [
                                                         Text(
                                                           accountsItem,
-                                                          textScaler: TextScaler
-                                                              .noScaling,
+                                                          textScaleFactor: 1,
                                                           overflow: TextOverflow
                                                               .ellipsis,
                                                           style: FlutterFlowTheme

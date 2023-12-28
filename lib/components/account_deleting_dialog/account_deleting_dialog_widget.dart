@@ -106,7 +106,7 @@ class _AccountDeletingDialogWidgetState
                 padding: EdgeInsetsDirectional.fromSTEB(20.0, 15.0, 20.0, 15.0),
                 child: Text(
                   'Remove an Account',
-                  textScaler: TextScaler.noScaling,
+                  textScaleFactor: 1,
                   style: FlutterFlowTheme.of(context).bodyMedium.override(
                         fontFamily:
                             FlutterFlowTheme.of(context).bodyMediumFamily,

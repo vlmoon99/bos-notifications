@@ -104,7 +104,7 @@ class _HistoryAccountDeletedWidgetState
                       ),
                       Text(
                         'History of deleted accounts',
-                        textScaler: TextScaler.noScaling,
+                        textScaleFactor: 1,
                         style: FlutterFlowTheme.of(context).bodyMedium.override(
                               fontFamily:
                                   FlutterFlowTheme.of(context).bodyMediumFamily,

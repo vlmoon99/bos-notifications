@@ -201,6 +201,7 @@ class _FiltersWidgetState extends State<FiltersWidget> {
               children: [
                 Text(
                   'Date Range',
+                  textScaleFactor: 1,
                   style: FlutterFlowTheme.of(context).bodyMedium.override(
                         fontFamily:
                             FlutterFlowTheme.of(context).bodyMediumFamily,
@@ -282,37 +283,26 @@ class _FiltersWidgetState extends State<FiltersWidget> {
                     color: Color(0xFFF4F4F4),
                     borderRadius: BorderRadius.circular(10.0),
                   ),
-                  child: FFButtonWidget(
-                    onPressed: () {
-                      print('Button pressed ...');
-                    },
-                    text: '${valueOrDefault<String>(
-                      FFAppState().filterData.first,
-                      'select data',
-                    )}-${valueOrDefault<String>(
-                      FFAppState().filterData.last,
-                      'select data',
-                    )}',
-                    options: FFButtonOptions(
-                      height: 40.0,
-                      padding:
-                          EdgeInsetsDirectional.fromSTEB(24.0, 0.0, 24.0, 0.0),
-                      iconPadding:
-                          EdgeInsetsDirectional.fromSTEB(0.0, 0.0, 0.0, 0.0),
-                      color: Color(0x004B39EF),
-                      textStyle: FlutterFlowTheme.of(context)
-                          .titleSmall
-                          .override(
+                  child: Align(
+                    alignment: Alignment.center,
+                    child: Text(
+                      '${valueOrDefault<String>(
+                        FFAppState().filterData.first,
+                        'select data',
+                      )}-${valueOrDefault<String>(
+                        FFAppState().filterData.last,
+                        'select data',
+                      )}',
+                      style: FlutterFlowTheme.of(context).bodyMedium.override(
                             fontFamily:
-                                FlutterFlowTheme.of(context).titleSmallFamily,
-                            color: Color(0xFF7E7E7E),
+                                FlutterFlowTheme.of(context).bodyMediumFamily,
                             fontSize: () {
                               if (MediaQuery.sizeOf(context).width <
                                   valueOrDefault<double>(
                                     kBreakpointSmall,
                                     400.0,
                                   )) {
-                                return 10.0;
+                                return 14.0;
                               } else if (MediaQuery.sizeOf(context).width <
                                   valueOrDefault<double>(
                                     kBreakpointMedium,
@@ -330,13 +320,9 @@ class _FiltersWidgetState extends State<FiltersWidget> {
                               }
                             }(),
                             useGoogleFonts: GoogleFonts.asMap().containsKey(
-                                FlutterFlowTheme.of(context).titleSmallFamily),
+                                FlutterFlowTheme.of(context).bodyMediumFamily),
                           ),
-                      elevation: 0.0,
-                      borderSide: BorderSide(
-                        color: Colors.transparent,
-                      ),
-                      borderRadius: BorderRadius.circular(8.0),
+                      textScaleFactor: 1,
                     ),
                   ),
                 ),
@@ -348,22 +334,22 @@ class _FiltersWidgetState extends State<FiltersWidget> {
             iconColor: Color(0xFF65C3A2),
             weekFormat: false,
             weekStartsMonday: false,
-            rowHeight: 50.0,
+            rowHeight: 42.0,
             onChange: (DateTimeRange? newSelectedDate) {
               setState(() => _model.calendarSelectedDay = newSelectedDate);
             },
             titleStyle: FlutterFlowTheme.of(context).headlineSmall.override(
                   fontFamily: FlutterFlowTheme.of(context).headlineSmallFamily,
-                  fontSize: 18.0,
+                  fontSize: 14.0,
                   useGoogleFonts: GoogleFonts.asMap().containsKey(
                       FlutterFlowTheme.of(context).headlineSmallFamily),
                 ),
             dayOfWeekStyle: FlutterFlowTheme.of(context).labelLarge.override(
-                  fontFamily: FlutterFlowTheme.of(context).labelLargeFamily,
-                  useGoogleFonts: GoogleFonts.asMap().containsKey(
-                      FlutterFlowTheme.of(context).labelLargeFamily),
-                  lineHeight: 1.0,
-                ),
+                fontFamily: FlutterFlowTheme.of(context).labelLargeFamily,
+                useGoogleFonts: GoogleFonts.asMap()
+                    .containsKey(FlutterFlowTheme.of(context).labelLargeFamily),
+                lineHeight: 1.0,
+                fontSize: 12),
             dateStyle: FlutterFlowTheme.of(context).bodyMedium,
             selectedDateStyle: FlutterFlowTheme.of(context).titleSmall,
             inactiveDateStyle: FlutterFlowTheme.of(context).labelMedium,

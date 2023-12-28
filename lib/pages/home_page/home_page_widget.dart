@@ -361,7 +361,7 @@ class _HomePageWidgetState extends State<HomePageWidget> {
                 children: [
                   Text(
                     'Home',
-                    textScaler: TextScaler.noScaling,
+                    textScaleFactor: 1,
                     style: FlutterFlowTheme.of(context).bodyMedium.override(
                           fontFamily:
                               FlutterFlowTheme.of(context).bodyMediumFamily,
@@ -404,7 +404,7 @@ class _HomePageWidgetState extends State<HomePageWidget> {
                           EdgeInsetsDirectional.fromSTEB(24.0, 24.0, 0.0, 24.0),
                       child: Text(
                         'Notifications',
-                        textScaler: TextScaler.noScaling,
+                        textScaleFactor: 1,
                         style: FlutterFlowTheme.of(context).bodyMedium.override(
                               fontFamily:
                                   FlutterFlowTheme.of(context).bodyMediumFamily,
@@ -570,7 +570,7 @@ class _HomePageWidgetState extends State<HomePageWidget> {
                                           AlignmentDirectional(0.00, -1.00),
                                       child: Text(
                                         '1',
-                                        textScaler: TextScaler.noScaling,
+                                        textScaleFactor: 1,
                                         style: FlutterFlowTheme.of(context)
                                             .bodyMedium
                                             .override(
@@ -925,8 +925,8 @@ class _HomePageWidgetState extends State<HomePageWidget> {
                                                                           (snapshot.data?[index][3] != '')
                                                                               ? snapshot.data![index][3]
                                                                               : snapshot.data![index][0]['accountId'] ?? '',
-                                                                          textScaler:
-                                                                              TextScaler.noScaling,
+                                                                          textScaleFactor:
+                                                                              1,
                                                                           style:
                                                                               TextStyle(
                                                                             color:
@@ -944,8 +944,8 @@ class _HomePageWidgetState extends State<HomePageWidget> {
                                                                               '',
                                                                           maxLines:
                                                                               1,
-                                                                          textScaler:
-                                                                              TextScaler.noScaling,
+                                                                          textScaleFactor:
+                                                                              1,
                                                                           overflow:
                                                                               TextOverflow.ellipsis,
                                                                           style:
@@ -975,9 +975,8 @@ class _HomePageWidgetState extends State<HomePageWidget> {
                                                                     overflow:
                                                                         TextOverflow
                                                                             .ellipsis,
-                                                                    textScaler:
-                                                                        TextScaler
-                                                                            .noScaling,
+                                                                    textScaleFactor:
+                                                                        1,
                                                                     style: TextStyle(
                                                                         fontSize: MediaQuery.sizeOf(context).height <
                                                                                 900
@@ -994,9 +993,8 @@ class _HomePageWidgetState extends State<HomePageWidget> {
                                                                               .data?[
                                                                           index][1])
                                                                       .toString(),
-                                                                  textScaler:
-                                                                      TextScaler
-                                                                          .noScaling,
+                                                                  textScaleFactor:
+                                                                      1,
                                                                   style: TextStyle(
                                                                       fontSize: MediaQuery.sizeOf(context).height <
                                                                               900

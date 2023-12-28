@@ -66,7 +66,7 @@ class _SubscribeBottomBarWidgetState extends State<SubscribeBottomBarWidget> {
     context.watch<FFAppState>();
 
     return Align(
-      alignment: AlignmentDirectional(0.00, -1.00),
+      alignment: Alignment.bottomCenter,
       child: Container(
         width: MediaQuery.sizeOf(context).width,
         height: MediaQuery.sizeOf(context).height * 0.8,
@@ -148,7 +148,7 @@ class _SubscribeBottomBarWidgetState extends State<SubscribeBottomBarWidget> {
                 padding: EdgeInsetsDirectional.fromSTEB(25.0, 5.0, 0.0, 20.0),
                 child: Text(
                   'Enter Account ID in the field below',
-                  textScaler: TextScaler.noScaling,
+                  textScaleFactor: 1,
                   style: FlutterFlowTheme.of(context).bodyMedium.override(
                         fontFamily:
                             FlutterFlowTheme.of(context).bodyMediumFamily,
@@ -188,7 +188,7 @@ class _SubscribeBottomBarWidgetState extends State<SubscribeBottomBarWidget> {
                 padding: EdgeInsetsDirectional.fromSTEB(25.0, 0.0, 0.0, 10.0),
                 child: Text(
                   'Add an Account:',
-                  textScaler: TextScaler.noScaling,
+                  textScaleFactor: 1,
                   style: FlutterFlowTheme.of(context).bodyMedium.override(
                         fontFamily:
                             FlutterFlowTheme.of(context).bodyMediumFamily,
@@ -347,7 +347,7 @@ class _SubscribeBottomBarWidgetState extends State<SubscribeBottomBarWidget> {
                                   FFAppState().userfound == 1
                                       ? 'An account has been found:'
                                       : 'No account with this ID has been found',
-                                  textScaler: TextScaler.noScaling,
+                                  textScaleFactor: 1,
                                   style: FlutterFlowTheme.of(context)
                                       .bodyMedium
                                       .override(
@@ -416,7 +416,7 @@ class _SubscribeBottomBarWidgetState extends State<SubscribeBottomBarWidget> {
                               alignment: Alignment.topLeft,
                               child: Text(
                                 '@${_model.textController.text}',
-                                textScaler: TextScaler.noScaling,
+                                textScaleFactor: 1,
                                 overflow: TextOverflow.ellipsis,
                                 style: FlutterFlowTheme.of(context)
                                     .bodyMedium
@@ -438,124 +438,120 @@ class _SubscribeBottomBarWidgetState extends State<SubscribeBottomBarWidget> {
                   ),
                 ),
               ),
-            Expanded(
-              child: Align(
-                alignment: AlignmentDirectional(0.00, 1.00),
-                child: Padding(
-                  padding: EdgeInsetsDirectional.fromSTEB(0.0, 0.0, 0.0, 50.0),
-                  child: InkWell(
-                    onTap: () async {
-                      Future.microtask(
-                        () async {
-                          if (currentUserDocument?.subscriptions.length == 50) {
-                            ScaffoldMessenger.of(context)
-                                .showSnackBar(SnackBar(content: Text('limit')));
-                          }
-                          _model.button =
-                              await GetNearSocialInformationCall.call(
-                            accountId: _model.textController.text,
+            Align(
+              alignment: AlignmentDirectional(0.00, 1.00),
+              child: Padding(
+                padding: EdgeInsetsDirectional.fromSTEB(0.0, 0.0, 0.0, 50.0),
+                child: InkWell(
+                  onTap: () async {
+                    Future.microtask(
+                      () async {
+                        if (currentUserDocument?.subscriptions.length == 50) {
+                          ScaffoldMessenger.of(context)
+                              .showSnackBar(SnackBar(content: Text('limit')));
+                        }
+                        _model.button = await GetNearSocialInformationCall.call(
+                          accountId: _model.textController.text,
+                        );
+                        if (((_model.button?.bodyText ?? '') != null &&
+                                (_model.button?.bodyText ?? '') != '') &&
+                            ((_model.button?.bodyText ?? '') != '{}') &&
+                            (FFAppState().userfound != 0)) {
+                          DatabaseHelper dbHelper = DatabaseHelper();
+                          var db = await dbHelper.db;
+                          FFAppState().update(
+                            () async {
+                              await dbHelper.deleteRecordByName(
+                                  _model.textController.text);
+                              FFAppState()
+                                  .deletedAccountList
+                                  .add(await db.query('myDB'));
+                            },
                           );
-                          if (((_model.button?.bodyText ?? '') != null &&
-                                  (_model.button?.bodyText ?? '') != '') &&
-                              ((_model.button?.bodyText ?? '') != '{}') &&
-                              (FFAppState().userfound != 0)) {
-                            DatabaseHelper dbHelper = DatabaseHelper();
-                            var db = await dbHelper.db;
-                            FFAppState().update(
-                              () async {
-                                await dbHelper.deleteRecordByName(
-                                    _model.textController.text);
-                                FFAppState()
-                                    .deletedAccountList
-                                    .add(await db.query('myDB'));
-                              },
-                            );
-                            await currentUserReference!.update({
-                              ...mapToFirestore(
-                                {
-                                  'subscriptions': FieldValue.arrayUnion(
-                                      [_model.textController.text]),
-                                },
-                              ),
-                            });
-                          }
-
-                          final uid = FirebaseAuth.instance.currentUser!.uid;
-                          final token =
-                              await FirebaseMessaging.instance.getToken();
-
-                          final isThisAccountIdChannelExist =
-                              (await FirebaseFirestore.instance
-                                          .collection('subscriptions_channels')
-                                          .doc(_model.textController.text)
-                                          .get())
-                                      .data()
-                                      ?.isNotEmpty ??
-                                  false;
-
-                          if (isThisAccountIdChannelExist) {
-                            await FirebaseFirestore.instance
-                                .collection('subscriptions_channels')
-                                .doc(_model.textController.text)
-                                .update({uid: token});
-                          } else {
-                            await FirebaseFirestore.instance
-                                .collection('subscriptions_channels')
-                                .doc(_model.textController.text)
-                                .set({uid: token});
-                          }
-
                           await currentUserReference!.update({
                             ...mapToFirestore(
                               {
-                                'accountDeleted': FieldValue.arrayRemove([
-                                  getAccountsDeletedFirestoreData(
-                                    updateAccountsDeletedStruct(
-                                      (currentUserDocument?.accountDeleted
-                                                  ?.toList() ??
-                                              [])
-                                          .where((e) =>
-                                              e.name ==
-                                              _model.textController.text)
-                                          .toList()
-                                          .first,
-                                      clearUnsetFields: false,
-                                    ),
-                                    true,
-                                  )
-                                ]),
+                                'subscriptions': FieldValue.arrayUnion(
+                                    [_model.textController.text]),
                               },
                             ),
                           });
-                        },
-                      );
-                      await Future.delayed(Duration(milliseconds: 300));
-                      Navigator.pop(context);
-                    },
-                    child: Container(
-                      width: MediaQuery.sizeOf(context).width * 0.9,
-                      height: 50,
-                      constraints: BoxConstraints(
-                        maxWidth: 400.0,
-                        maxHeight: 50,
-                      ),
-                      decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(8),
-                        color: FFAppState().userfound == 1
-                            ? Colors.black
-                            : Color(0xFFF5F5EF),
-                      ),
-                      child: Align(
-                        alignment: Alignment.center,
-                        child: Text(
-                          'Subscribe',
-                          textScaler: TextScaler.noScaling,
-                          style: TextStyle(
-                            fontSize: 18,
-                            color: !(FFAppState().userfound == 1)
-                                ? Colors.black
-                                : Color(0xFFF5F5EF),
+                        }
+
+                        final uid = FirebaseAuth.instance.currentUser!.uid;
+                        final token =
+                            await FirebaseMessaging.instance.getToken();
+
+                        final isThisAccountIdChannelExist =
+                            (await FirebaseFirestore.instance
+                                        .collection('subscriptions_channels')
+                                        .doc(_model.textController.text)
+                                        .get())
+                                    .data()
+                                    ?.isNotEmpty ??
+                                false;
+
+                        if (isThisAccountIdChannelExist) {
+                          await FirebaseFirestore.instance
+                              .collection('subscriptions_channels')
+                              .doc(_model.textController.text)
+                              .update({uid: token});
+                        } else {
+                          await FirebaseFirestore.instance
+                              .collection('subscriptions_channels')
+                              .doc(_model.textController.text)
+                              .set({uid: token});
+                        }
+
+                        await currentUserReference!.update({
+                          ...mapToFirestore(
+                            {
+                              'accountDeleted': FieldValue.arrayRemove([
+                                getAccountsDeletedFirestoreData(
+                                  updateAccountsDeletedStruct(
+                                    (currentUserDocument?.accountDeleted
+                                                ?.toList() ??
+                                            [])
+                                        .where((e) =>
+                                            e.name ==
+                                            _model.textController.text)
+                                        .toList()
+                                        .first,
+                                    clearUnsetFields: false,
+                                  ),
+                                  true,
+                                )
+                              ]),
+                            },
                           ),
+                        });
+                      },
+                    );
+                    await Future.delayed(Duration(milliseconds: 300));
+                    Navigator.pop(context);
+                  },
+                  child: Container(
+                    width: MediaQuery.sizeOf(context).width * 0.9,
+                    height: 50,
+                    constraints: BoxConstraints(
+                      maxWidth: 400.0,
+                    ),
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(8),
+                      color: FFAppState().userfound == 1
+                          ? Colors.black
+                          : Color(0xFFF5F5EF),
+                    ),
+                    child: Align(
+                      alignment: Alignment.center,
+                      child: Text(
+                        'Subscribe',
+                        textScaleFactor: 1,
+                        style: TextStyle(
+                          fontSize: 18,
+                          color: !(FFAppState().userfound == 1)
+                              ? Colors.black
+                              : Color(0xFFF5F5EF),
                         ),
                       ),
                     ),

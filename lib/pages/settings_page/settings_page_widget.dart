@@ -79,7 +79,7 @@ class _SettingsPageWidgetState extends State<SettingsPageWidget> {
                   children: [
                     Text(
                       'Settings',
-                      textScaler: TextScaler.noScaling,
+                      textScaleFactor: 1,
                       style: FlutterFlowTheme.of(context).bodyMedium.override(
                             fontFamily:
                                 FlutterFlowTheme.of(context).bodyMediumFamily,
@@ -130,7 +130,7 @@ class _SettingsPageWidgetState extends State<SettingsPageWidget> {
                               children: [
                                 Text(
                                   'Receive push-notifications',
-                                  textScaler: TextScaler.noScaling,
+                                  textScaleFactor: 1,
                                   style: FlutterFlowTheme.of(context)
                                       .bodyMedium
                                       .override(
@@ -182,7 +182,7 @@ class _SettingsPageWidgetState extends State<SettingsPageWidget> {
                                 25.0, 0.0, 25.0, 15.0),
                             child: Text(
                               'When active, you will receive push-notifications on your Smartphone Lock Screen',
-                              textScaler: TextScaler.noScaling,
+                              textScaleFactor: 1,
                               textAlign: TextAlign.start,
                               style: FlutterFlowTheme.of(context)
                                   .bodyMedium
@@ -227,7 +227,7 @@ class _SettingsPageWidgetState extends State<SettingsPageWidget> {
                                     25.0, 0.0, 0.0, 0.0),
                                 child: Text(
                                   'History of deleted accounts',
-                                  textScaler: TextScaler.noScaling,
+                                  textScaleFactor: 1,
                                   style: FlutterFlowTheme.of(context)
                                       .bodyMedium
                                       .override(
