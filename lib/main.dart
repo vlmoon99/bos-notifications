@@ -281,7 +281,7 @@ class _NavBarPageState extends State<NavBarPage> {
                                   ),
                                 ),
                                 Text('Home',
-                                    textScaler: TextScaler.noScaling,
+                                    textScaleFactor: 1,
                                     maxLines: 1,
                                     style: TextStyle(
                                       fontSize: 13,
@@ -332,7 +332,7 @@ class _NavBarPageState extends State<NavBarPage> {
                                   ),
                                 ),
                                 Text('Accounts',
-                                    textScaler: TextScaler.noScaling,
+                                    textScaleFactor: 1,
                                     maxLines: 1,
                                     style: TextStyle(
                                       fontSize: 13,
@@ -384,7 +384,7 @@ class _NavBarPageState extends State<NavBarPage> {
                                 ),
                                 Text(
                                   'Settings',
-                                  textScaler: TextScaler.noScaling,
+                                  textScaleFactor: 1,
                                   maxLines: 1,
                                   style: TextStyle(
                                     fontSize: 13,
