@@ -223,93 +223,87 @@ class _SubscribeBottomBarWidgetState extends State<SubscribeBottomBarWidget> {
                 ),
               ),
             ),
-            Align(
-              alignment: AlignmentDirectional(0.00, 0.00),
-              child: Padding(
-                padding: const EdgeInsets.only(top: 15, left: 20, right: 20),
-                child: Container(
-                  padding: EdgeInsets.symmetric(horizontal: 16),
-                  height: 40,
-                  width: MediaQuery.sizeOf(context).width,
-                  alignment: Alignment.center,
-                  constraints: BoxConstraints(
-                    maxWidth: 350.0,
+            Padding(
+              padding: const EdgeInsets.only(top: 15, left: 20, right: 20),
+              child: Container(
+                padding: EdgeInsets.symmetric(horizontal: 16),
+                height: 40,
+                width: MediaQuery.sizeOf(context).width,
+                alignment: Alignment.center,
+                constraints: BoxConstraints(
+                  maxWidth: 350.0,
+                ),
+                decoration: BoxDecoration(
+                  color: Color(0xFFFAF9F8),
+                  borderRadius: BorderRadius.circular(8.0),
+                  border: Border.all(
+                    color: Color(0xFFBDBDBD),
+                    width: 1.0,
                   ),
-                  decoration: BoxDecoration(
-                    color: Color(0xFFFAF9F8),
-                    borderRadius: BorderRadius.circular(8.0),
-                    border: Border.all(
-                      color: Color(0xFFBDBDBD),
-                      width: 1.0,
+                ),
+                child: OverflowBox(
+                  maxHeight: 1000,
+                  child: TextField(
+                    controller: _model.textController,
+                    onChanged: (_) => EasyDebounce.debounce(
+                      '_model.textController',
+                      Duration(seconds: 1),
+                      () async {
+                        var _shouldSetState = false;
+                        if (_model.textController.text == '') {
+                          setState(() {
+                            FFAppState().userfound = 0;
+                          });
+                          if (_shouldSetState) setState(() {});
+                          return;
+                        } else {
+                          _model.getNearSocialInfoResult =
+                              await GetNearSocialInformationCall.call(
+                            accountId: _model.textController.text,
+                          );
+                          _shouldSetState = true;
+                          if (((_model.getNearSocialInfoResult?.bodyText ??
+                                      '') ==
+                                  '') ||
+                              ((_model.getNearSocialInfoResult?.bodyText ??
+                                      '') ==
+                                  '{}')) {
+                            setState(() {
+                              FFAppState().userfound = 2;
+                            });
+                            if (_shouldSetState) setState(() {});
+                            return;
+                          } else {
+                            setState(() {
+                              FFAppState().userfound = 1;
+                            });
+                            if (_shouldSetState) setState(() {});
+                            return;
+                          }
+                        }
+                      },
                     ),
-                  ),
-                  child: Expanded(
-                    child: OverflowBox(
-                      maxHeight: 1000,
-                      child: TextField(
-                        controller: _model.textController,
-                        onChanged: (_) => EasyDebounce.debounce(
-                          '_model.textController',
-                          Duration(seconds: 1),
-                          () async {
-                            var _shouldSetState = false;
-                            if (_model.textController.text == '') {
-                              setState(() {
-                                FFAppState().userfound = 0;
-                              });
-                              if (_shouldSetState) setState(() {});
-                              return;
-                            } else {
-                              _model.getNearSocialInfoResult =
-                                  await GetNearSocialInformationCall.call(
-                                accountId: _model.textController.text,
-                              );
-                              _shouldSetState = true;
-                              if (((_model.getNearSocialInfoResult?.bodyText ??
-                                          '') ==
-                                      '') ||
-                                  ((_model.getNearSocialInfoResult?.bodyText ??
-                                          '') ==
-                                      '{}')) {
-                                setState(() {
-                                  FFAppState().userfound = 2;
-                                });
-                                if (_shouldSetState) setState(() {});
-                                return;
-                              } else {
-                                setState(() {
-                                  FFAppState().userfound = 1;
-                                });
-                                if (_shouldSetState) setState(() {});
-                                return;
-                              }
-                            }
-                          },
-                        ),
-                        textAlignVertical: TextAlignVertical.top,
-                        style: FlutterFlowTheme.of(context)
-                            .labelMedium
-                            .copyWith(fontSize: 14),
-                        decoration: InputDecoration(
-                          hintText: 'Enter Account ID here...',
-                          hintStyle: FlutterFlowTheme.of(context)
-                              .labelMedium
-                              .override(
-                                fontFamily: FlutterFlowTheme.of(context)
-                                    .labelMediumFamily,
-                                color: Color(0xFFBDBDBD),
-                                fontSize: 14.0,
-                                useGoogleFonts: GoogleFonts.asMap().containsKey(
-                                    FlutterFlowTheme.of(context)
-                                        .labelMediumFamily),
-                              ),
-                          enabledBorder: InputBorder.none,
-                          floatingLabelBehavior: FloatingLabelBehavior.never,
-                          focusedBorder: InputBorder.none,
-                          errorBorder: InputBorder.none,
-                          focusedErrorBorder: InputBorder.none,
-                        ),
-                      ),
+                    textAlignVertical: TextAlignVertical.top,
+                    style: FlutterFlowTheme.of(context)
+                        .labelMedium
+                        .copyWith(fontSize: 14),
+                    decoration: InputDecoration(
+                      hintText: 'Enter Account ID here...',
+                      hintStyle: FlutterFlowTheme.of(context)
+                          .labelMedium
+                          .override(
+                            fontFamily:
+                                FlutterFlowTheme.of(context).labelMediumFamily,
+                            color: Color(0xFFBDBDBD),
+                            fontSize: 14.0,
+                            useGoogleFonts: GoogleFonts.asMap().containsKey(
+                                FlutterFlowTheme.of(context).labelMediumFamily),
+                          ),
+                      enabledBorder: InputBorder.none,
+                      floatingLabelBehavior: FloatingLabelBehavior.never,
+                      focusedBorder: InputBorder.none,
+                      errorBorder: InputBorder.none,
+                      focusedErrorBorder: InputBorder.none,
                     ),
                   ),
                 ),
@@ -404,16 +398,16 @@ class _SubscribeBottomBarWidgetState extends State<SubscribeBottomBarWidget> {
                                 fit: BoxFit.cover,
                                 errorWidget: (context, url, error) =>
                                     SvgPicture.network(url),
-                                imageUrl:
-                                    "https://i.near.social/magic/large/https://near.social/magic/img/account/${_model.textController.text}"),
+                                imageUrl: _model.textController.text != ''
+                                    ? "https://i.near.social/magic/large/https://near.social/magic/img/account/${_model.textController.text}"
+                                    : "https://i.near.social/magic/large/https://near.social/magic/img/account/sesona"),
                           ),
                         ),
-                        Padding(
-                          padding: EdgeInsetsDirectional.fromSTEB(
-                              5.0, 0.0, 0.0, 0.0),
-                          child: Expanded(
-                            child: Align(
-                              alignment: Alignment.topLeft,
+                        Expanded(
+                          child: Align(
+                            alignment: Alignment.topLeft,
+                            child: Padding(
+                              padding: const EdgeInsets.only(left: 5),
                               child: Text(
                                 '@${_model.textController.text}',
                                 textScaleFactor: 1,
