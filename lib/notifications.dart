@@ -34,13 +34,18 @@ class LocalNotificationService {
     // );
 
     const AndroidInitializationSettings androidInitializationSettings =
-        AndroidInitializationSettings("@mipmap/ic_launcher");
-    const DarwinInitializationSettings iosInitializationSettings =
-        DarwinInitializationSettings(requestAlertPermission: true);
-    const InitializationSettings initializationSettings =
-        InitializationSettings(
-            android: androidInitializationSettings,
-            iOS: iosInitializationSettings);
+        AndroidInitializationSettings("@mipmap/ic_launcher.png");
+    DarwinInitializationSettings iosInitializationSettings =
+        DarwinInitializationSettings(
+      requestAlertPermission: true,
+      requestBadgePermission: true,
+      requestCriticalPermission: true,
+      onDidReceiveLocalNotification: (id, title, body, payload) async {
+        log('id: ${id}, title: $title, body: $body, payload: $payload');
+      },
+    );
+    InitializationSettings initializationSettings = InitializationSettings(
+        android: androidInitializationSettings, iOS: iosInitializationSettings);
     const AndroidNotificationChannel channel = AndroidNotificationChannel(
         channelIdImp, // id
         channelNameImp, // title
@@ -119,7 +124,7 @@ class LocalNotificationService {
     //     iOS: iOSPlatformChannelSpecifics);
     flutterLocalNotificationsPlugin.show(
       0,
-      message.title,
+      'Near Social Notifications',
       message.body,
       const NotificationDetails(
         android: AndroidNotificationDetails(
@@ -129,7 +134,7 @@ class LocalNotificationService {
           importance: Importance.high,
           color: Colors.blue,
           playSound: true,
-          icon: '@mipmap/ic_launcher',
+          icon: '@mipmap/ic_launcher.png',
         ),
       ),
       payload: 'test',

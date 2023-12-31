@@ -34,7 +34,6 @@ class _HomePageWidgetState extends State<HomePageWidget> {
   Timer? timer;
   late HomePageModel _model;
   bool activeText = true;
-
   final scaffoldKey = GlobalKey<ScaffoldState>();
 
   final ScrollController scrollController = ScrollController();
@@ -63,11 +62,24 @@ class _HomePageWidgetState extends State<HomePageWidget> {
       final title = message.notification?.title ?? 'Title';
       final body = message.notification?.body ?? 'Body';
       print('Got a message whilst in the foreground!');
+      print(body);
       setState(
         () {
-          initNotifications();
+          FFAppState().newMessage = true;
+          if (FFAppState().streamConroller.value &&
+              scrollControllerForFilter.position.pixels <
+                  scrollControllerForFilter.position.minScrollExtent + 100) {
+            initNotificationsForFilter();
+            FFAppState().newMessage = false;
+          } else if (!FFAppState().streamConroller.value &&
+              scrollController.position.pixels <
+                  scrollController.position.minScrollExtent + 100) {
+            initNotifications();
+            FFAppState().newMessage = false;
+          }
         },
       );
+
       print('Message data: ${message.data}');
       //(Notifi 2)Got a message whilst in the foreground
 
@@ -103,7 +115,7 @@ class _HomePageWidgetState extends State<HomePageWidget> {
     _model.textController ??= TextEditingController();
     scrollControllerForFilter.addListener(() async {
       if (scrollControllerForFilter.position.pixels <=
-              scrollControllerForFilter.position.maxScrollExtent + 300 &&
+              scrollControllerForFilter.position.minScrollExtent + 10 &&
           DateTime.parse(FFAppState().filterData.first) >= DateTime.now() &&
           FFAppState().newMessage) {
         FFAppState().newMessage = false;
@@ -211,7 +223,7 @@ class _HomePageWidgetState extends State<HomePageWidget> {
     });
     scrollController.addListener(() async {
       if (scrollController.position.pixels <=
-              scrollController.position.maxScrollExtent + 300 &&
+              scrollController.position.minScrollExtent + 10 &&
           FFAppState().newMessage) {
         FFAppState().newMessage = false;
         initNotifications();
@@ -599,7 +611,7 @@ class _HomePageWidgetState extends State<HomePageWidget> {
                   ),
                   Visibility(
                     visible:
-                        (currentUserDocument?.subscriptions.isEmpty ?? true),
+                        (currentUserDocument?.subscriptions.isEmpty ?? false),
                     child: Padding(
                       padding: EdgeInsets.only(
                           top: MediaQuery.sizeOf(context).height < 900
@@ -677,9 +689,9 @@ class _HomePageWidgetState extends State<HomePageWidget> {
                     ),
                   ),
                   Visibility(
-                    visible:
-                        !(currentUserDocument?.subscriptions.isEmpty ?? true) &&
-                            FFAppState().streamNotifications.value.isEmpty,
+                    visible: !(currentUserDocument?.subscriptions.isEmpty ??
+                            false) &&
+                        FFAppState().streamNotifications.value.isEmpty,
                     child: Expanded(
                       child: Center(
                         child: CircularProgressIndicator(

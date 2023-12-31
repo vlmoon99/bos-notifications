@@ -1,3 +1,4 @@
+import 'package:b_o_s_notifications/firebase_options.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/foundation.dart';
 
@@ -13,6 +14,8 @@ Future initFirebase() async {
             appId: "1:1098516707870:web:df27274b713f71162e8c0f",
             measurementId: "G-3LSP61LZWV"));
   } else {
-    await Firebase.initializeApp();
+    await Firebase.initializeApp(
+      options: DefaultFirebaseOptions.currentPlatform,
+    );
   }
 }

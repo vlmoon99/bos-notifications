@@ -28,23 +28,17 @@ dependencies:
   aligned_dialog: 0.0.6
   auto_size_text: 3.0.0
   cached_network_image: 3.3.0
-  cloud_firestore: 4.8.0
-  cloud_firestore_platform_interface: 5.15.0
-  cloud_firestore_web: 3.6.0
-  cloud_functions: 4.3.2
-  cloud_functions_platform_interface: 5.4.2
-  cloud_functions_web: 4.5.2
+  cloud_firestore: ^4.13.6
+  cloud_firestore_platform_interface: ^6.0.10
+  cloud_firestore_web: ^3.8.10
   easy_debounce: 2.0.1
   equatable: 2.0.5
-  firebase_auth: 4.6.2
-  firebase_auth_platform_interface: 6.15.2
-  firebase_auth_web: 5.5.2
-  firebase_core: 2.13.1
-  firebase_core_platform_interface: 4.8.0
-  firebase_core_web: 2.5.0
-  firebase_messaging: 14.6.2
-  firebase_messaging_platform_interface: 4.5.2
-  firebase_messaging_web: 3.5.2
+  firebase_auth: ^4.15.3
+  firebase_auth_platform_interface: ^7.0.9
+  firebase_core: 2.24.2
+  firebase_core_platform_interface: 5.0.0
+  firebase_messaging: ^14.7.9
+  firebase_messaging_platform_interface: ^4.5.18
   flutter_animate: 4.1.1+1
   flutter_cache_manager: ^3.3.1
   flutter_svg: 2.0.4

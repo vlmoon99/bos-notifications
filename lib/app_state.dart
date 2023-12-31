@@ -385,9 +385,9 @@ Future initNotifications() async {
   FFAppState().listAccountForNotifications.add([]);
   List<String> subs;
   if (FFAppState().filterID == null) {
-    subs = List.from(currentUserDocument!.subscriptions);
+    subs = List.from(currentUserDocument?.subscriptions ?? []);
   } else {
-    subs = List.from(currentUserDocument!.subscriptions);
+    subs = List.from(currentUserDocument?.subscriptions ?? []);
     subs.removeWhere((element) => !element.startsWith(FFAppState().filterID!));
   }
   subs.forEach((e) async {
