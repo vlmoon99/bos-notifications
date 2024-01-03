@@ -1,4 +1,7 @@
-<!DOCTYPE html><html><head>
+<!DOCTYPE html>
+<html>
+
+<head>
   <!--
     If you are serving your web app in a path other than the root, change the
     href value below to reflect the base path you are serving from.
@@ -19,26 +22,26 @@
   <meta name="apple-mobile-web-app-status-bar-style" content="black">
   <meta name="apple-mobile-web-app-title" content="BOS Notifications">
 
-  
 
-  
+
+
 
   <!-- Favicon -->
-  <link rel="icon" href="icon.png" sizes="any">
-  
+  <link rel="icon" href="app_launcher_icon.png" sizes="any">
+
 
   <!-- Open Graph & SEO tags -->
   <meta property="og:title" content="BOS Notifications">
   <meta property="og:description" content="App for getting push notifications from  Near Social smart contract">
-  <meta property="og:image" content="/assets/assets/images/icon.png"> 
+  <meta property="og:image" content="/assets/assets/images/app_launcher_icon.png">
   <meta name="twitter:title" content="BOS Notifications">
   <meta name="twitter:description" content="App for getting push notifications from  Near Social smart contract">
-  <meta name="twitter:image" content="/assets/assets/images/icon.png">
+  <meta name="twitter:image" content="/assets/assets/images/app_launcher_icon.png">
   <meta name="twitter:card" content="summary_large_image">
 
   <title> BOS Notifications </title>
   <meta name="description" content="App for getting push notifications from  Near Social smart contract">
-    
+
 
   <!-- Status Bar color in Safari browser (iOS) and PWA -->
   <meta name="theme-color" media="(prefers-color-scheme: light)" content="#f1f4f8">
@@ -51,19 +54,19 @@
   </script>
   <!-- This script adds the flutter initialization JS code -->
   <script src="flutter.js" defer=""></script>
-  
-  
+
+
   <meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" name="viewport">
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
+
+
+
+
+
+
+
+
+
+
   <style id="splash-screen-style">
     html {
       height: 100%
@@ -73,7 +76,7 @@
       margin: 0;
       min-height: 100%;
       background-color: #B1B1FC;
-          background-size: 100% 100%;
+      background-size: 100% 100%;
     }
 
     .center {
@@ -86,19 +89,22 @@
     }
 
     .contain {
-      display:block;
-      width:100%; height:100%;
+      display: block;
+      width: 100%;
+      height: 100%;
       object-fit: contain;
     }
 
     .stretch {
-      display:block;
-      width:100%; height:100%;
+      display: block;
+      width: 100%;
+      height: 100%;
     }
 
     .cover {
-      display:block;
-      width:100%; height:100%;
+      display: block;
+      width: 100%;
+      height: 100%;
       object-fit: cover;
     }
 
@@ -130,11 +136,12 @@
     }
   </script>
 </head>
+
 <body>
-  
-  
+
+
   <script>
-    
+
     window.addEventListener('load', function (ev) {
       // Download main.dart.js
       _flutter.loader.loadEntrypoint({
@@ -143,7 +150,7 @@
           serviceWorkerUrl: 'flutter_service_worker.js?v=',
           serviceWorkerVersion: serviceWorkerVersion,
         },
-        onEntrypointLoaded: async function(engineInitializer) {
+        onEntrypointLoaded: async function (engineInitializer) {
           // Initialize the Flutter engine
           let appRunner = await engineInitializer.initializeEngine({
             useColorEmoji: true,
@@ -154,10 +161,12 @@
       });
     });
   </script>
-  
-  
-  
-  
 
 
-</body></html>
+
+
+
+
+</body>
+
+</html>

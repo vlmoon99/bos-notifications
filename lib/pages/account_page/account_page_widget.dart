@@ -134,11 +134,16 @@ class _AccountPageWidgetState extends State<AccountPageWidget> {
                             FFAppState().tapButton = true;
                           });
                           await showModalBottomSheet(
+                            isScrollControlled: true,
                             backgroundColor: Colors.transparent,
                             enableDrag: false,
                             context: context,
                             builder: (context) {
-                              return SubscribeBottomBarWidget();
+                              return Container(
+                                height:
+                                    MediaQuery.sizeOf(context).height * 0.85,
+                                child: SubscribeBottomBarWidget(),
+                              );
                             },
                           ).then((value) => safeSetState(() {}));
 
