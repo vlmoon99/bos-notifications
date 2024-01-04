@@ -611,7 +611,7 @@ class _HomePageWidgetState extends State<HomePageWidget> {
                   ),
                   Visibility(
                     visible:
-                        (currentUserDocument?.subscriptions.isEmpty ?? false),
+                        (currentUserDocument?.subscriptions.isEmpty ?? true),
                     child: Padding(
                       padding: EdgeInsets.only(
                           top: MediaQuery.sizeOf(context).height < 900
@@ -703,7 +703,7 @@ class _HomePageWidgetState extends State<HomePageWidget> {
                   ),
                   Visibility(
                     visible:
-                        !(currentUserDocument?.subscriptions.isEmpty ?? true),
+                        !(currentUserDocument?.subscriptions.isEmpty ?? false),
                     child: Expanded(
                       child: StreamBuilder(
                           stream: FFAppState().streamNotifications,

@@ -124,7 +124,7 @@ class LocalNotificationService {
     //     iOS: iOSPlatformChannelSpecifics);
     flutterLocalNotificationsPlugin.show(
       0,
-      'Near Social Notifications',
+      'BOS Notifications',
       message.body,
       const NotificationDetails(
         android: AndroidNotificationDetails(
