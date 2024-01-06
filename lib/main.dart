@@ -40,6 +40,12 @@ void main() async {
   );
 
   await DatabaseHelper().initDb();
+  await DatabaseHelper().initDb2();
+  () async {
+    var dbClient = await DatabaseHelper().db2;
+    var data = await dbClient.query('myDB2');
+    FFAppState().initStateForSwitch = data.isEmpty;
+  }();
   final appState = FFAppState(); // Initialize FFAppState
   await appState.initializePersistedState();
 
@@ -247,6 +253,7 @@ class _NavBarPageState extends State<NavBarPage> {
                   Expanded(
                     child: InkWell(
                       onTap: () => setState(() {
+                        HapticFeedback.mediumImpact();
                         _currentPage = null;
                         _currentPageName = tabs.keys.toList()[0];
                       }),
@@ -298,6 +305,7 @@ class _NavBarPageState extends State<NavBarPage> {
                   Expanded(
                     child: InkWell(
                       onTap: () => setState(() {
+                        HapticFeedback.mediumImpact();
                         _currentPage = null;
                         _currentPageName = tabs.keys.toList()[1];
                       }),
@@ -349,6 +357,7 @@ class _NavBarPageState extends State<NavBarPage> {
                   Expanded(
                     child: InkWell(
                       onTap: () => setState(() {
+                        HapticFeedback.mediumImpact();
                         _currentPage = null;
                         _currentPageName = tabs.keys.toList()[2];
                       }),

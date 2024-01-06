@@ -130,6 +130,7 @@ class _AccountPageWidgetState extends State<AccountPageWidget> {
                       ),
                       child: FFButtonWidget(
                         onPressed: () async {
+                          HapticFeedback.mediumImpact();
                           setState(() {
                             FFAppState().tapButton = true;
                           });
@@ -241,35 +242,36 @@ class _AccountPageWidgetState extends State<AccountPageWidget> {
                                 width: MediaQuery.sizeOf(context).width * 1.0,
                                 child: TextField(
                                   controller: _model.textController,
-                                  onChanged: (_) => EasyDebounce.debounce(
-                                    '_model.textController',
-                                    Duration(milliseconds: 100),
-                                    () async {
-                                      setState(() {
-                                        FFAppState().searchAccount =
-                                            _model.textController.text;
-                                      });
-                                    },
-                                  ),
+                                  onChanged: (_) {
+                                    HapticFeedback.lightImpact();
+                                    EasyDebounce.debounce(
+                                      '_model.textController',
+                                      Duration(milliseconds: 100),
+                                      () async {
+                                        setState(() {
+                                          FFAppState().searchAccount =
+                                              _model.textController.text;
+                                        });
+                                      },
+                                    );
+                                  },
                                   autofocus: false,
                                   obscureText: false,
                                   decoration: InputDecoration(
-                                    labelText: 'Search by Account ID or Name',
-                                    labelStyle: FlutterFlowTheme.of(context)
+                                    hintText: 'Search by Account ID or Name',
+                                    hintStyle: FlutterFlowTheme.of(context)
                                         .labelMedium
                                         .override(
                                           fontFamily:
                                               FlutterFlowTheme.of(context)
                                                   .labelMediumFamily,
                                           color: Color(0xFFBDBDBD),
-                                          fontSize: 12.0,
+                                          fontSize: 14.0,
                                           useGoogleFonts: GoogleFonts.asMap()
                                               .containsKey(
                                                   FlutterFlowTheme.of(context)
                                                       .labelMediumFamily),
                                         ),
-                                    hintStyle: FlutterFlowTheme.of(context)
-                                        .labelMedium,
                                     floatingLabelBehavior:
                                         FloatingLabelBehavior.never,
                                     enabledBorder: InputBorder.none,
@@ -312,21 +314,24 @@ class _AccountPageWidgetState extends State<AccountPageWidget> {
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           crossAxisAlignment: CrossAxisAlignment.end,
                           children: [
-                            Text(
-                              'Accounts',
-                              textScaleFactor: 1,
-                              style: FlutterFlowTheme.of(context)
-                                  .bodyMedium
-                                  .override(
-                                    fontFamily: FlutterFlowTheme.of(context)
-                                        .bodyMediumFamily,
-                                    fontSize: 18.0,
-                                    fontWeight: FontWeight.w500,
-                                    useGoogleFonts: GoogleFonts.asMap()
-                                        .containsKey(
-                                            FlutterFlowTheme.of(context)
-                                                .bodyMediumFamily),
-                                  ),
+                            SizedBox(
+                              height: 70,
+                              child: Text(
+                                'Accounts',
+                                textScaleFactor: 1,
+                                style: FlutterFlowTheme.of(context)
+                                    .bodyMedium
+                                    .override(
+                                      fontFamily: FlutterFlowTheme.of(context)
+                                          .bodyMediumFamily,
+                                      fontSize: 18.0,
+                                      fontWeight: FontWeight.w500,
+                                      useGoogleFonts: GoogleFonts.asMap()
+                                          .containsKey(
+                                              FlutterFlowTheme.of(context)
+                                                  .bodyMediumFamily),
+                                    ),
+                              ),
                             ),
                             Align(
                               alignment: AlignmentDirectional(1.00, 1.00),
@@ -336,6 +341,7 @@ class _AccountPageWidgetState extends State<AccountPageWidget> {
                                 hoverColor: Colors.transparent,
                                 highlightColor: Colors.transparent,
                                 onTap: () async {
+                                  HapticFeedback.mediumImpact();
                                   setState(() {
                                     FFAppState().accountSelected = [];
                                   });
@@ -352,26 +358,33 @@ class _AccountPageWidgetState extends State<AccountPageWidget> {
                                         !FFAppState().selectAccounts;
                                   });
                                 },
-                                child: Text(
-                                  valueOrDefault<String>(
-                                    FFAppState().selectAccounts
-                                        ? 'Cancel'
-                                        : 'Select',
-                                    'Select',
-                                  ),
-                                  textScaleFactor: 1,
-                                  style: FlutterFlowTheme.of(context)
-                                      .bodyMedium
-                                      .override(
-                                        fontFamily: FlutterFlowTheme.of(context)
-                                            .bodyMediumFamily,
-                                        color: Color(0xFF65C3A2),
-                                        fontWeight: FontWeight.bold,
-                                        useGoogleFonts: GoogleFonts.asMap()
-                                            .containsKey(
-                                                FlutterFlowTheme.of(context)
-                                                    .bodyMediumFamily),
+                                child: SizedBox(
+                                  height: 70,
+                                  child: Align(
+                                    alignment: Alignment.center,
+                                    child: Text(
+                                      valueOrDefault<String>(
+                                        FFAppState().selectAccounts
+                                            ? 'Cancel'
+                                            : 'Select',
+                                        'Select',
                                       ),
+                                      textScaler: TextScaler.noScaling,
+                                      style: FlutterFlowTheme.of(context)
+                                          .bodyMedium
+                                          .override(
+                                            fontFamily:
+                                                FlutterFlowTheme.of(context)
+                                                    .bodyMediumFamily,
+                                            color: Color(0xFF65C3A2),
+                                            fontWeight: FontWeight.bold,
+                                            useGoogleFonts: GoogleFonts.asMap()
+                                                .containsKey(
+                                                    FlutterFlowTheme.of(context)
+                                                        .bodyMediumFamily),
+                                          ),
+                                    ),
+                                  ),
                                 ),
                               ),
                             ),
@@ -423,6 +436,7 @@ class _AccountPageWidgetState extends State<AccountPageWidget> {
                                           hoverColor: Colors.transparent,
                                           highlightColor: Colors.transparent,
                                           onTap: () {
+                                            HapticFeedback.mediumImpact();
                                             if (FFAppState().selectAccounts ==
                                                 true) {
                                               if (FFAppState()
@@ -466,6 +480,7 @@ class _AccountPageWidgetState extends State<AccountPageWidget> {
                                             ;
                                           },
                                           onLongPress: () async {
+                                            HapticFeedback.mediumImpact();
                                             setState(() {
                                               FFAppState().selectAccounts =
                                                   true;
@@ -626,6 +641,8 @@ class _AccountPageWidgetState extends State<AccountPageWidget> {
                                                                         .transparent,
                                                                 onTap:
                                                                     () async {
+                                                                  HapticFeedback
+                                                                      .mediumImpact();
                                                                   if (FFAppState()
                                                                       .deletionAccountList
                                                                       .value
@@ -698,6 +715,8 @@ class _AccountPageWidgetState extends State<AccountPageWidget> {
                                                                         .transparent,
                                                                 onTap:
                                                                     () async {
+                                                                  HapticFeedback
+                                                                      .mediumImpact();
                                                                   if (FFAppState()
                                                                       .accountSelected
                                                                       .contains(
@@ -784,6 +803,8 @@ class _AccountPageWidgetState extends State<AccountPageWidget> {
                                                                         'assets/icons/trash.svg'),
                                                               ),
                                                               onTap: () async {
+                                                                HapticFeedback
+                                                                    .mediumImpact();
                                                                 await showAlignedDialog(
                                                                   context:
                                                                       context,

@@ -113,6 +113,7 @@ class _FiltersWidgetState extends State<FiltersWidget> {
                   ),
                   FFButtonWidget(
                     onPressed: () async {
+                      HapticFeedback.mediumImpact();
                       if (pause) {
                         pause = false;
                         setState(() {
@@ -131,8 +132,6 @@ class _FiltersWidgetState extends State<FiltersWidget> {
                         initNotifications();
                         await Future.delayed(Duration(milliseconds: 600));
                         pause = true;
-                      } else {
-                        print('TIME TIME TIME');
                       }
                       Navigator.pop(context);
                     },
@@ -287,10 +286,10 @@ class _FiltersWidgetState extends State<FiltersWidget> {
                     alignment: Alignment.center,
                     child: Text(
                       '${valueOrDefault<String>(
-                        FFAppState().filterData.first,
+                        FFAppState().filterData.last,
                         'select data',
                       )}-${valueOrDefault<String>(
-                        FFAppState().filterData.last,
+                        FFAppState().filterData.first,
                         'select data',
                       )}',
                       style: FlutterFlowTheme.of(context).bodyMedium.override(
@@ -336,6 +335,7 @@ class _FiltersWidgetState extends State<FiltersWidget> {
             weekStartsMonday: false,
             rowHeight: 42.0,
             onChange: (DateTimeRange? newSelectedDate) {
+              HapticFeedback.mediumImpact();
               setState(() => _model.calendarSelectedDay = newSelectedDate);
             },
             titleStyle: FlutterFlowTheme.of(context).headlineSmall.override(
@@ -364,6 +364,7 @@ class _FiltersWidgetState extends State<FiltersWidget> {
                 children: [
                   FFButtonWidget(
                     onPressed: () async {
+                      HapticFeedback.mediumImpact();
                       Navigator.pop(context);
                     },
                     text: 'Cancel',
@@ -418,6 +419,7 @@ class _FiltersWidgetState extends State<FiltersWidget> {
                   ),
                   FFButtonWidget(
                     onPressed: () async {
+                      HapticFeedback.mediumImpact();
                       await Future.microtask(
                         () {
                           FFAppState().filterData.last = dateTimeFormat(

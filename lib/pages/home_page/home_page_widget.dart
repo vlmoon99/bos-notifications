@@ -83,8 +83,8 @@ class _HomePageWidgetState extends State<HomePageWidget> {
       print('Message data: ${message.data}');
       //(Notifi 2)Got a message whilst in the foreground
 
-      LocalNotificationService.showNotificationOnForeground(
-          LocalNotificationMessage(title, body, {}));
+      // LocalNotificationService.showNotificationOnForeground(
+      //     LocalNotificationMessage(title, body, {}));
     });
   }
 
@@ -101,6 +101,7 @@ class _HomePageWidgetState extends State<HomePageWidget> {
   @override
   void initState() {
     setupInteractedMessage();
+    FFAppState().messageNull = true;
 
     FFAppState().listTapNotifications.value.clear();
     if (FFAppState().filterData.first != '' &&
@@ -129,7 +130,7 @@ class _HomePageWidgetState extends State<HomePageWidget> {
 
         //СОЗДАНИЕ СОРТИРОВОЧНОГО ЛИСТА, ЛОКАЛЬНОГО ПРЕДЕЛЬНОГО БЛОКА И ОБНУЛЕНИЕ ГЛОБАЛЬНОГО ПРЕДЕЛЬНОГО БЛОКА.
         List sortList = [];
-        int localLastBlockHeight = FFAppState().lastBlockHeight!;
+        int localLastBlockHeight = FFAppState().lastBlockHeight ?? 0;
         FFAppState().lastBlockHeight = null;
         List listAccounts =
             List.from(FFAppState().listAccountForNotifications.value);
@@ -237,7 +238,7 @@ class _HomePageWidgetState extends State<HomePageWidget> {
         //СОЗДАНИЕ СОРТИРОВОЧНОГО ЛИСТА, ЛОКАЛЬНОГО ПРЕДЕЛЬНОГО БЛОКА И ОБНУЛЕНИЕ ГЛОБАЛЬНОГО ПРЕДЕЛЬНОГО БЛОКА.
         Set timeSet = {};
         List sortList = [];
-        int localLastBlockHeight = FFAppState().lastBlockHeight!;
+        int localLastBlockHeight = FFAppState().lastBlockHeight ?? 0;
         FFAppState().lastBlockHeight = null;
 
         List listAccounts =
@@ -259,10 +260,12 @@ class _HomePageWidgetState extends State<HomePageWidget> {
           }
 
           //обозначение общего предельного блока
-          if (FFAppState().lastBlockHeight == null ||
-              FFAppState().lastBlockHeight! <
-                  notifications.last['blockHeight']) {
-            FFAppState().lastBlockHeight = notifications.last['blockHeight'];
+          if (notifications.isNotEmpty) {
+            if (FFAppState().lastBlockHeight == null ||
+                (FFAppState().lastBlockHeight ?? 0) <
+                    notifications.last['blockHeight']) {
+              FFAppState().lastBlockHeight = notifications.last['blockHeight'];
+            }
           }
 
           //ДОБАВЛЕНИЕ ДЛЯ КАЖДОГО ЭЛЕМЕНТА ВРЕМЕНИ И ДОБАВЛЕНИЕ ЭЛЕМЕНТА В СОРТИРОВКУ.
@@ -466,8 +469,10 @@ class _HomePageWidgetState extends State<HomePageWidget> {
                                 child: Container(
                                   margin: EdgeInsets.only(bottom: 0),
                                   child: TextField(
+                                    autocorrect: false,
                                     textAlignVertical: TextAlignVertical.bottom,
                                     onChanged: (value) async {
+                                      HapticFeedback.lightImpact();
                                       timer?.cancel();
                                       timer = Timer(Duration(seconds: 1), () {
                                         FFAppState().filterID =
@@ -480,7 +485,6 @@ class _HomePageWidgetState extends State<HomePageWidget> {
                                         } else {
                                           initNotifications();
                                         }
-                                        FFAppState().filterID = null;
                                       });
                                     },
                                     controller: _model.textController,
@@ -540,6 +544,7 @@ class _HomePageWidgetState extends State<HomePageWidget> {
                                     color: Colors.white,
                                   ),
                                   onTap: () async {
+                                    HapticFeedback.lightImpact();
                                     await showModalBottomSheet(
                                       isScrollControlled: true,
                                       backgroundColor: Colors.transparent,
@@ -689,14 +694,33 @@ class _HomePageWidgetState extends State<HomePageWidget> {
                     ),
                   ),
                   Visibility(
-                    visible: !(currentUserDocument?.subscriptions.isEmpty ??
+                    visible: (currentUserDocument?.subscriptions.isNotEmpty ??
                             false) &&
-                        FFAppState().streamNotifications.value.isEmpty,
+                        FFAppState().messageNull,
                     child: Expanded(
                       child: Center(
                         child: CircularProgressIndicator(
                           backgroundColor: Colors.white,
                           color: Colors.green,
+                        ),
+                      ),
+                    ),
+                  ),
+                  Visibility(
+                    visible: (currentUserDocument?.subscriptions.isNotEmpty ??
+                            false) &&
+                        !FFAppState().messageNull &&
+                        FFAppState().streamNotifications.value.isEmpty,
+                    child: Expanded(
+                      child: Center(
+                        child: Text(
+                          'No notifications.',
+                          textScaler: TextScaler.noScaling,
+                          style: TextStyle(
+                            color: Color(0xFF65C3A2),
+                            fontSize: 25,
+                            fontWeight: FontWeight.w500,
+                          ),
                         ),
                       ),
                     ),
@@ -742,6 +766,8 @@ class _HomePageWidgetState extends State<HomePageWidget> {
                                                               0.008)),
                                                   child: InkWell(
                                                     onTap: () async {
+                                                      HapticFeedback
+                                                          .mediumImpact();
                                                       FFAppState().update(
                                                         () {
                                                           FFAppState()
@@ -782,7 +808,8 @@ class _HomePageWidgetState extends State<HomePageWidget> {
                                                               .toString() ==
                                                           'mention') {
                                                         String id = snapshot
-                                                            .data![index][2]
+                                                            .data![index][0]
+                                                                ['accountId']
                                                             .toString();
                                                         String block = snapshot
                                                             .data![index][0]

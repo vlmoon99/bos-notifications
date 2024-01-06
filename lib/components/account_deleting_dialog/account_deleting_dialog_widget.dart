@@ -1,3 +1,5 @@
+import 'package:firebase_auth/firebase_auth.dart';
+
 import '../../local_DataBase.dart';
 import '/auth/firebase_auth/auth_util.dart';
 import '/backend/backend.dart';
@@ -58,34 +60,10 @@ class _AccountDeletingDialogWidgetState
     return Align(
       alignment: AlignmentDirectional(0.00, 0.00),
       child: Container(
-        width: valueOrDefault<double>(
-          () {
-            if (MediaQuery.sizeOf(context).width <
-                valueOrDefault<double>(
-                  kBreakpointSmall,
-                  400.0,
-                )) {
-              return 320.0;
-            } else if (MediaQuery.sizeOf(context).width <
-                valueOrDefault<double>(
-                  kBreakpointMedium,
-                  1025.0,
-                )) {
-              return 420.0;
-            } else if (MediaQuery.sizeOf(context).width <
-                valueOrDefault<double>(
-                  kBreakpointLarge,
-                  1500.0,
-                )) {
-              return 520.0;
-            } else {
-              return 620.0;
-            }
-          }(),
-          320.0,
-        ),
-        height: MediaQuery.sizeOf(context).height * 0.6,
-        constraints: BoxConstraints(maxHeight: 400),
+        width: MediaQuery.sizeOf(context).width * 0.9,
+        height: MediaQuery.sizeOf(context).height * 0.32,
+        constraints:
+            BoxConstraints(maxHeight: 350, maxWidth: 400, minHeight: 260),
         decoration: BoxDecoration(
           color: FlutterFlowTheme.of(context).secondaryBackground,
           boxShadow: [
@@ -166,6 +144,7 @@ class _AccountDeletingDialogWidgetState
                           EdgeInsetsDirectional.fromSTEB(20.0, 0.0, 20.0, 0.0),
                       child: FFButtonWidget(
                         onPressed: () async {
+                          HapticFeedback.mediumImpact();
                           Navigator.pop(context);
                         },
                         text: 'No, keep it',
@@ -238,6 +217,7 @@ class _AccountDeletingDialogWidgetState
                                   : null;
                           return FFButtonWidget(
                             onPressed: () async {
+                              HapticFeedback.mediumImpact();
                               FFAppState().selectAccounts = false;
                               print(currentUserDocument?.uid);
                               var dbHelper = DatabaseHelper();
@@ -255,8 +235,13 @@ class _AccountDeletingDialogWidgetState
                               FFAppState()
                                   .deletedAccountList
                                   .add(await db.query('myDB'));
-                              print(await db.query('myDB'));
-                              print(FFAppState().deletedAccountList.value);
+                              final uid =
+                                  FirebaseAuth.instance.currentUser!.uid;
+                              await FirebaseFirestore.instance
+                                  .collection('subscriptions_channels')
+                                  .doc(widget.name)
+                                  .update({uid: ''});
+
                               await buttonUsersRecord!.reference.update({
                                 ...mapToFirestore(
                                   {

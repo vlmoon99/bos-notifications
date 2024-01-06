@@ -23,6 +23,8 @@ class FFAppState extends ChangeNotifier {
   bool selectAccounts = false;
   bool pause = false;
   bool newMessage = false;
+  bool messageNull = true;
+  bool initStateForSwitch = true;
   static FFAppState _instance = FFAppState._internal();
 
   factory FFAppState() {
@@ -258,6 +260,7 @@ Future _safeInitAsync(Function() initializeField) async {
 
 Future initNotificationsForFilter() async {
   FFAppState().pause = false;
+  FFAppState().messageNull = true;
   if (!FFAppState().cycle) {
     return;
   }
@@ -363,9 +366,10 @@ Future initNotificationsForFilter() async {
       sort.removeWhere(
           (element) => element[0]['blockHeight'] < FFAppState().endRes);
       sort.removeWhere((element) =>
-          element[0]['blockHeight'] < FFAppState().lastBlockHeight);
+          element[0]['blockHeight'] < (FFAppState().lastBlockHeight ?? 0));
       sort.sort((a, b) => b[0]['blockHeight'].compareTo(a[0]['blockHeight']));
       FFAppState().streamNotifications.add(sort);
+      FFAppState().messageNull = false;
       FFAppState().streamConroller.add(true);
       FFAppState().pause = true;
     },
@@ -374,6 +378,7 @@ Future initNotificationsForFilter() async {
 
 Future initNotifications() async {
   FFAppState().pause = false;
+  FFAppState().messageNull = true;
   bool start = true;
   List valueResult = [];
   DateTime timeUNIXresult;
@@ -383,13 +388,15 @@ Future initNotifications() async {
   FFAppState().sortStreamNotifications.add([]);
   FFAppState().streamNotifications.add([]);
   FFAppState().listAccountForNotifications.add([]);
-  List<String> subs;
+  List<String> subs = [];
   if (FFAppState().filterID == null) {
     subs = List.from(currentUserDocument?.subscriptions ?? []);
   } else {
     subs = List.from(currentUserDocument?.subscriptions ?? []);
     subs.removeWhere((element) => !element.startsWith(FFAppState().filterID!));
   }
+  print(FFAppState().filterID);
+  print(subs);
   subs.forEach((e) async {
     ApiCallResponse _notification =
         await GetNotificationsByUserIdWithoutFromValueCall.call(accountId: e);
@@ -462,10 +469,11 @@ Future initNotifications() async {
         () {
           List sort = FFAppState().streamNotifications.value;
           sort.removeWhere((element) =>
-              element[0]['blockHeight'] < FFAppState().lastBlockHeight);
+              element[0]['blockHeight'] < FFAppState().lastBlockHeight ?? 0);
           sort.sort(
               (a, b) => b[0]['blockHeight'].compareTo(a[0]['blockHeight']));
           FFAppState().streamNotifications.add(sort);
+          FFAppState().messageNull = false;
           FFAppState().streamConroller.add(false);
           FFAppState().pause = true;
         },

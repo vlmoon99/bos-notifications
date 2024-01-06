@@ -149,6 +149,7 @@ class _AccountDeletedWidgetState extends State<AccountDeletedWidget> {
                             height: 24,
                           ),
                           onTap: () async {
+                            HapticFeedback.mediumImpact();
                             DatabaseHelper dbHelper = DatabaseHelper();
                             var db = await dbHelper.db;
 
@@ -170,8 +171,9 @@ class _AccountDeletedWidgetState extends State<AccountDeletedWidget> {
                               ),
                             });
                             final uid = FirebaseAuth.instance.currentUser!.uid;
-                            final token =
-                                await FirebaseMessaging.instance.getToken();
+                            final token = FFAppState().initStateForSwitch
+                                ? await FirebaseMessaging.instance.getToken()
+                                : '';
 
                             final isThisAccountIdChannelExist =
                                 (await FirebaseFirestore.instance

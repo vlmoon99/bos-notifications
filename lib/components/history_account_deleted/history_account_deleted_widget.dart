@@ -95,6 +95,7 @@ class _HistoryAccountDeletedWidgetState
                           size: 24.0,
                         ),
                         onPressed: () async {
+                          HapticFeedback.mediumImpact();
                           setState(() {
                             FFAppState().update(() {
                               FFAppState().historyOnOff.add(false);

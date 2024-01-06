@@ -245,44 +245,47 @@ class _SubscribeBottomBarWidgetState extends State<SubscribeBottomBarWidget> {
                   maxHeight: 1000,
                   child: TextField(
                     controller: _model.textController,
-                    onChanged: (_) => EasyDebounce.debounce(
-                      '_model.textController',
-                      Duration(seconds: 1),
-                      () async {
-                        var _shouldSetState = false;
-                        if (_model.textController.text == '') {
-                          setState(() {
-                            FFAppState().userfound = 0;
-                          });
-                          if (_shouldSetState) setState(() {});
-                          return;
-                        } else {
-                          _model.getNearSocialInfoResult =
-                              await GetNearSocialInformationCall.call(
-                            accountId: _model.textController.text,
-                          );
-                          _shouldSetState = true;
-                          if (((_model.getNearSocialInfoResult?.bodyText ??
-                                      '') ==
-                                  '') ||
-                              ((_model.getNearSocialInfoResult?.bodyText ??
-                                      '') ==
-                                  '{}')) {
+                    onChanged: (_) {
+                      HapticFeedback.lightImpact();
+                      EasyDebounce.debounce(
+                        '_model.textController',
+                        Duration(seconds: 1),
+                        () async {
+                          var _shouldSetState = false;
+                          if (_model.textController.text == '') {
                             setState(() {
-                              FFAppState().userfound = 2;
+                              FFAppState().userfound = 0;
                             });
                             if (_shouldSetState) setState(() {});
                             return;
                           } else {
-                            setState(() {
-                              FFAppState().userfound = 1;
-                            });
-                            if (_shouldSetState) setState(() {});
-                            return;
+                            _model.getNearSocialInfoResult =
+                                await GetNearSocialInformationCall.call(
+                              accountId: _model.textController.text,
+                            );
+                            _shouldSetState = true;
+                            if (((_model.getNearSocialInfoResult?.bodyText ??
+                                        '') ==
+                                    '') ||
+                                ((_model.getNearSocialInfoResult?.bodyText ??
+                                        '') ==
+                                    '{}')) {
+                              setState(() {
+                                FFAppState().userfound = 2;
+                              });
+                              if (_shouldSetState) setState(() {});
+                              return;
+                            } else {
+                              setState(() {
+                                FFAppState().userfound = 1;
+                              });
+                              if (_shouldSetState) setState(() {});
+                              return;
+                            }
                           }
-                        }
-                      },
-                    ),
+                        },
+                      );
+                    },
                     textAlignVertical: TextAlignVertical.top,
                     style: FlutterFlowTheme.of(context)
                         .labelMedium
@@ -438,6 +441,7 @@ class _SubscribeBottomBarWidgetState extends State<SubscribeBottomBarWidget> {
                 padding: EdgeInsetsDirectional.fromSTEB(0.0, 0.0, 0.0, 50.0),
                 child: InkWell(
                   onTap: () async {
+                    HapticFeedback.mediumImpact();
                     Future.microtask(
                       () async {
                         if (currentUserDocument?.subscriptions.length == 50) {
@@ -473,8 +477,9 @@ class _SubscribeBottomBarWidgetState extends State<SubscribeBottomBarWidget> {
                         }
 
                         final uid = FirebaseAuth.instance.currentUser!.uid;
-                        final token =
-                            await FirebaseMessaging.instance.getToken();
+                        final token = FFAppState().initStateForSwitch
+                            ? await FirebaseMessaging.instance.getToken()
+                            : '';
 
                         final isThisAccountIdChannelExist =
                             (await FirebaseFirestore.instance

@@ -1,11 +1,12 @@
-import 'package:b_o_s_notifications/flutter_flow/flutter_flow_calendar.dart';
-import 'package:b_o_s_notifications/pages/home_page/home_page_model.dart';
+import 'package:b_o_s_notifications/auth/firebase_auth/auth_util.dart';
+import 'package:b_o_s_notifications/local_DataBase.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
 
 import '/components/history_account_deleted/history_account_deleted_widget.dart';
 import '/flutter_flow/flutter_flow_icon_button.dart';
 import '/flutter_flow/flutter_flow_theme.dart';
 import '/flutter_flow/flutter_flow_util.dart';
-import '/flutter_flow/flutter_flow_widgets.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
@@ -13,7 +14,7 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
 import 'settings_page_model.dart';
 export 'settings_page_model.dart';
-import 'package:b_o_s_notifications/components/history_account_deleted/history_account_deleted_widget.dart';
+import 'package:sqflite/sqflite.dart';
 
 class SettingsPageWidget extends StatefulWidget {
   const SettingsPageWidget({Key? key}) : super(key: key);
@@ -26,14 +27,13 @@ class _SettingsPageWidgetState extends State<SettingsPageWidget> {
   late SettingsPageModel _model;
   bool? history;
   DateTime? date;
+
   final scaffoldKey = GlobalKey<ScaffoldState>();
 
   @override
   void initState() {
     super.initState();
     _model = createModel(context, () => SettingsPageModel());
-
-    WidgetsBinding.instance.addPostFrameCallback((_) => setState(() {}));
   }
 
   @override
@@ -161,10 +161,45 @@ class _SettingsPageWidgetState extends State<SettingsPageWidget> {
                                       ),
                                 ),
                                 Switch.adaptive(
-                                  value: _model.switchValue ??= true,
+                                  value: FFAppState().initStateForSwitch,
                                   onChanged: (newValue) async {
-                                    setState(
-                                        () => _model.switchValue = newValue!);
+                                    HapticFeedback.mediumImpact();
+                                    final uid =
+                                        FirebaseAuth.instance.currentUser!.uid;
+                                    final token = await FirebaseMessaging
+                                        .instance
+                                        .getToken();
+                                    var dbClient = await DatabaseHelper().db2;
+                                    if (FFAppState().initStateForSwitch) {
+                                      dbClient.insert('MyDB2', {'name': 'yes'});
+                                      currentUserDocument?.subscriptions
+                                          .forEach((element) async {
+                                        await FirebaseFirestore.instance
+                                            .collection(
+                                                'subscriptions_channels')
+                                            .doc(element)
+                                            .update({uid: ''});
+                                      });
+                                      setState(() {
+                                        FFAppState().initStateForSwitch =
+                                            !FFAppState().initStateForSwitch;
+                                      });
+                                    } else if (!FFAppState()
+                                        .initStateForSwitch) {
+                                      dbClient.delete('myDB2');
+                                      currentUserDocument?.subscriptions
+                                          .forEach((element) async {
+                                        await FirebaseFirestore.instance
+                                            .collection(
+                                                'subscriptions_channels')
+                                            .doc(element)
+                                            .update({uid: token});
+                                      });
+                                      setState(() {
+                                        FFAppState().initStateForSwitch =
+                                            !FFAppState().initStateForSwitch;
+                                      });
+                                    }
                                   },
                                   activeColor: Colors.black,
                                   activeTrackColor: Color(0xFF7EF4CA),
@@ -258,6 +293,7 @@ class _SettingsPageWidgetState extends State<SettingsPageWidget> {
                                         size: 24.0,
                                       ),
                                       onPressed: () async {
+                                        HapticFeedback.mediumImpact();
                                         setState(() {
                                           FFAppState().update(() {
                                             FFAppState().historyOnOff.add(true);

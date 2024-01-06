@@ -9,7 +9,7 @@ class DatabaseHelper {
   factory DatabaseHelper() => _instance;
 
   static Database? _db;
-
+  static Database? _db2;
   DatabaseHelper.internal();
 
   Future<Database> get db async {
@@ -18,6 +18,14 @@ class DatabaseHelper {
     }
     _db = await initDb();
     return _db!;
+  }
+
+  Future<Database> get db2 async {
+    if (_db2 != null) {
+      return _db2!;
+    }
+    _db2 = await initDb();
+    return _db2!;
   }
 
   Future<Database> initDb() async {
@@ -39,6 +47,24 @@ class DatabaseHelper {
     return _db!;
   }
 
+  Future<Database> initDb2() async {
+    String databasesPath = await getDatabasesPath();
+    String path = join(databasesPath, 'myDB2.db=');
+
+    // Check if the database exists
+    // bool databaseExists = await databaseExists(path);
+
+    if (!await databaseExists(path)) {
+      // Create the database
+      _db2 = await openDatabase(path, version: 1, onCreate: _onCreate2);
+    } else {
+      // If the database already exists, open it
+      _db2 = await openDatabase(path);
+    }
+    print(_db2!);
+    return _db2!;
+  }
+
   void _onCreate(Database db, int version) async {
     // Create tables and define their columns
     await db.execute('''
@@ -48,6 +74,17 @@ class DatabaseHelper {
         date TEXT
       )
     ''');
+  }
+
+  void _onCreate2(Database db, int version) async {
+    await db.execute('''
+    CREATE TABLE myDB2 (
+      id INTEGER PRIMARY KEY,
+      name TEXT
+    )
+  ''');
+    print(await db);
+    print(1234);
   }
 
   // Your methods to interact with the database go here
