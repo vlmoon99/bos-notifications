@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:b_o_s_notifications/auth/firebase_auth/auth_util.dart';
 import 'package:b_o_s_notifications/auth/firebase_auth/firebase_auth_manager.dart';
 import 'package:b_o_s_notifications/backend/api_requests/api_calls.dart';
@@ -294,10 +296,11 @@ Future initNotificationsForFilter() async {
   FFAppState().streamNotifications.add([]);
   List<String> subs;
   if (FFAppState().filterID == null) {
-    subs = List.from(currentUserDocument!.subscriptions);
+    subs = List.from(currentUserDocument?.subscriptions ?? []);
   } else {
-    subs = List.from(currentUserDocument!.subscriptions);
-    subs.removeWhere((element) => !element.startsWith(FFAppState().filterID!));
+    subs = List.from(currentUserDocument?.subscriptions ?? []);
+    subs.removeWhere(
+        (element) => !element.startsWith(FFAppState().filterID ?? ' '));
   }
 
   await Future.forEach(subs, (elementAcc) async {
@@ -380,7 +383,6 @@ Future initNotifications() async {
   FFAppState().pause = false;
   FFAppState().messageNull = true;
   bool start = true;
-  List valueResult = [];
   DateTime timeUNIXresult;
   FFAppState().lastBlockHeight = null;
 
@@ -391,12 +393,20 @@ Future initNotifications() async {
   List<String> subs = [];
   if (FFAppState().filterID == null) {
     subs = List.from(currentUserDocument?.subscriptions ?? []);
-  } else {
+  } else if (FFAppState().filterID != null) {
     subs = List.from(currentUserDocument?.subscriptions ?? []);
     subs.removeWhere((element) => !element.startsWith(FFAppState().filterID!));
+
+    print(subs);
+    print(FFAppState().filterID);
   }
-  print(FFAppState().filterID);
-  print(subs);
+  if (subs.isEmpty) {
+    FFAppState().update(() {
+      FFAppState().messageNull = false;
+    });
+    return;
+  }
+
   subs.forEach((e) async {
     ApiCallResponse _notification =
         await GetNotificationsByUserIdWithoutFromValueCall.call(accountId: e);

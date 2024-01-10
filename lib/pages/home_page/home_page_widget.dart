@@ -102,7 +102,7 @@ class _HomePageWidgetState extends State<HomePageWidget> {
   void initState() {
     setupInteractedMessage();
     FFAppState().messageNull = true;
-
+    FFAppState().filterID = null;
     FFAppState().listTapNotifications.value.clear();
     if (FFAppState().filterData.first != '' &&
         FFAppState().filterData.last != '') {
@@ -474,7 +474,8 @@ class _HomePageWidgetState extends State<HomePageWidget> {
                                     onChanged: (value) async {
                                       HapticFeedback.lightImpact();
                                       timer?.cancel();
-                                      timer = Timer(Duration(seconds: 1), () {
+                                      timer = Timer(Duration(milliseconds: 300),
+                                          () {
                                         FFAppState().filterID =
                                             value.replaceAll(RegExp(r'\s'), '');
                                         if (FFAppState().filterData.last !=
@@ -707,9 +708,7 @@ class _HomePageWidgetState extends State<HomePageWidget> {
                     ),
                   ),
                   Visibility(
-                    visible: (currentUserDocument?.subscriptions.isNotEmpty ??
-                            false) &&
-                        !FFAppState().messageNull &&
+                    visible: !FFAppState().messageNull &&
                         FFAppState().streamNotifications.value.isEmpty,
                     child: Expanded(
                       child: Center(
@@ -916,11 +915,11 @@ class _HomePageWidgetState extends State<HomePageWidget> {
                                                                   width: MediaQuery.sizeOf(
                                                                               context)
                                                                           .height *
-                                                                      0.06,
+                                                                      0.05,
                                                                   height: MediaQuery.sizeOf(
                                                                               context)
                                                                           .height *
-                                                                      0.06,
+                                                                      0.05,
                                                                   decoration: BoxDecoration(
                                                                       color: Colors
                                                                           .white,
