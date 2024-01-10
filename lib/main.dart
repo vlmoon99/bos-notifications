@@ -120,7 +120,7 @@ class _MyAppState extends State<MyApp> {
   Widget build(BuildContext context) {
     return MaterialApp.router(
       debugShowCheckedModeBanner: false,
-      title: 'NearSocialNotifications',
+      title: 'BOS Notifications',
       localizationsDelegates: [
         FFLocalizationsDelegate(),
         GlobalMaterialLocalizations.delegate,
@@ -132,6 +132,11 @@ class _MyAppState extends State<MyApp> {
         Locale('en'),
       ],
       theme: ThemeData(
+        appBarTheme: AppBarTheme(
+            systemOverlayStyle: SystemUiOverlayStyle.dark.copyWith(
+          statusBarIconBrightness:
+              Brightness.dark, // Цвет икон статусной строки
+        )),
         brightness: Brightness.light,
         scrollbarTheme: ScrollbarThemeData(),
       ),
@@ -277,13 +282,15 @@ class _NavBarPageState extends State<NavBarPage> {
                                 Padding(
                                   padding: const EdgeInsets.only(bottom: 5),
                                   child: SvgPicture.asset(
-                                    'assets/icons/tabhome2.svg',
+                                    'assets/icons/nearLogo.svg',
+                                    width: 20,
+                                    height: 20,
                                     color: currentIndex == 0
                                         ? Color.fromARGB(255, 151, 151, 255)
                                         : Colors.grey,
                                   ),
                                 ),
-                                Text('Home',
+                                Text('Near Social',
                                     textScaleFactor: 1,
                                     maxLines: 1,
                                     style: TextStyle(
@@ -327,9 +334,11 @@ class _NavBarPageState extends State<NavBarPage> {
                             child: Column(
                               children: [
                                 Padding(
-                                  padding: const EdgeInsets.only(bottom: 5),
+                                  padding: const EdgeInsets.only(bottom: 0),
                                   child: SvgPicture.asset(
                                     'assets/icons/accounts.svg',
+                                    width: 28,
+                                    height: 28,
                                     color: currentIndex == 1
                                         ? Color.fromARGB(255, 151, 151, 255)
                                         : Colors.grey,

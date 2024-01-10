@@ -142,7 +142,7 @@ class _HomePageWidgetState extends State<HomePageWidget> {
           List notifications = notificationsAPI.jsonBody;
 
           //удаление аккаунта из потенциальных аккаунтов при условии
-          if (notifications.length != 20 ||
+          if (notifications.length < 20 ||
               notifications.last['blockHeight'] < FFAppState().endRes) {
             FFAppState().listAccountForNotifications.value.remove(account);
             FFAppState()
@@ -347,15 +347,6 @@ class _HomePageWidgetState extends State<HomePageWidget> {
 
   @override
   Widget build(BuildContext context) {
-    if (isiOS) {
-      SystemChrome.setSystemUIOverlayStyle(
-        SystemUiOverlayStyle(
-          statusBarBrightness: Theme.of(context).brightness,
-          systemStatusBarContrastEnforced: true,
-        ),
-      );
-    }
-
     context.watch<FFAppState>();
 
     return Title(
@@ -375,7 +366,7 @@ class _HomePageWidgetState extends State<HomePageWidget> {
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
                   Text(
-                    'Home',
+                    'Social Notifications',
                     textScaleFactor: 1,
                     style: FlutterFlowTheme.of(context).bodyMedium.override(
                           fontFamily:
@@ -476,16 +467,40 @@ class _HomePageWidgetState extends State<HomePageWidget> {
                                       timer?.cancel();
                                       timer = Timer(Duration(milliseconds: 300),
                                           () {
-                                        FFAppState().filterID =
-                                            value.replaceAll(RegExp(r'\s'), '');
-                                        if (FFAppState().filterData.last !=
-                                                '' &&
-                                            FFAppState().filterData.first !=
-                                                '') {
-                                          initNotificationsForFilter();
-                                        } else {
-                                          initNotifications();
-                                        }
+                                        FFAppState().update(
+                                          () {
+                                            FFAppState().filterID = value
+                                                .replaceAll(RegExp(r'\s'), '');
+                                          },
+                                        );
+                                        FFAppState().streamConroller.value
+                                            ? scrollControllerForFilter
+                                                .animateTo(
+                                                0.0,
+                                                duration:
+                                                    Duration(milliseconds: 300),
+                                                curve: Curves.easeInOut,
+                                              )
+                                            : scrollController.animateTo(
+                                                0.0,
+                                                duration:
+                                                    Duration(milliseconds: 300),
+                                                curve: Curves.easeInOut,
+                                              );
+                                        if (!(currentUserDocument
+                                                    ?.subscriptions ??
+                                                [])
+                                            .any((e) => e.startsWith(
+                                                FFAppState().filterID ?? ''))) {
+                                        } else {}
+                                        // if (FFAppState().filterData.last !=
+                                        //         '' &&
+                                        //     FFAppState().filterData.first !=
+                                        //         '') {
+                                        //   initNotificationsForFilter();
+                                        // } else {
+                                        //   initNotifications();
+                                        // }
                                       });
                                     },
                                     controller: _model.textController,
@@ -694,19 +709,16 @@ class _HomePageWidgetState extends State<HomePageWidget> {
                       ),
                     ),
                   ),
-                  Visibility(
-                    visible: (currentUserDocument?.subscriptions.isNotEmpty ??
-                            false) &&
-                        FFAppState().messageNull,
-                    child: Expanded(
-                      child: Center(
-                        child: CircularProgressIndicator(
-                          backgroundColor: Colors.white,
-                          color: Colors.green,
-                        ),
-                      ),
-                    ),
-                  ),
+                  // Visibility(
+                  //   visible: (currentUserDocument?.subscriptions.isNotEmpty ??
+                  //           false) &&
+                  //       FFAppState().messageNull,
+                  //   child: Expanded(
+                  //     child: Center(
+                  //       child: ,
+                  //     ),
+                  //   ),
+                  // ),
                   Visibility(
                     visible: !FFAppState().messageNull &&
                         FFAppState().streamNotifications.value.isEmpty,
@@ -748,271 +760,305 @@ class _HomePageWidgetState extends State<HomePageWidget> {
                                     itemCount: snapshot.data?.length ?? 0,
                                     itemBuilder: (context, index) {
                                       return snapshot.data!.isEmpty
-                                          ? SizedBox()
+                                          ? CircularProgressIndicator(
+                                              backgroundColor: Colors.white,
+                                              color: Colors.green,
+                                            )
                                           : Column(
                                               children: [
-                                                Padding(
-                                                  padding: EdgeInsets.symmetric(
-                                                      vertical: (MediaQuery.sizeOf(
-                                                                          context)
-                                                                      .height *
-                                                                  0.01) >
-                                                              12
-                                                          ? 12
-                                                          : (MediaQuery.sizeOf(
-                                                                      context)
-                                                                  .height *
-                                                              0.008)),
-                                                  child: InkWell(
-                                                    onTap: () async {
-                                                      HapticFeedback
-                                                          .mediumImpact();
-                                                      FFAppState().update(
-                                                        () {
-                                                          FFAppState()
-                                                              .listTapNotifications
-                                                              .value
-                                                              .add(index);
-                                                        },
-                                                      );
-
-                                                      Timer(
-                                                          Duration(seconds: 2),
-                                                          () {
-                                                        FFAppState().update(() {
-                                                          FFAppState()
-                                                              .listTapNotifications
-                                                              .value
-                                                              .remove(index);
-                                                        });
-                                                      });
-                                                      String url;
-                                                      if (snapshot.data![index]
-                                                              [0]['value']
-                                                              ['type']
+                                                Visibility(
+                                                  visible: (FFAppState()
+                                                              .filterID ==
+                                                          null) ||
+                                                      (snapshot.data?[index]
+                                                                  [2] ??
+                                                              '')
                                                           .toString()
-                                                          .startsWith(
-                                                              'devgovgigs')) {
-                                                        String idPost = snapshot
-                                                            .data![index][0]
-                                                                ['value']
-                                                                ['post']
-                                                            .toString();
-                                                        url =
-                                                            'https://near.social/devhub.near/widget/app?page=post&id=$idPost';
-                                                      } else if (snapshot
-                                                              .data![index][0]
-                                                                  ['value']
-                                                                  ['type']
-                                                              .toString() ==
-                                                          'mention') {
-                                                        String id = snapshot
-                                                            .data![index][0]
-                                                                ['accountId']
-                                                            .toString();
-                                                        String block = snapshot
-                                                            .data![index][0]
-                                                                ['blockHeight']
-                                                            .toString();
-                                                        url =
-                                                            'https://near.social/mob.near/widget/MainPage.N.Post.Page?accountId=$id&blockHeight=$block';
-                                                      } else {
-                                                        if (snapshot.data![index]
-                                                                        [0][
-                                                                        'value']
-                                                                        ['type']
-                                                                    .toString() !=
-                                                                'like' &&
-                                                            snapshot.data![index]
-                                                                        [0]
-                                                                        ['value']
-                                                                        ['type']
-                                                                    .toString() !=
-                                                                'repost' &&
-                                                            snapshot.data![index]
-                                                                        [0]
-                                                                        ['value']
-                                                                        ['type']
-                                                                    .toString() !=
-                                                                'comment') {
-                                                          return;
-                                                        }
-                                                        String id = snapshot
-                                                            .data![index][2]
-                                                            .toString();
-
-                                                        String block = snapshot
-                                                            .data![index][0]
-                                                                ['value']
-                                                                ['item']
-                                                                ['blockHeight']
-                                                            .toString();
-                                                        url =
-                                                            'https://near.social/mob.near/widget/MainPage.N.Post.Page?accountId=$id&blockHeight=$block';
-                                                      }
-
-                                                      await launchUrlString(
-                                                          url);
-                                                    },
-                                                    child: AnimatedContainer(
-                                                      duration: Duration(
-                                                          milliseconds: 100),
-                                                      constraints:
-                                                          BoxConstraints(
-                                                        minHeight: 50,
-                                                        maxHeight: 100,
-                                                      ),
-                                                      decoration: BoxDecoration(
-                                                        color: FFAppState()
+                                                          .startsWith(FFAppState()
+                                                                  .filterID ??
+                                                              ''),
+                                                  child: Padding(
+                                                    padding: EdgeInsets.symmetric(
+                                                        vertical: (MediaQuery.sizeOf(
+                                                                            context)
+                                                                        .height *
+                                                                    0.01) >
+                                                                12
+                                                            ? 12
+                                                            : (MediaQuery.sizeOf(
+                                                                        context)
+                                                                    .height *
+                                                                0.008)),
+                                                    child: InkWell(
+                                                      onTap: () async {
+                                                        HapticFeedback
+                                                            .mediumImpact();
+                                                        FFAppState().update(
+                                                          () {
+                                                            FFAppState()
                                                                 .listTapNotifications
                                                                 .value
-                                                                .contains(index)
-                                                            ? Color.fromARGB(
-                                                                255,
-                                                                232,
-                                                                249,
-                                                                230)
-                                                            : Color(0xFFFAF9F8),
-                                                        borderRadius:
-                                                            BorderRadius
-                                                                .circular(
-                                                          8,
+                                                                .add(index);
+                                                          },
+                                                        );
+
+                                                        Timer(
+                                                            Duration(
+                                                                seconds: 2),
+                                                            () {
+                                                          FFAppState()
+                                                              .update(() {
+                                                            FFAppState()
+                                                                .listTapNotifications
+                                                                .value
+                                                                .remove(index);
+                                                          });
+                                                        });
+                                                        String url;
+                                                        if (snapshot
+                                                            .data![index][0]
+                                                                ['value']
+                                                                ['type']
+                                                            .toString()
+                                                            .startsWith(
+                                                                'devgovgigs')) {
+                                                          String idPost =
+                                                              snapshot
+                                                                  .data![index]
+                                                                      [0]
+                                                                      ['value']
+                                                                      ['post']
+                                                                  .toString();
+                                                          url =
+                                                              'https://near.social/devhub.near/widget/app?page=post&id=$idPost';
+                                                        } else if (snapshot
+                                                                .data![index][0]
+                                                                    ['value']
+                                                                    ['type']
+                                                                .toString() ==
+                                                            'mention') {
+                                                          String id = snapshot
+                                                              .data![index][0]
+                                                                  ['accountId']
+                                                              .toString();
+                                                          String block = snapshot
+                                                              .data![index][0][
+                                                                  'blockHeight']
+                                                              .toString();
+                                                          url =
+                                                              'https://near.social/mob.near/widget/MainPage.N.Post.Page?accountId=$id&blockHeight=$block';
+                                                        } else {
+                                                          if (snapshot.data![index]
+                                                                          [0]
+                                                                          ['value']
+                                                                          [
+                                                                          'type']
+                                                                      .toString() !=
+                                                                  'like' &&
+                                                              snapshot.data![index]
+                                                                          [0]
+                                                                          ['value']
+                                                                          [
+                                                                          'type']
+                                                                      .toString() !=
+                                                                  'repost' &&
+                                                              snapshot.data![index]
+                                                                          [0]
+                                                                          ['value']
+                                                                          ['type']
+                                                                      .toString() !=
+                                                                  'comment') {
+                                                            return;
+                                                          }
+                                                          String id = snapshot
+                                                              .data![index][2]
+                                                              .toString();
+
+                                                          String block = snapshot
+                                                              .data![index][0]
+                                                                  ['value']
+                                                                  ['item'][
+                                                                  'blockHeight']
+                                                              .toString();
+                                                          url =
+                                                              'https://near.social/mob.near/widget/MainPage.N.Post.Page?accountId=$id&blockHeight=$block';
+                                                        }
+
+                                                        await launchUrlString(
+                                                            url);
+                                                      },
+                                                      child: AnimatedContainer(
+                                                        duration: Duration(
+                                                            milliseconds: 100),
+                                                        constraints:
+                                                            BoxConstraints(
+                                                          minHeight: 50,
+                                                          maxHeight: 100,
                                                         ),
-                                                      ),
-                                                      height: MediaQuery.sizeOf(
-                                                                  context)
-                                                              .height *
-                                                          0.065,
-                                                      child: Padding(
-                                                        padding: EdgeInsets.all(
+                                                        decoration:
+                                                            BoxDecoration(
+                                                          color: FFAppState()
+                                                                  .listTapNotifications
+                                                                  .value
+                                                                  .contains(
+                                                                      index)
+                                                              ? Color.fromARGB(
+                                                                  255,
+                                                                  232,
+                                                                  249,
+                                                                  230)
+                                                              : Color(
+                                                                  0xFFFAF9F8),
+                                                          borderRadius:
+                                                              BorderRadius
+                                                                  .circular(
+                                                            8,
+                                                          ),
+                                                        ),
+                                                        height:
                                                             MediaQuery.sizeOf(
-                                                                            context)
-                                                                        .width >
-                                                                    600
-                                                                ? 8
-                                                                : 2),
-                                                        child: Row(
-                                                          mainAxisAlignment:
-                                                              MainAxisAlignment
-                                                                  .spaceBetween,
-                                                          children: [
-                                                            Row(
-                                                              children: [
-                                                                Container(
-                                                                  constraints:
-                                                                      BoxConstraints(
-                                                                    minWidth:
-                                                                        45,
-                                                                    minHeight:
-                                                                        45,
-                                                                    maxHeight:
-                                                                        65,
-                                                                    maxWidth:
-                                                                        65,
-                                                                  ),
-                                                                  clipBehavior:
-                                                                      Clip.antiAliasWithSaveLayer,
-                                                                  width: MediaQuery.sizeOf(
+                                                                        context)
+                                                                    .height *
+                                                                0.065,
+                                                        child: Padding(
+                                                          padding: EdgeInsets.all(
+                                                              MediaQuery.sizeOf(
                                                                               context)
-                                                                          .height *
-                                                                      0.05,
-                                                                  height: MediaQuery.sizeOf(
-                                                                              context)
-                                                                          .height *
-                                                                      0.05,
-                                                                  decoration: BoxDecoration(
-                                                                      color: Colors
-                                                                          .white,
-                                                                      borderRadius:
-                                                                          BorderRadius.circular(
-                                                                              100)),
-                                                                  child: snapshot
-                                                                          .data!
-                                                                          .isEmpty
-                                                                      ? SizedBox()
-                                                                      : CachedNetworkImage(
-                                                                          imageUrl:
-                                                                              'https://i.near.social/magic/large/https://near.social/magic/img/account/${snapshot.data![index][0]['accountId']}',
-                                                                          errorWidget: (context,
-                                                                              url,
-                                                                              error) {
-                                                                            return SvgPicture.network(url);
-                                                                          },
-                                                                          fit: BoxFit
-                                                                              .cover,
-                                                                        ),
-                                                                ),
-                                                                Padding(
-                                                                  padding: EdgeInsets
-                                                                      .symmetric(
-                                                                          horizontal:
-                                                                              10),
-                                                                  child:
-                                                                      SizedBox(
-                                                                    width: 150,
-                                                                    child:
-                                                                        Column(
-                                                                      mainAxisAlignment:
-                                                                          MainAxisAlignment
-                                                                              .spaceBetween,
-                                                                      crossAxisAlignment:
-                                                                          CrossAxisAlignment
-                                                                              .start,
-                                                                      children: [
-                                                                        Text(
-                                                                          (snapshot.data?[index][3] != '')
-                                                                              ? snapshot.data![index][3]
-                                                                              : snapshot.data![index][0]['accountId'] ?? '',
-                                                                          textScaleFactor:
-                                                                              1,
-                                                                          style:
-                                                                              TextStyle(
-                                                                            color:
-                                                                                Color(0xFF000000),
-                                                                            fontWeight:
-                                                                                FontWeight.w500,
+                                                                          .width >
+                                                                      600
+                                                                  ? 8
+                                                                  : 2),
+                                                          child: Row(
+                                                            mainAxisAlignment:
+                                                                MainAxisAlignment
+                                                                    .spaceBetween,
+                                                            children: [
+                                                              Row(
+                                                                children: [
+                                                                  Container(
+                                                                    constraints:
+                                                                        BoxConstraints(
+                                                                      minWidth:
+                                                                          45,
+                                                                      minHeight:
+                                                                          45,
+                                                                      maxHeight:
+                                                                          65,
+                                                                      maxWidth:
+                                                                          65,
+                                                                    ),
+                                                                    clipBehavior:
+                                                                        Clip.antiAliasWithSaveLayer,
+                                                                    width: MediaQuery.sizeOf(context)
+                                                                            .height *
+                                                                        0.05,
+                                                                    height: MediaQuery.sizeOf(context)
+                                                                            .height *
+                                                                        0.05,
+                                                                    decoration: BoxDecoration(
+                                                                        color: Colors
+                                                                            .white,
+                                                                        borderRadius:
+                                                                            BorderRadius.circular(100)),
+                                                                    child: snapshot
+                                                                            .data!
+                                                                            .isEmpty
+                                                                        ? SizedBox()
+                                                                        : CachedNetworkImage(
+                                                                            imageUrl:
+                                                                                'https://i.near.social/magic/large/https://near.social/magic/img/account/${snapshot.data![index][0]['accountId']}',
+                                                                            errorWidget: (context,
+                                                                                url,
+                                                                                error) {
+                                                                              return SvgPicture.network(url);
+                                                                            },
+                                                                            fit:
+                                                                                BoxFit.cover,
                                                                           ),
-                                                                          maxLines:
-                                                                              1,
-                                                                          overflow:
-                                                                              TextOverflow.ellipsis,
-                                                                        ),
-                                                                        Text(
-                                                                          snapshot.data?[index][0]['value']['type'] ??
-                                                                              '',
-                                                                          maxLines:
-                                                                              1,
-                                                                          textScaleFactor:
-                                                                              1,
-                                                                          overflow:
-                                                                              TextOverflow.ellipsis,
-                                                                          style:
-                                                                              TextStyle(color: Color(0xFF7E7E7E)),
-                                                                        ),
-                                                                      ],
+                                                                  ),
+                                                                  Padding(
+                                                                    padding: EdgeInsets.symmetric(
+                                                                        horizontal:
+                                                                            10),
+                                                                    child:
+                                                                        SizedBox(
+                                                                      width:
+                                                                          150,
+                                                                      child:
+                                                                          Column(
+                                                                        mainAxisAlignment:
+                                                                            MainAxisAlignment.spaceBetween,
+                                                                        crossAxisAlignment:
+                                                                            CrossAxisAlignment.start,
+                                                                        children: [
+                                                                          Text(
+                                                                            (snapshot.data?[index][3] != '')
+                                                                                ? snapshot.data![index][3]
+                                                                                : snapshot.data![index][0]['accountId'] ?? '',
+                                                                            textScaleFactor:
+                                                                                1,
+                                                                            style:
+                                                                                TextStyle(
+                                                                              color: Color(0xFF000000),
+                                                                              fontWeight: FontWeight.w500,
+                                                                            ),
+                                                                            maxLines:
+                                                                                1,
+                                                                            overflow:
+                                                                                TextOverflow.ellipsis,
+                                                                          ),
+                                                                          Text(
+                                                                            snapshot.data?[index][0]['value']['type'] ??
+                                                                                '',
+                                                                            maxLines:
+                                                                                1,
+                                                                            textScaleFactor:
+                                                                                1,
+                                                                            overflow:
+                                                                                TextOverflow.ellipsis,
+                                                                            style:
+                                                                                TextStyle(color: Color(0xFF7E7E7E)),
+                                                                          ),
+                                                                        ],
+                                                                      ),
                                                                     ),
                                                                   ),
-                                                                ),
-                                                              ],
-                                                            ),
-                                                            Column(
-                                                              crossAxisAlignment:
-                                                                  CrossAxisAlignment
-                                                                      .end,
-                                                              mainAxisAlignment:
-                                                                  MainAxisAlignment
-                                                                      .spaceBetween,
-                                                              children: [
-                                                                SizedBox(
-                                                                  width: 50,
-                                                                  height: 20,
-                                                                  child: Text(
-                                                                    snapshot.data?[index][2]
-                                                                            .toString() ??
-                                                                        '',
-                                                                    overflow:
-                                                                        TextOverflow
-                                                                            .ellipsis,
+                                                                ],
+                                                              ),
+                                                              Column(
+                                                                crossAxisAlignment:
+                                                                    CrossAxisAlignment
+                                                                        .end,
+                                                                mainAxisAlignment:
+                                                                    MainAxisAlignment
+                                                                        .spaceBetween,
+                                                                children: [
+                                                                  SizedBox(
+                                                                    width: 50,
+                                                                    height: 20,
+                                                                    child: Text(
+                                                                      snapshot.data?[index][2]
+                                                                              .toString() ??
+                                                                          '',
+                                                                      overflow:
+                                                                          TextOverflow
+                                                                              .ellipsis,
+                                                                      textScaleFactor:
+                                                                          1,
+                                                                      style: TextStyle(
+                                                                          fontSize: MediaQuery.sizeOf(context).height < 900
+                                                                              ? 11
+                                                                              : 14,
+                                                                          color:
+                                                                              Color(0xFF7E7E7E)),
+                                                                    ),
+                                                                  ),
+                                                                  Text(
+                                                                    DateFormat(
+                                                                            'MMM dd')
+                                                                        .format(
+                                                                            snapshot.data?[index][1])
+                                                                        .toString(),
                                                                     textScaleFactor:
                                                                         1,
                                                                     style: TextStyle(
@@ -1021,29 +1067,12 @@ class _HomePageWidgetState extends State<HomePageWidget> {
                                                                             ? 11
                                                                             : 14,
                                                                         color: Color(
-                                                                            0xFF7E7E7E)),
+                                                                            0xFFBDBDBD)),
                                                                   ),
-                                                                ),
-                                                                Text(
-                                                                  DateFormat(
-                                                                          'MMM dd')
-                                                                      .format(snapshot
-                                                                              .data?[
-                                                                          index][1])
-                                                                      .toString(),
-                                                                  textScaleFactor:
-                                                                      1,
-                                                                  style: TextStyle(
-                                                                      fontSize: MediaQuery.sizeOf(context).height <
-                                                                              900
-                                                                          ? 11
-                                                                          : 14,
-                                                                      color: Color(
-                                                                          0xFFBDBDBD)),
-                                                                ),
-                                                              ],
-                                                            ),
-                                                          ],
+                                                                ],
+                                                              ),
+                                                            ],
+                                                          ),
                                                         ),
                                                       ),
                                                     ),
@@ -1057,7 +1086,14 @@ class _HomePageWidgetState extends State<HomePageWidget> {
                                                       FFAppState()
                                                           .listAccountForNotifications
                                                           .value
-                                                          .isNotEmpty,
+                                                          .isNotEmpty &&
+                                                      (FFAppState()
+                                                          .listAccountForNotifications
+                                                          .value
+                                                          .any((e) => e.startsWith(
+                                                              FFAppState()
+                                                                      .filterID ??
+                                                                  ''))),
                                                   child:
                                                       CircularProgressIndicator(
                                                     backgroundColor:

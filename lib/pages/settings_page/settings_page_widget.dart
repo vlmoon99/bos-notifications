@@ -44,14 +44,14 @@ class _SettingsPageWidgetState extends State<SettingsPageWidget> {
 
   @override
   Widget build(BuildContext context) {
-    if (isiOS) {
-      SystemChrome.setSystemUIOverlayStyle(
-        SystemUiOverlayStyle(
-          statusBarBrightness: Theme.of(context).brightness,
-          systemStatusBarContrastEnforced: true,
-        ),
-      );
-    }
+    // if (isiOS) {
+    //   SystemChrome.setSystemUIOverlayStyle(
+    //     SystemUiOverlayStyle(
+    //       statusBarBrightness: Theme.of(context).brightness,
+    //       systemStatusBarContrastEnforced: true,
+    //     ),
+    //   );
+    // }
 
     context.watch<FFAppState>();
     return PopScope(

@@ -83,7 +83,7 @@ class GetNotificationsByUserIdWithoutFromValueCall {
   static Future<ApiCallResponse> call({
     String? action = 'notify',
     String? accountId = 'vlmoon.near',
-    int? limit = 20,
+    int? limit = 300,
     String? order = 'desc',
   }) async {
     final ffApiRequestBody = '''
@@ -122,7 +122,7 @@ class GetNotificationsByUserIdWithFromValueCall {
   static Future<ApiCallResponse> call({
     String? action = 'notify',
     String? accountId = 'vlmoon.near',
-    int? limit = 20,
+    int? limit = 300,
     String? order = 'desc',
     int? from = 105161501,
   }) async {
