@@ -3,6 +3,7 @@ import 'package:b_o_s_notifications/notifications.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 import '/auth/firebase_auth/auth_util.dart';
 import '/components/account_deleting_dialog/account_deleting_dialog_widget.dart';
@@ -37,6 +38,7 @@ class _AccountPageWidgetState extends State<AccountPageWidget> {
   @override
   void initState() {
     super.initState();
+    checkFirstTimeUser();
     _model = createModel(context, () => AccountPageModel());
 
     _model.textController ??= TextEditingController();
@@ -866,5 +868,40 @@ class _AccountPageWidgetState extends State<AccountPageWidget> {
             ),
           )),
     );
+  }
+
+  Future<void> checkFirstTimeUser() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    bool isFirstTime = prefs.getBool('isFirstTime') ?? true;
+
+    if (isFirstTime && (currentUserDocument?.subscriptions.isEmpty ?? true)) {
+      // Выполните действия для первого входа
+      print('Пользователь открывает приложение впервые');
+      await Future.delayed(Duration(seconds: 1));
+      setState(() {
+        FFAppState().tapButton = true;
+      });
+      await showModalBottomSheet(
+        isScrollControlled: true,
+        backgroundColor: Colors.transparent,
+        enableDrag: false,
+        context: context,
+        builder: (context) {
+          return Container(
+            height: MediaQuery.sizeOf(context).height * 0.85,
+            child: SubscribeBottomBarWidget(),
+          );
+        },
+      ).then((value) => safeSetState(() {}));
+
+      setState(() {
+        FFAppState().tapButton = false;
+      });
+      // Сохраните информацию, что пользователь уже открыл приложение
+      prefs.setBool('isFirstTime', false);
+    } else {
+      // Действия для повторного входа
+      print('Пользователь уже открывал приложение');
+    }
   }
 }

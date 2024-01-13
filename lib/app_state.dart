@@ -27,6 +27,17 @@ class FFAppState extends ChangeNotifier {
   bool newMessage = false;
   bool messageNull = true;
   bool initStateForSwitch = true;
+  bool help = false;
+  List<String> filterCategories = [
+    'mention',
+    'like',
+    'poke',
+    'devgovgigs',
+    'chess-game',
+    'follow',
+    'unfollow',
+    'comment'
+  ];
   static FFAppState _instance = FFAppState._internal();
 
   factory FFAppState() {
@@ -314,7 +325,7 @@ Future initNotificationsForFilter() async {
       return;
     }
 
-    if (valueApiResult.length >= 20 &&
+    if (valueApiResult.length >= 299 &&
         valueApiResult.last['blockHeight'] > FFAppState().endRes) {
       if (FFAppState().lastBlockHeight == null ||
           FFAppState().lastBlockHeight! < valueApiResult.last['blockHeight']) {
@@ -414,7 +425,7 @@ Future initNotifications() async {
     ApiCallResponse _notification =
         await GetNotificationsByUserIdWithoutFromValueCall.call(accountId: e);
     List value = _notification.jsonBody;
-    if (value.length >= 20) {
+    if (value.length >= 299) {
       FFAppState().listAccountForNotifications.value.add(e);
 
       if (FFAppState().lastBlockHeight == null ||
@@ -482,7 +493,8 @@ Future initNotifications() async {
         () {
           List sort = FFAppState().streamNotifications.value;
           sort.removeWhere((element) =>
-              element[0]['blockHeight'] < FFAppState().lastBlockHeight ?? 0);
+              (element[0]['blockHeight'] ?? 0) < FFAppState().lastBlockHeight ??
+              0);
           sort.sort(
               (a, b) => b[0]['blockHeight'].compareTo(a[0]['blockHeight']));
           FFAppState().streamNotifications.add(sort);

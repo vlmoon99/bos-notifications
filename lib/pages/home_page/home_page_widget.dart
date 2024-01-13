@@ -2,11 +2,13 @@ import 'dart:async';
 
 import 'package:b_o_s_notifications/auth/firebase_auth/auth_util.dart';
 import 'package:b_o_s_notifications/notifications.dart';
+import 'package:b_o_s_notifications/pages/account_page/account_page_widget.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:b_o_s_notifications/backend/api_requests/api_calls.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:rxdart/subjects.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:url_launcher/url_launcher_string.dart';
 import '/components/filters/filters_widget.dart';
@@ -100,10 +102,12 @@ class _HomePageWidgetState extends State<HomePageWidget> {
 
   @override
   void initState() {
+    checkFirstTimeUser();
     setupInteractedMessage();
     FFAppState().messageNull = true;
     FFAppState().filterID = null;
     FFAppState().listTapNotifications.value.clear();
+
     if (FFAppState().filterData.first != '' &&
         FFAppState().filterData.last != '') {
       initNotificationsForFilter();
@@ -142,7 +146,7 @@ class _HomePageWidgetState extends State<HomePageWidget> {
           List notifications = notificationsAPI.jsonBody;
 
           //удаление аккаунта из потенциальных аккаунтов при условии
-          if (notifications.length < 20 ||
+          if (notifications.length <= 295 ||
               notifications.last['blockHeight'] < FFAppState().endRes) {
             FFAppState().listAccountForNotifications.value.remove(account);
             FFAppState()
@@ -252,7 +256,7 @@ class _HomePageWidgetState extends State<HomePageWidget> {
           List notifications = notificationsAPI.jsonBody;
 
           //удаление аккаунта из потенциальных аккаунтов при условии
-          if (notifications.length != 20) {
+          if (notifications.length <= 295) {
             FFAppState().listAccountForNotifications.value.remove(account);
             FFAppState()
                 .listAccountForNotifications
@@ -282,7 +286,6 @@ class _HomePageWidgetState extends State<HomePageWidget> {
               ApiCallResponse x = await GetNearSocialNameCall.call(
                   accountId: notif['accountId']);
               if (x.jsonBody[notif['accountId']] != null) {
-                print(x.jsonBody[notif['accountId']]);
                 name = x.jsonBody[notif['accountId']]['profile']['name'];
                 FFAppState()
                     .listNameId
@@ -403,233 +406,279 @@ class _HomePageWidgetState extends State<HomePageWidget> {
                 mainAxisAlignment: MainAxisAlignment.start,
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
-                  Align(
-                    alignment: Alignment.centerLeft,
-                    child: Padding(
-                      padding:
-                          EdgeInsetsDirectional.fromSTEB(24.0, 24.0, 0.0, 24.0),
-                      child: Text(
-                        'Notifications',
-                        textScaleFactor: 1,
-                        style: FlutterFlowTheme.of(context).bodyMedium.override(
-                              fontFamily:
-                                  FlutterFlowTheme.of(context).bodyMediumFamily,
-                              fontSize: 18.0,
-                              fontWeight: FontWeight.bold,
-                              useGoogleFonts: GoogleFonts.asMap().containsKey(
-                                  FlutterFlowTheme.of(context)
-                                      .bodyMediumFamily),
+                  Padding(
+                    padding: const EdgeInsets.only(top: 20),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Padding(
+                          padding: EdgeInsets.symmetric(horizontal: 24),
+                          child: Text(
+                            'Notifications',
+                            textScaler: TextScaler.noScaling,
+                            style: FlutterFlowTheme.of(context)
+                                .bodyMedium
+                                .override(
+                                  fontFamily: FlutterFlowTheme.of(context)
+                                      .bodyMediumFamily,
+                                  fontSize: 18.0,
+                                  fontWeight: FontWeight.bold,
+                                  useGoogleFonts: GoogleFonts.asMap()
+                                      .containsKey(FlutterFlowTheme.of(context)
+                                          .bodyMediumFamily),
+                                ),
+                          ),
+                        ),
+                        Padding(
+                          padding: EdgeInsets.symmetric(horizontal: 24),
+                          child: InkWell(
+                            onTap: () async {
+                              HapticFeedback.lightImpact();
+                              await showModalBottomSheet(
+                                isScrollControlled: true,
+                                backgroundColor: Colors.transparent,
+                                enableDrag: false,
+                                context: context,
+                                builder: (context) {
+                                  return Container(
+                                    height: MediaQuery.sizeOf(context).height *
+                                        0.85,
+                                    child: FiltersWidget(),
+                                  );
+                                },
+                              ).then((value) => safeSetState(() {}));
+                            },
+                            child: Text(
+                              'Filters',
+                              textScaler: TextScaler.noScaling,
+                              style: TextStyle(
+                                  color: Color(0xFF65C3A2),
+                                  fontSize: 18,
+                                  fontWeight: FontWeight.bold),
                             ),
+                          ),
+                        )
+                      ],
+                    ),
+                  ),
+                  Container(
+                    margin: EdgeInsets.symmetric(horizontal: 24, vertical: 14),
+                    width: MediaQuery.sizeOf(context).width,
+                    height: 1,
+                    decoration: BoxDecoration(
+                      color: Color(0xFFEDEEEE),
+                      borderRadius: BorderRadius.circular(
+                        100,
                       ),
                     ),
                   ),
-                  Row(
-                    mainAxisSize: MainAxisSize.min,
-                    mainAxisAlignment: MediaQuery.sizeOf(context).width > 600
-                        ? MainAxisAlignment.start
-                        : MainAxisAlignment.spaceBetween,
-                    children: [
-                      Container(
-                        constraints: BoxConstraints(
-                          maxWidth: 450,
-                        ),
-                        width: MediaQuery.sizeOf(context).width * 0.7,
-                        height: 45.0,
-                        decoration: BoxDecoration(
-                          color: Color(0xFFF5F5EF),
-                          borderRadius: BorderRadius.circular(8.0),
-                        ),
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.start,
-                          crossAxisAlignment: CrossAxisAlignment.center,
-                          children: [
-                            SizedBox(
-                              height: 45,
-                              width: 45,
-                              child: InkWell(
-                                child: SvgPicture.asset(
-                                  'assets/icons/Icon_search.svg',
-                                  fit: BoxFit.none,
-                                ),
-                                onTap: () {},
-                              ),
-                            ),
-                            Expanded(
-                              child: OverflowBox(
-                                maxHeight: 1000,
-                                child: Container(
-                                  margin: EdgeInsets.only(bottom: 0),
-                                  child: TextField(
-                                    autocorrect: false,
-                                    textAlignVertical: TextAlignVertical.bottom,
-                                    onChanged: (value) async {
-                                      HapticFeedback.lightImpact();
-                                      timer?.cancel();
-                                      timer = Timer(Duration(milliseconds: 300),
-                                          () {
-                                        FFAppState().update(
-                                          () {
-                                            FFAppState().filterID = value
-                                                .replaceAll(RegExp(r'\s'), '');
-                                          },
-                                        );
-                                        FFAppState().streamConroller.value
-                                            ? scrollControllerForFilter
-                                                .animateTo(
-                                                0.0,
-                                                duration:
-                                                    Duration(milliseconds: 300),
-                                                curve: Curves.easeInOut,
-                                              )
-                                            : scrollController.animateTo(
-                                                0.0,
-                                                duration:
-                                                    Duration(milliseconds: 300),
-                                                curve: Curves.easeInOut,
-                                              );
-                                        if (!(currentUserDocument
-                                                    ?.subscriptions ??
-                                                [])
-                                            .any((e) => e.startsWith(
-                                                FFAppState().filterID ?? ''))) {
-                                        } else {}
-                                        // if (FFAppState().filterData.last !=
-                                        //         '' &&
-                                        //     FFAppState().filterData.first !=
-                                        //         '') {
-                                        //   initNotificationsForFilter();
-                                        // } else {
-                                        //   initNotifications();
-                                        // }
-                                      });
-                                    },
-                                    controller: _model.textController,
-                                    autofocus: false,
-                                    obscureText: false,
-                                    decoration: InputDecoration(
-                                      hintText: 'Search by Account ID or Name',
-                                      hintStyle: FlutterFlowTheme.of(context)
-                                          .labelMedium
-                                          .override(
-                                            fontFamily:
-                                                FlutterFlowTheme.of(context)
-                                                    .labelMediumFamily,
-                                            color: Color(0xFFBDBDBD),
-                                            fontSize: 15.0,
-                                            useGoogleFonts: GoogleFonts.asMap()
-                                                .containsKey(
-                                                    FlutterFlowTheme.of(context)
-                                                        .labelMediumFamily),
-                                          ),
-                                      floatingLabelBehavior:
-                                          FloatingLabelBehavior.never,
-                                      enabledBorder: InputBorder.none,
-                                      focusedBorder: InputBorder.none,
-                                    ),
-                                  ),
-                                ),
-                              ),
-                            ),
-                          ],
-                        ),
-                      ),
-                      Padding(
-                        padding: EdgeInsets.only(
-                            left: (MediaQuery.sizeOf(context).width > 600)
-                                ? 24
-                                : 0),
-                        child: Container(
-                          width: 55,
-                          height: 55,
-                          child: Stack(
-                            alignment: AlignmentDirectional(0.0, 0.0),
-                            children: [
-                              Container(
-                                decoration: BoxDecoration(
-                                  borderRadius: BorderRadius.circular(8),
-                                  color: Colors.black,
-                                ),
-                                height: 45,
-                                width: 45,
-                                child: InkWell(
-                                  child: SvgPicture.asset(
-                                    'assets/icons/Icon_filter.svg',
-                                    height: 25,
-                                    width: 25,
-                                    fit: BoxFit.none,
-                                    color: Colors.white,
-                                  ),
-                                  onTap: () async {
-                                    HapticFeedback.lightImpact();
-                                    await showModalBottomSheet(
-                                      isScrollControlled: true,
-                                      backgroundColor: Colors.transparent,
-                                      enableDrag: false,
-                                      context: context,
-                                      builder: (context) {
-                                        return Container(
-                                          height: MediaQuery.sizeOf(context)
-                                                  .height *
-                                              0.85,
-                                          child: FiltersWidget(),
-                                        );
-                                      },
-                                    ).then((value) => safeSetState(() {}));
-                                  },
-                                ),
-                              ),
-                              Opacity(
-                                opacity: (FFAppState().filterData.first !=
-                                                null &&
-                                            FFAppState().filterData.first !=
-                                                '') &&
-                                        (FFAppState().filterData.last != null &&
-                                            FFAppState().filterData.last != '')
-                                    ? 1.0
-                                    : 0.0,
-                                child: Align(
-                                  alignment: AlignmentDirectional(1.00, -1.00),
-                                  child: Container(
-                                    width: 16.0,
-                                    height: 16.0,
-                                    decoration: BoxDecoration(
-                                      color: Color(0xFFFF7966),
-                                      shape: BoxShape.circle,
-                                    ),
-                                    alignment:
-                                        AlignmentDirectional(0.00, -1.00),
-                                    child: Align(
-                                      alignment:
-                                          AlignmentDirectional(0.00, -1.00),
-                                      child: Text(
-                                        '1',
-                                        textScaleFactor: 1,
-                                        style: FlutterFlowTheme.of(context)
-                                            .bodyMedium
-                                            .override(
-                                              fontFamily:
-                                                  FlutterFlowTheme.of(context)
-                                                      .bodyMediumFamily,
-                                              color: Colors.white,
-                                              fontSize: 13.0,
-                                              useGoogleFonts: GoogleFonts
-                                                      .asMap()
-                                                  .containsKey(
-                                                      FlutterFlowTheme.of(
-                                                              context)
-                                                          .bodyMediumFamily),
-                                            ),
-                                      ),
-                                    ),
-                                  ),
-                                ),
-                              ),
-                            ],
-                          ),
-                        ),
-                      ),
-                    ],
-                  ),
+                  // Row(
+                  //   mainAxisSize: MainAxisSize.min,
+                  //   mainAxisAlignment: MediaQuery.sizeOf(context).width > 600
+                  //       ? MainAxisAlignment.start
+                  //       : MainAxisAlignment.spaceBetween,
+                  //   children: [
+                  //     Container(
+                  //       constraints: BoxConstraints(
+                  //         maxWidth: 450,
+                  //       ),
+                  //       width: MediaQuery.sizeOf(context).width * 0.7,
+                  //       height: 45.0,
+                  //       decoration: BoxDecoration(
+                  //         color: Color(0xFFF5F5EF),
+                  //         borderRadius: BorderRadius.circular(8.0),
+                  //       ),
+                  //       child: Row(
+                  //         mainAxisAlignment: MainAxisAlignment.start,
+                  //         crossAxisAlignment: CrossAxisAlignment.center,
+                  //         children: [
+                  //           SizedBox(
+                  //             height: 45,
+                  //             width: 45,
+                  //             child: InkWell(
+                  //               child: SvgPicture.asset(
+                  //                 'assets/icons/Icon_search.svg',
+                  //                 fit: BoxFit.none,
+                  //               ),
+                  //               onTap: () {},
+                  //             ),
+                  //           ),
+                  //           Expanded(
+                  //             child: OverflowBox(
+                  //               maxHeight: 1000,
+                  //               child: Container(
+                  //                 margin: EdgeInsets.only(bottom: 0),
+                  //                 child: TextField(
+                  //                   autocorrect: false,
+                  //                   textAlignVertical: TextAlignVertical.bottom,
+                  //                   onChanged: (value) async {
+                  //                     HapticFeedback.lightImpact();
+                  //                     timer?.cancel();
+                  //                     timer = Timer(Duration(milliseconds: 300),
+                  //                         () {
+                  //                       FFAppState().update(
+                  //                         () {
+                  //                           FFAppState().filterID = value
+                  //                               .replaceAll(RegExp(r'\s'), '');
+                  //                         },
+                  //                       );
+                  //                       FFAppState().streamConroller.value
+                  //                           ? scrollControllerForFilter
+                  //                               .animateTo(
+                  //                               0.0,
+                  //                               duration:
+                  //                                   Duration(milliseconds: 300),
+                  //                               curve: Curves.easeInOut,
+                  //                             )
+                  //                           : scrollController.animateTo(
+                  //                               0.0,
+                  //                               duration:
+                  //                                   Duration(milliseconds: 300),
+                  //                               curve: Curves.easeInOut,
+                  //                             );
+                  //                       if (!(currentUserDocument
+                  //                                   ?.subscriptions ??
+                  //                               [])
+                  //                           .any((e) => e.startsWith(
+                  //                               FFAppState().filterID ?? ''))) {
+                  //                       } else {}
+                  //                       // if (FFAppState().filterData.last !=
+                  //                       //         '' &&
+                  //                       //     FFAppState().filterData.first !=
+                  //                       //         '') {
+                  //                       //   initNotificationsForFilter();
+                  //                       // } else {
+                  //                       //   initNotifications();
+                  //                       // }
+                  //                     });
+                  //                   },
+                  //                   controller: _model.textController,
+                  //                   autofocus: false,
+                  //                   obscureText: false,
+                  //                   decoration: InputDecoration(
+                  //                     hintText: 'Search by Account ID or Name',
+                  //                     hintStyle: FlutterFlowTheme.of(context)
+                  //                         .labelMedium
+                  //                         .override(
+                  //                           fontFamily:
+                  //                               FlutterFlowTheme.of(context)
+                  //                                   .labelMediumFamily,
+                  //                           color: Color(0xFFBDBDBD),
+                  //                           fontSize: 15.0,
+                  //                           useGoogleFonts: GoogleFonts.asMap()
+                  //                               .containsKey(
+                  //                                   FlutterFlowTheme.of(context)
+                  //                                       .labelMediumFamily),
+                  //                         ),
+                  //                     floatingLabelBehavior:
+                  //                         FloatingLabelBehavior.never,
+                  //                     enabledBorder: InputBorder.none,
+                  //                     focusedBorder: InputBorder.none,
+                  //                   ),
+                  //                 ),
+                  //               ),
+                  //             ),
+                  //           ),
+                  //         ],
+                  //       ),
+                  //     ),
+                  //     Padding(
+                  //       padding: EdgeInsets.only(
+                  //           left: (MediaQuery.sizeOf(context).width > 600)
+                  //               ? 24
+                  //               : 0),
+                  //       child: Container(
+                  //         width: 55,
+                  //         height: 55,
+                  //         child: Stack(
+                  //           alignment: AlignmentDirectional(0.0, 0.0),
+                  //           children: [
+                  //             Container(
+                  //               decoration: BoxDecoration(
+                  //                 borderRadius: BorderRadius.circular(8),
+                  //                 color: Colors.black,
+                  //               ),
+                  //               height: 45,
+                  //               width: 45,
+                  //               child: InkWell(
+                  //                 child: SvgPicture.asset(
+                  //                   'assets/icons/Icon_filter.svg',
+                  //                   height: 25,
+                  //                   width: 25,
+                  //                   fit: BoxFit.none,
+                  //                   color: Colors.white,
+                  //                 ),
+                  //                 onTap: () async {
+                  //                   HapticFeedback.lightImpact();
+                  //                   await showModalBottomSheet(
+                  //                     isScrollControlled: true,
+                  //                     backgroundColor: Colors.transparent,
+                  //                     enableDrag: false,
+                  //                     context: context,
+                  //                     builder: (context) {
+                  //                       return Container(
+                  //                         height: MediaQuery.sizeOf(context)
+                  //                                 .height *
+                  //                             0.85,
+                  //                         child: FiltersWidget(),
+                  //                       );
+                  //                     },
+                  //                   ).then((value) => safeSetState(() {}));
+                  //                 },
+                  //               ),
+                  //             ),
+                  //             Opacity(
+                  //               opacity: (FFAppState().filterData.first !=
+                  //                               null &&
+                  //                           FFAppState().filterData.first !=
+                  //                               '') &&
+                  //                       (FFAppState().filterData.last != null &&
+                  //                           FFAppState().filterData.last != '')
+                  //                   ? 1.0
+                  //                   : 0.0,
+                  //               child: Align(
+                  //                 alignment: AlignmentDirectional(1.00, -1.00),
+                  //                 child: Container(
+                  //                   width: 16.0,
+                  //                   height: 16.0,
+                  //                   decoration: BoxDecoration(
+                  //                     color: Color(0xFFFF7966),
+                  //                     shape: BoxShape.circle,
+                  //                   ),
+                  //                   alignment:
+                  //                       AlignmentDirectional(0.00, -1.00),
+                  //                   child: Align(
+                  //                     alignment:
+                  //                         AlignmentDirectional(0.00, -1.00),
+                  //                     child: Text(
+                  //                       '1',
+                  //                       textScaleFactor: 1,
+                  //                       style: FlutterFlowTheme.of(context)
+                  //                           .bodyMedium
+                  //                           .override(
+                  //                             fontFamily:
+                  //                                 FlutterFlowTheme.of(context)
+                  //                                     .bodyMediumFamily,
+                  //                             color: Colors.white,
+                  //                             fontSize: 13.0,
+                  //                             useGoogleFonts: GoogleFonts
+                  //                                     .asMap()
+                  //                                 .containsKey(
+                  //                                     FlutterFlowTheme.of(
+                  //                                             context)
+                  //                                         .bodyMediumFamily),
+                  //                           ),
+                  //                     ),
+                  //                   ),
+                  //                 ),
+                  //               ),
+                  //             ),
+                  //           ],
+                  //         ),
+                  //       ),
+                  //     ),
+                  //   ],
+                  // ),
                   Visibility(
                     visible:
                         (currentUserDocument?.subscriptions.isEmpty ?? true),
@@ -721,7 +770,9 @@ class _HomePageWidgetState extends State<HomePageWidget> {
                   // ),
                   Visibility(
                     visible: !FFAppState().messageNull &&
-                        FFAppState().streamNotifications.value.isEmpty,
+                        FFAppState().streamNotifications.value.isEmpty &&
+                        (currentUserDocument?.subscriptions.isNotEmpty ??
+                            false),
                     child: Expanded(
                       child: Center(
                         child: Text(
@@ -768,15 +819,29 @@ class _HomePageWidgetState extends State<HomePageWidget> {
                                               children: [
                                                 Visibility(
                                                   visible: (FFAppState()
-                                                              .filterID ==
-                                                          null) ||
-                                                      (snapshot.data?[index]
-                                                                  [2] ??
-                                                              '')
-                                                          .toString()
-                                                          .startsWith(FFAppState()
-                                                                  .filterID ??
-                                                              ''),
+                                                          .filterCategories
+                                                          .contains(snapshot.data![index]
+                                                                  [0]['value']
+                                                              ['type']) ||
+                                                      (snapshot.data![index][0]['value']['type'] != null &&
+                                                          snapshot.data![index]
+                                                                  [0]['value']
+                                                                  ['type']
+                                                              .startsWith(
+                                                                  'devgovgigs') &&
+                                                          FFAppState()
+                                                              .filterCategories
+                                                              .contains('devgovgigs'))),
+                                                  // (FFAppState()
+                                                  //             .filterID ==
+                                                  //         null) ||
+                                                  //     (snapshot.data?[index]
+                                                  //                 [2] ??
+                                                  //             '')
+                                                  //         .toString()
+                                                  //         .startsWith(FFAppState()
+                                                  //                 .filterID ??
+                                                  //             ''),
                                                   child: Padding(
                                                     padding: EdgeInsets.symmetric(
                                                         vertical: (MediaQuery.sizeOf(
@@ -983,7 +1048,7 @@ class _HomePageWidgetState extends State<HomePageWidget> {
                                                                     child:
                                                                         SizedBox(
                                                                       width:
-                                                                          150,
+                                                                          130,
                                                                       child:
                                                                           Column(
                                                                         mainAxisAlignment:
@@ -995,8 +1060,8 @@ class _HomePageWidgetState extends State<HomePageWidget> {
                                                                             (snapshot.data?[index][3] != '')
                                                                                 ? snapshot.data![index][3]
                                                                                 : snapshot.data![index][0]['accountId'] ?? '',
-                                                                            textScaleFactor:
-                                                                                1,
+                                                                            textScaler:
+                                                                                TextScaler.noScaling,
                                                                             style:
                                                                                 TextStyle(
                                                                               color: Color(0xFF000000),
@@ -1012,8 +1077,8 @@ class _HomePageWidgetState extends State<HomePageWidget> {
                                                                                 '',
                                                                             maxLines:
                                                                                 1,
-                                                                            textScaleFactor:
-                                                                                1,
+                                                                            textScaler:
+                                                                                TextScaler.noScaling,
                                                                             overflow:
                                                                                 TextOverflow.ellipsis,
                                                                             style:
@@ -1034,12 +1099,15 @@ class _HomePageWidgetState extends State<HomePageWidget> {
                                                                         .spaceBetween,
                                                                 children: [
                                                                   SizedBox(
-                                                                    width: 50,
+                                                                    width: 65,
                                                                     height: 20,
                                                                     child: Text(
                                                                       snapshot.data?[index][2]
                                                                               .toString() ??
                                                                           '',
+                                                                      textAlign:
+                                                                          TextAlign
+                                                                              .end,
                                                                       overflow:
                                                                           TextOverflow
                                                                               .ellipsis,
@@ -1084,16 +1152,12 @@ class _HomePageWidgetState extends State<HomePageWidget> {
                                                                   .length -
                                                               1 &&
                                                       FFAppState()
-                                                          .listAccountForNotifications
-                                                          .value
+                                                          .filterCategories
                                                           .isNotEmpty &&
-                                                      (FFAppState()
+                                                      FFAppState()
                                                           .listAccountForNotifications
                                                           .value
-                                                          .any((e) => e.startsWith(
-                                                              FFAppState()
-                                                                      .filterID ??
-                                                                  ''))),
+                                                          .isNotEmpty,
                                                   child:
                                                       CircularProgressIndicator(
                                                     backgroundColor:
@@ -1118,5 +1182,18 @@ class _HomePageWidgetState extends State<HomePageWidget> {
             ),
           ),
         ));
+  }
+
+  Future<void> checkFirstTimeUser() async {
+    await Future.delayed(Duration(seconds: 1));
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    bool isFirstTime = prefs.getBool('isFirstTime') ?? true;
+
+    if (isFirstTime && (currentUserDocument?.subscriptions.isEmpty ?? true)) {
+      // Выполните действия для первого входа
+      print('Пользователь открывает приложение впервые');
+
+      context.pushNamed('AccountPage');
+    }
   }
 }
