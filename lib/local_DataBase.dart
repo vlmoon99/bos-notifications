@@ -84,7 +84,6 @@ class DatabaseHelper {
     )
   ''');
     print(await db);
-    print(1234);
   }
 
   // Your methods to interact with the database go here

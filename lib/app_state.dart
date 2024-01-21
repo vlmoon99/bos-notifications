@@ -28,22 +28,25 @@ class FFAppState extends ChangeNotifier {
   bool messageNull = true;
   bool initStateForSwitch = true;
   bool help = false;
-  List<String> filterCategories = [
-    'mention',
-    'like',
-    'poke',
-    'devgovgigs',
-    'chess-game',
-    'follow',
-    'unfollow',
-    'comment'
-  ];
+
   static FFAppState _instance = FFAppState._internal();
 
   factory FFAppState() {
     return _instance;
   }
-
+  final BehaviorSubject<bool> firstInit = BehaviorSubject<bool>()..add(false);
+  final BehaviorSubject<List<String>> filterCategories =
+      BehaviorSubject<List<String>>()
+        ..add([
+          'mention',
+          'like',
+          'poke',
+          'devgovgigs',
+          'chess-game',
+          'follow',
+          'unfollow',
+          'comment'
+        ]);
   final BehaviorSubject<List<Map>> listNameId = BehaviorSubject<List<Map>>()
     ..add([]);
   final BehaviorSubject<List<int>> listTapNotifications =
@@ -493,8 +496,8 @@ Future initNotifications() async {
         () {
           List sort = FFAppState().streamNotifications.value;
           sort.removeWhere((element) =>
-              (element[0]['blockHeight'] ?? 0) < FFAppState().lastBlockHeight ??
-              0);
+              (element[0]['blockHeight'] ?? 0) <
+              (FFAppState().lastBlockHeight ?? 0));
           sort.sort(
               (a, b) => b[0]['blockHeight'].compareTo(a[0]['blockHeight']));
           FFAppState().streamNotifications.add(sort);

@@ -32,9 +32,8 @@ class LocalNotificationService {
     //   presentSound: true,
     //   presentBadge: true,
     // );
-
     const AndroidInitializationSettings androidInitializationSettings =
-        AndroidInitializationSettings("@mipmap/ic_launcher.png");
+        AndroidInitializationSettings('@mipmap/ic_launcher');
     DarwinInitializationSettings iosInitializationSettings =
         DarwinInitializationSettings(
       requestAlertPermission: true,
@@ -45,7 +44,13 @@ class LocalNotificationService {
       },
     );
     InitializationSettings initializationSettings = InitializationSettings(
-        android: androidInitializationSettings, iOS: iosInitializationSettings);
+      android: androidInitializationSettings,
+      iOS: iosInitializationSettings,
+      macOS: DarwinInitializationSettings(
+          requestAlertPermission: true,
+          requestBadgePermission: true,
+          requestSoundPermission: true),
+    );
     const AndroidNotificationChannel channel = AndroidNotificationChannel(
         channelIdImp, // id
         channelNameImp, // title
@@ -119,9 +124,10 @@ class LocalNotificationService {
       importance: Importance.max,
       priority: Priority.high,
     );
-    // const NotificationDetails platformChannelSpecifics = NotificationDetails(
-    //     android: androidPlatformChannelSpecifics,
-    //     iOS: iOSPlatformChannelSpecifics);
+    const NotificationDetails platformChannelSpecifics = NotificationDetails(
+        android: androidPlatformChannelSpecifics,
+        iOS: iOSPlatformChannelSpecifics);
+
     flutterLocalNotificationsPlugin.show(
       0,
       'BOS Notifications',
@@ -134,15 +140,15 @@ class LocalNotificationService {
           importance: Importance.high,
           color: Colors.blue,
           playSound: true,
-          icon: '@mipmap/ic_launcher.png',
+          icon: '@mipmap/ic_launcher',
         ),
       ),
       payload: 'test',
     );
 
-    // _notificationPlugin.show(DateTime.now().millisecond, message.title,
-    //     message.body, platformChannelSpecifics,
-    //     payload: json.encode(message.data));
+    _notificationPlugin.show(DateTime.now().millisecond, message.title,
+        message.body, platformChannelSpecifics,
+        payload: json.encode(message.data));
   }
 }
 

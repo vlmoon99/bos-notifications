@@ -27,7 +27,7 @@ class _LoginPageWidgetState extends State<LoginPageWidget> {
     super.initState();
     _model = createModel(context, () => LoginPageModel());
 
-    WidgetsBinding.instance.addPostFrameCallback((_) => setState(() async {
+    WidgetsBinding.instance.addPostFrameCallback((_) => () async {
           GoRouter.of(context).prepareAuthEvent();
           final user = await authManager.signInAnonymously(context);
           if (user == null) {
@@ -35,7 +35,7 @@ class _LoginPageWidgetState extends State<LoginPageWidget> {
           }
 
           context.pushNamedAuth('HomePage', context.mounted);
-        }));
+        }());
   }
 
   @override
@@ -52,8 +52,20 @@ class _LoginPageWidgetState extends State<LoginPageWidget> {
     return Container(
       width: MediaQuery.sizeOf(context).width,
       height: MediaQuery.sizeOf(context).height,
-      child: SvgPicture.asset(
-        'assets/images/Loading2.png',
+      child: Image.asset(
+        () {
+          if (MediaQuery.sizeOf(context).width >
+              MediaQuery.sizeOf(context).height) {
+            print('dek');
+            return 'asss/Dekstop.png';
+          } else if (MediaQuery.sizeOf(context).height > 3000) {
+            print('table');
+            return 'asg';
+          } else {
+            print('phone');
+            return '.png';
+          }
+        }(),
         fit: BoxFit.cover,
       ),
     );

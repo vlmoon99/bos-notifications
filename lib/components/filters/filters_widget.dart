@@ -21,6 +21,7 @@ class FiltersWidget extends StatefulWidget {
 
 class _FiltersWidgetState extends State<FiltersWidget> {
   bool pause = true;
+  bool change = false;
   late FiltersModel _model;
 
   @override
@@ -121,7 +122,7 @@ class _FiltersWidgetState extends State<FiltersWidget> {
                         pause = false;
                         FFAppState().update(
                           () {
-                            FFAppState().filterCategories = [
+                            FFAppState().filterCategories.value = [
                               'mention',
                               'like',
                               'poke',
@@ -217,293 +218,321 @@ class _FiltersWidgetState extends State<FiltersWidget> {
                     ),
                   ),
                 ),
-                Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 24),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Text(
-                        'Likes',
-                        style: TextStyle(
-                            fontSize: 16, fontWeight: FontWeight.w600),
-                      ),
-                      SizedBox(
-                        height: 20,
-                        width: 20,
-                        child: InkWell(
-                          onTap: () {
-                            if (FFAppState()
-                                .filterCategories
-                                .contains('like')) {
-                              FFAppState().update(() {
-                                FFAppState().filterCategories.remove('like');
-                              });
-                            } else {
-                              FFAppState().update(() {
-                                FFAppState().filterCategories.add('like');
-                              });
-                            }
-                          },
-                          child: SvgPicture.asset(
-                              FFAppState().filterCategories.contains('like')
-                                  ? 'assets/icons/boxon.svg'
-                                  : 'assets/icons/boxoff.svg'),
+                InkWell(
+                  onTap: () {
+                    HapticFeedback.mediumImpact();
+                    if (FFAppState().filterCategories.value.contains('like')) {
+                      FFAppState().update(() {
+                        FFAppState().filterCategories.value.remove('like');
+                      });
+                    } else {
+                      FFAppState().update(() {
+                        FFAppState().filterCategories.value.add('like');
+                      });
+                    }
+                  },
+                  child: Padding(
+                    padding:
+                        const EdgeInsets.symmetric(horizontal: 24, vertical: 3),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Text(
+                          'Likes',
+                          style: TextStyle(
+                              fontSize: 20, fontWeight: FontWeight.w600),
                         ),
-                      ),
-                    ],
-                  ),
-                ),
-                myDivider(),
-                Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 24),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Text(
-                        'Mentions',
-                        style: TextStyle(
-                            fontSize: 16, fontWeight: FontWeight.w600),
-                      ),
-                      SizedBox(
-                        height: 20,
-                        width: 20,
-                        child: InkWell(
-                          onTap: () {
-                            if (FFAppState()
-                                .filterCategories
-                                .contains('mention')) {
-                              FFAppState().update(() {
-                                FFAppState().filterCategories.remove('mention');
-                              });
-                            } else {
-                              FFAppState().update(() {
-                                FFAppState().filterCategories.add('mention');
-                              });
-                            }
-                          },
-                          child: SvgPicture.asset(
-                              FFAppState().filterCategories.contains('mention')
-                                  ? 'assets/icons/boxon.svg'
-                                  : 'assets/icons/boxoff.svg'),
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-                myDivider(),
-                Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 24),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Text(
-                        'Pokes',
-                        style: TextStyle(
-                            fontSize: 16, fontWeight: FontWeight.w600),
-                      ),
-                      SizedBox(
-                        height: 20,
-                        width: 20,
-                        child: InkWell(
-                          onTap: () {
-                            if (FFAppState()
-                                .filterCategories
-                                .contains('poke')) {
-                              FFAppState().update(() {
-                                FFAppState().filterCategories.remove('poke');
-                              });
-                            } else {
-                              FFAppState().update(() {
-                                FFAppState().filterCategories.add('poke');
-                              });
-                            }
-                          },
-                          child: SvgPicture.asset(
-                              FFAppState().filterCategories.contains('poke')
-                                  ? 'assets/icons/boxon.svg'
-                                  : 'assets/icons/boxoff.svg'),
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-                myDivider(),
-                Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 24),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Text(
-                        'Follows',
-                        style: TextStyle(
-                            fontSize: 16, fontWeight: FontWeight.w600),
-                      ),
-                      SizedBox(
-                        height: 20,
-                        width: 20,
-                        child: InkWell(
-                          onTap: () {
-                            if (FFAppState()
-                                .filterCategories
-                                .contains('follow')) {
-                              FFAppState().update(() {
-                                FFAppState().filterCategories.remove('follow');
-                                FFAppState()
-                                    .filterCategories
-                                    .remove('unfollow');
-                              });
-                            } else {
-                              FFAppState().update(() {
-                                FFAppState().filterCategories.add('follow');
-                                FFAppState().filterCategories.add('unfollow');
-                              });
-                            }
-                          },
-                          child: SvgPicture.asset(
-                              FFAppState().filterCategories.contains('follow')
-                                  ? 'assets/icons/boxon.svg'
-                                  : 'assets/icons/boxoff.svg'),
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-                myDivider(),
-                Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 24),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Text(
-                        'Comment',
-                        style: TextStyle(
-                            fontSize: 16, fontWeight: FontWeight.w600),
-                      ),
-                      SizedBox(
-                        height: 20,
-                        width: 20,
-                        child: InkWell(
-                          onTap: () {
-                            if (FFAppState()
-                                .filterCategories
-                                .contains('comment')) {
-                              FFAppState().update(() {
-                                FFAppState().filterCategories.remove('comment');
-                              });
-                            } else {
-                              FFAppState().update(() {
-                                FFAppState().filterCategories.add('comment');
-                              });
-                            }
-                          },
-                          child: SvgPicture.asset(
-                              FFAppState().filterCategories.contains('comment')
-                                  ? 'assets/icons/boxon.svg'
-                                  : 'assets/icons/boxoff.svg'),
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-                myDivider(),
-                Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 24),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Text(
-                        'Devgovgigs',
-                        style: TextStyle(
-                            fontSize: 16, fontWeight: FontWeight.w600),
-                      ),
-                      SizedBox(
-                        height: 20,
-                        width: 20,
-                        child: InkWell(
-                          onTap: () {
-                            if (FFAppState()
-                                .filterCategories
-                                .contains('devgovgigs')) {
-                              FFAppState().update(() {
-                                FFAppState()
-                                    .filterCategories
-                                    .remove('devgovgigs');
-                              });
-                            } else {
-                              FFAppState().update(() {
-                                FFAppState().filterCategories.add('devgovgigs');
-                              });
-                            }
-                          },
+                        SizedBox(
+                          height: 22,
+                          width: 22,
                           child: SvgPicture.asset(FFAppState()
                                   .filterCategories
+                                  .value
+                                  .contains('like')
+                              ? 'assets/icons/boxon.svg'
+                              : 'assets/icons/boxoff.svg'),
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+                myDivider(),
+                InkWell(
+                  onTap: () {
+                    HapticFeedback.mediumImpact();
+                    if (FFAppState()
+                        .filterCategories
+                        .value
+                        .contains('mention')) {
+                      FFAppState().update(() {
+                        FFAppState().filterCategories.value.remove('mention');
+                      });
+                    } else {
+                      FFAppState().update(() {
+                        FFAppState().filterCategories.value.add('mention');
+                      });
+                    }
+                  },
+                  child: Padding(
+                    padding:
+                        const EdgeInsets.symmetric(horizontal: 24, vertical: 3),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Text(
+                          'Mentions',
+                          style: TextStyle(
+                              fontSize: 20, fontWeight: FontWeight.w600),
+                        ),
+                        SizedBox(
+                          height: 22,
+                          width: 22,
+                          child: SvgPicture.asset(FFAppState()
+                                  .filterCategories
+                                  .value
+                                  .contains('mention')
+                              ? 'assets/icons/boxon.svg'
+                              : 'assets/icons/boxoff.svg'),
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+                myDivider(),
+                InkWell(
+                  onTap: () {
+                    HapticFeedback.mediumImpact();
+                    if (FFAppState().filterCategories.value.contains('poke')) {
+                      FFAppState().update(() {
+                        FFAppState().filterCategories.value.remove('poke');
+                      });
+                    } else {
+                      FFAppState().update(() {
+                        FFAppState().filterCategories.value.add('poke');
+                      });
+                    }
+                  },
+                  child: Padding(
+                    padding:
+                        const EdgeInsets.symmetric(horizontal: 24, vertical: 3),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Text(
+                          'Pokes',
+                          style: TextStyle(
+                              fontSize: 20, fontWeight: FontWeight.w600),
+                        ),
+                        SizedBox(
+                          height: 22,
+                          width: 22,
+                          child: SvgPicture.asset(FFAppState()
+                                  .filterCategories
+                                  .value
+                                  .contains('poke')
+                              ? 'assets/icons/boxon.svg'
+                              : 'assets/icons/boxoff.svg'),
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+                myDivider(),
+                InkWell(
+                  onTap: () {
+                    HapticFeedback.mediumImpact();
+                    if (FFAppState()
+                        .filterCategories
+                        .value
+                        .contains('follow')) {
+                      FFAppState().update(() {
+                        FFAppState().filterCategories.value.remove('follow');
+                        FFAppState().filterCategories.value.remove('unfollow');
+                      });
+                    } else {
+                      FFAppState().update(() {
+                        FFAppState().filterCategories.value.add('follow');
+                        FFAppState().filterCategories.value.add('unfollow');
+                      });
+                    }
+                  },
+                  child: Padding(
+                    padding:
+                        const EdgeInsets.symmetric(horizontal: 24, vertical: 3),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Text(
+                          'Follows',
+                          style: TextStyle(
+                              fontSize: 20, fontWeight: FontWeight.w600),
+                        ),
+                        SizedBox(
+                          height: 22,
+                          width: 22,
+                          child: SvgPicture.asset(FFAppState()
+                                  .filterCategories
+                                  .value
+                                  .contains('follow')
+                              ? 'assets/icons/boxon.svg'
+                              : 'assets/icons/boxoff.svg'),
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+                myDivider(),
+                InkWell(
+                  onTap: () {
+                    HapticFeedback.mediumImpact();
+                    if (FFAppState()
+                        .filterCategories
+                        .value
+                        .contains('comment')) {
+                      FFAppState().update(() {
+                        FFAppState().filterCategories.value.remove('comment');
+                      });
+                    } else {
+                      FFAppState().update(() {
+                        FFAppState().filterCategories.value.add('comment');
+                      });
+                    }
+                  },
+                  child: Padding(
+                    padding:
+                        const EdgeInsets.symmetric(horizontal: 24, vertical: 3),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Text(
+                          'Comment',
+                          style: TextStyle(
+                              fontSize: 20, fontWeight: FontWeight.w600),
+                        ),
+                        SizedBox(
+                          height: 22,
+                          width: 22,
+                          child: SvgPicture.asset(FFAppState()
+                                  .filterCategories
+                                  .value
+                                  .contains('comment')
+                              ? 'assets/icons/boxon.svg'
+                              : 'assets/icons/boxoff.svg'),
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+                myDivider(),
+                InkWell(
+                  onTap: () {
+                    HapticFeedback.mediumImpact();
+                    if (FFAppState()
+                        .filterCategories
+                        .value
+                        .contains('devgovgigs')) {
+                      FFAppState().update(() {
+                        FFAppState()
+                            .filterCategories
+                            .value
+                            .remove('devgovgigs');
+                      });
+                    } else {
+                      FFAppState().update(() {
+                        FFAppState().filterCategories.value.add('devgovgigs');
+                      });
+                    }
+                  },
+                  child: Padding(
+                    padding:
+                        const EdgeInsets.symmetric(horizontal: 24, vertical: 3),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Text(
+                          'Devgovgigs',
+                          style: TextStyle(
+                              fontSize: 20, fontWeight: FontWeight.w600),
+                        ),
+                        SizedBox(
+                          height: 22,
+                          width: 22,
+                          child: SvgPicture.asset(FFAppState()
+                                  .filterCategories
+                                  .value
                                   .contains('devgovgigs')
                               ? 'assets/icons/boxon.svg'
                               : 'assets/icons/boxoff.svg'),
                         ),
-                      ),
-                    ],
+                      ],
+                    ),
                   ),
                 ),
                 myDivider(),
-                Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 24),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Text(
-                        'Chess-games',
-                        style: TextStyle(
-                            fontSize: 16, fontWeight: FontWeight.w600),
-                      ),
-                      SizedBox(
-                        height: 20,
-                        width: 20,
-                        child: InkWell(
-                          onTap: () {
-                            if (FFAppState()
-                                .filterCategories
-                                .contains('chess-game')) {
-                              FFAppState().update(() {
-                                FFAppState()
-                                    .filterCategories
-                                    .remove('chess-game');
-                              });
-                            } else {
-                              FFAppState().update(() {
-                                FFAppState().filterCategories.add('chess-game');
-                              });
-                            }
-                          },
+                InkWell(
+                  onTap: () {
+                    HapticFeedback.mediumImpact();
+                    if (FFAppState()
+                        .filterCategories
+                        .value
+                        .contains('chess-game')) {
+                      FFAppState().update(() {
+                        FFAppState()
+                            .filterCategories
+                            .value
+                            .remove('chess-game');
+                      });
+                    } else {
+                      FFAppState().update(() {
+                        FFAppState().filterCategories.value.add('chess-game');
+                      });
+                    }
+                  },
+                  child: Padding(
+                    padding:
+                        const EdgeInsets.symmetric(horizontal: 24, vertical: 3),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Text(
+                          'Chess-games',
+                          style: TextStyle(
+                              fontSize: 20, fontWeight: FontWeight.w600),
+                        ),
+                        SizedBox(
+                          height: 22,
+                          width: 22,
                           child: SvgPicture.asset(FFAppState()
                                   .filterCategories
+                                  .value
                                   .contains('chess-game')
                               ? 'assets/icons/boxon.svg'
                               : 'assets/icons/boxoff.svg'),
                         ),
-                      ),
-                    ],
+                      ],
+                    ),
                   ),
                 ),
                 Padding(
                   padding:
-                      const EdgeInsets.symmetric(horizontal: 20, vertical: 5),
+                      const EdgeInsets.symmetric(horizontal: 20, vertical: 3),
                   child: Row(
                     children: [
                       Image.asset(
                         'assets/icons/triangleLEFT.png',
-                        width: 16,
-                        height: 16,
+                        width: 20,
+                        height: 20,
                         color: Color(0xFFEDEEEE),
                       ),
                       Expanded(
                           child: Divider(
+                        thickness: 2,
                         color: Color(0xFFEDEEEE),
                       )),
                       Image.asset(
                         'assets/icons/triangleRIGHT.png',
-                        width: 16,
-                        height: 16,
+                        width: 20,
+                        height: 20,
                         color: Color(0xFFEDEEEE),
                       ),
                     ],
@@ -522,40 +551,18 @@ class _FiltersWidgetState extends State<FiltersWidget> {
                 ),
                 Padding(
                   padding:
-                      EdgeInsetsDirectional.fromSTEB(25.0, 10.0, 25.0, 5.0),
+                      EdgeInsetsDirectional.fromSTEB(16.0, 10.0, 16.0, 5.0),
                   child: Row(
                     mainAxisSize: MainAxisSize.max,
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
                       Text(
                         'Date Range',
-                        textScaleFactor: 1,
+                        textScaler: TextScaler.noScaling,
                         style: FlutterFlowTheme.of(context).bodyMedium.override(
                               fontFamily:
                                   FlutterFlowTheme.of(context).bodyMediumFamily,
-                              fontSize: () {
-                                if (MediaQuery.sizeOf(context).width <
-                                    valueOrDefault<double>(
-                                      kBreakpointSmall,
-                                      400.0,
-                                    )) {
-                                  return 14.0;
-                                } else if (MediaQuery.sizeOf(context).width <
-                                    valueOrDefault<double>(
-                                      kBreakpointMedium,
-                                      1025.0,
-                                    )) {
-                                  return 17.0;
-                                } else if (MediaQuery.sizeOf(context).width <
-                                    valueOrDefault<double>(
-                                      kBreakpointLarge,
-                                      1500.0,
-                                    )) {
-                                  return 20.0;
-                                } else {
-                                  return 25.0;
-                                }
-                              }(),
+                              fontSize: 18,
                               useGoogleFonts: GoogleFonts.asMap().containsKey(
                                   FlutterFlowTheme.of(context)
                                       .bodyMediumFamily),
@@ -656,7 +663,7 @@ class _FiltersWidgetState extends State<FiltersWidget> {
                                       .containsKey(FlutterFlowTheme.of(context)
                                           .bodyMediumFamily),
                                 ),
-                            textScaleFactor: 1,
+                            textScaler: TextScaler.noScaling,
                           ),
                         ),
                       ),
@@ -670,6 +677,7 @@ class _FiltersWidgetState extends State<FiltersWidget> {
                   weekStartsMonday: false,
                   rowHeight: 45.0,
                   onChange: (DateTimeRange? newSelectedDate) {
+                    change = true;
                     HapticFeedback.mediumImpact();
                     setState(
                         () => _model.calendarSelectedDay = newSelectedDate);
@@ -691,154 +699,148 @@ class _FiltersWidgetState extends State<FiltersWidget> {
                           useGoogleFonts: GoogleFonts.asMap().containsKey(
                               FlutterFlowTheme.of(context).labelLargeFamily),
                           lineHeight: 1.0,
-                          fontSize: 16),
+                          fontSize: 12),
                   dateStyle: FlutterFlowTheme.of(context).bodyMedium,
                   selectedDateStyle: FlutterFlowTheme.of(context).titleSmall,
                   inactiveDateStyle: FlutterFlowTheme.of(context).labelMedium,
                   locale: FFLocalizations.of(context).languageCode,
                 ),
-                Padding(
-                  padding: EdgeInsets.only(top: 40),
-                  child: Row(
-                    mainAxisSize: MainAxisSize.max,
-                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                    children: [
-                      FFButtonWidget(
-                        onPressed: () async {
-                          HapticFeedback.mediumImpact();
-                          Navigator.pop(context);
-                        },
-                        text: 'Cancel',
-                        options: FFButtonOptions(
-                          width: () {
-                            if (MediaQuery.sizeOf(context).width <
-                                valueOrDefault<double>(
-                                  kBreakpointSmall,
-                                  400.0,
-                                )) {
-                              return 150.0;
-                            } else if (MediaQuery.sizeOf(context).width <
-                                valueOrDefault<double>(
-                                  kBreakpointMedium,
-                                  1025.0,
-                                )) {
-                              return 200.0;
-                            } else if (MediaQuery.sizeOf(context).width <
-                                valueOrDefault<double>(
-                                  kBreakpointLarge,
-                                  1500.0,
-                                )) {
-                              return 250.0;
-                            } else {
-                              return 300.0;
-                            }
-                          }(),
-                          height: 40.0,
-                          padding: EdgeInsetsDirectional.fromSTEB(
-                              24.0, 0.0, 24.0, 0.0),
-                          iconPadding: EdgeInsetsDirectional.fromSTEB(
-                              0.0, 0.0, 0.0, 0.0),
-                          color: Colors.white,
-                          textStyle: FlutterFlowTheme.of(context)
-                              .titleSmall
-                              .override(
-                                fontFamily: FlutterFlowTheme.of(context)
-                                    .titleSmallFamily,
-                                color: Colors.black,
-                                fontSize: 14.0,
-                                fontWeight: FontWeight.bold,
-                                useGoogleFonts: GoogleFonts.asMap().containsKey(
-                                    FlutterFlowTheme.of(context)
-                                        .titleSmallFamily),
-                              ),
-                          elevation: 0.0,
-                          borderSide: BorderSide(
-                            color: Colors.black,
-                            width: 2.0,
-                          ),
-                          borderRadius: BorderRadius.circular(8.0),
+              ],
+            ),
+          ),
+          Padding(
+            padding: EdgeInsets.only(top: 20, bottom: 40),
+            child: Row(
+              mainAxisSize: MainAxisSize.max,
+              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+              children: [
+                FFButtonWidget(
+                  onPressed: () async {
+                    HapticFeedback.mediumImpact();
+                    Navigator.pop(context);
+                  },
+                  text: 'Cancel',
+                  options: FFButtonOptions(
+                    width: () {
+                      if (MediaQuery.sizeOf(context).width <
+                          valueOrDefault<double>(
+                            kBreakpointSmall,
+                            400.0,
+                          )) {
+                        return 150.0;
+                      } else if (MediaQuery.sizeOf(context).width <
+                          valueOrDefault<double>(
+                            kBreakpointMedium,
+                            1025.0,
+                          )) {
+                        return 200.0;
+                      } else if (MediaQuery.sizeOf(context).width <
+                          valueOrDefault<double>(
+                            kBreakpointLarge,
+                            1500.0,
+                          )) {
+                        return 250.0;
+                      } else {
+                        return 300.0;
+                      }
+                    }(),
+                    height: 40.0,
+                    padding:
+                        EdgeInsetsDirectional.fromSTEB(24.0, 0.0, 24.0, 0.0),
+                    iconPadding:
+                        EdgeInsetsDirectional.fromSTEB(0.0, 0.0, 0.0, 0.0),
+                    color: Colors.white,
+                    textStyle: FlutterFlowTheme.of(context).titleSmall.override(
+                          fontFamily:
+                              FlutterFlowTheme.of(context).titleSmallFamily,
+                          color: Colors.black,
+                          fontSize: 14.0,
+                          fontWeight: FontWeight.bold,
+                          useGoogleFonts: GoogleFonts.asMap().containsKey(
+                              FlutterFlowTheme.of(context).titleSmallFamily),
                         ),
-                      ),
-                      FFButtonWidget(
-                        onPressed: () async {
-                          HapticFeedback.mediumImpact();
-                          await Future.microtask(
-                            () {
-                              FFAppState().filterData.last = dateTimeFormat(
-                                'yMMMd',
-                                _model.calendarSelectedDay!.start,
-                                locale:
-                                    FFLocalizations.of(context).languageCode,
-                              );
-
-                              FFAppState().filterData.first = dateTimeFormat(
-                                'yMMMd',
-                                _model.calendarSelectedDay!.end >
-                                        DateTime.timestamp()
-                                    ? DateTime.timestamp()
-                                    : _model.calendarSelectedDay!.end,
-                                locale:
-                                    FFLocalizations.of(context).languageCode,
-                              );
-                              print(FFAppState().filterData);
-                            },
+                    elevation: 0.0,
+                    borderSide: BorderSide(
+                      color: Colors.black,
+                      width: 2.0,
+                    ),
+                    borderRadius: BorderRadius.circular(8.0),
+                  ),
+                ),
+                FFButtonWidget(
+                  onPressed: () async {
+                    HapticFeedback.mediumImpact();
+                    if (change) {
+                      await Future.microtask(
+                        () {
+                          FFAppState().filterData.last = dateTimeFormat(
+                            'yMMMd',
+                            _model.calendarSelectedDay!.start,
+                            locale: FFLocalizations.of(context).languageCode,
                           );
 
-                          initNotificationsForFilter();
-                          Navigator.pop(context);
+                          FFAppState().filterData.first = dateTimeFormat(
+                            'yMMMd',
+                            _model.calendarSelectedDay!.end >
+                                    DateTime.timestamp()
+                                ? DateTime.timestamp()
+                                : _model.calendarSelectedDay!.end,
+                            locale: FFLocalizations.of(context).languageCode,
+                          );
+                          print(FFAppState().filterData);
                         },
-                        text: 'Apply',
-                        options: FFButtonOptions(
-                          width: () {
-                            if (MediaQuery.sizeOf(context).width <
-                                valueOrDefault<double>(
-                                  kBreakpointSmall,
-                                  400.0,
-                                )) {
-                              return 150.0;
-                            } else if (MediaQuery.sizeOf(context).width <
-                                valueOrDefault<double>(
-                                  kBreakpointMedium,
-                                  1025.0,
-                                )) {
-                              return 200.0;
-                            } else if (MediaQuery.sizeOf(context).width <
-                                valueOrDefault<double>(
-                                  kBreakpointLarge,
-                                  1500.0,
-                                )) {
-                              return 250.0;
-                            } else {
-                              return 300.0;
-                            }
-                          }(),
-                          height: 40.0,
-                          padding: EdgeInsetsDirectional.fromSTEB(
-                              24.0, 0.0, 24.0, 0.0),
-                          iconPadding: EdgeInsetsDirectional.fromSTEB(
-                              0.0, 0.0, 0.0, 0.0),
-                          color: Colors.black,
-                          textStyle: FlutterFlowTheme.of(context)
-                              .titleSmall
-                              .override(
-                                fontFamily: FlutterFlowTheme.of(context)
-                                    .titleSmallFamily,
-                                color: Colors.white,
-                                fontSize: 14.0,
-                                fontWeight: FontWeight.bold,
-                                useGoogleFonts: GoogleFonts.asMap().containsKey(
-                                    FlutterFlowTheme.of(context)
-                                        .titleSmallFamily),
-                              ),
-                          elevation: 0.0,
-                          borderSide: BorderSide(
-                            color: Colors.black,
-                            width: 2.0,
-                          ),
-                          borderRadius: BorderRadius.circular(8.0),
+                      );
+                    }
+
+                    initNotificationsForFilter();
+                    Navigator.pop(context);
+                  },
+                  text: 'Apply',
+                  options: FFButtonOptions(
+                    width: () {
+                      if (MediaQuery.sizeOf(context).width <
+                          valueOrDefault<double>(
+                            kBreakpointSmall,
+                            400.0,
+                          )) {
+                        return 150.0;
+                      } else if (MediaQuery.sizeOf(context).width <
+                          valueOrDefault<double>(
+                            kBreakpointMedium,
+                            1025.0,
+                          )) {
+                        return 200.0;
+                      } else if (MediaQuery.sizeOf(context).width <
+                          valueOrDefault<double>(
+                            kBreakpointLarge,
+                            1500.0,
+                          )) {
+                        return 250.0;
+                      } else {
+                        return 300.0;
+                      }
+                    }(),
+                    height: 40.0,
+                    padding:
+                        EdgeInsetsDirectional.fromSTEB(24.0, 0.0, 24.0, 0.0),
+                    iconPadding:
+                        EdgeInsetsDirectional.fromSTEB(0.0, 0.0, 0.0, 0.0),
+                    color: Colors.black,
+                    textStyle: FlutterFlowTheme.of(context).titleSmall.override(
+                          fontFamily:
+                              FlutterFlowTheme.of(context).titleSmallFamily,
+                          color: Colors.white,
+                          fontSize: 14.0,
+                          fontWeight: FontWeight.bold,
+                          useGoogleFonts: GoogleFonts.asMap().containsKey(
+                              FlutterFlowTheme.of(context).titleSmallFamily),
                         ),
-                      ),
-                    ],
+                    elevation: 0.0,
+                    borderSide: BorderSide(
+                      color: Colors.black,
+                      width: 2.0,
+                    ),
+                    borderRadius: BorderRadius.circular(8.0),
                   ),
                 ),
               ],
@@ -860,6 +862,7 @@ class myDivider extends StatelessWidget {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 24),
       child: Divider(
+        thickness: 2,
         color: Color(0xFFEDEEEE),
       ),
     );

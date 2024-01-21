@@ -61,10 +61,6 @@ class _HomePageWidgetState extends State<HomePageWidget> {
     // Stream listener
     FirebaseMessaging.onMessageOpenedApp.listen(_handleMessage);
     FirebaseMessaging.onMessage.listen((RemoteMessage message) {
-      final title = message.notification?.title ?? 'Title';
-      final body = message.notification?.body ?? 'Body';
-      print('Got a message whilst in the foreground!');
-      print(body);
       setState(
         () {
           FFAppState().newMessage = true;
@@ -102,7 +98,16 @@ class _HomePageWidgetState extends State<HomePageWidget> {
 
   @override
   void initState() {
-    checkFirstTimeUser();
+    WidgetsBinding.instance.addPostFrameCallback(
+      (timeStamp) {
+        if (FFAppState().firstInit.value) {
+          print('Пользователь открывает приложение впервые');
+
+          context.pushReplacementNamed('AccountPage');
+        }
+      },
+    );
+
     setupInteractedMessage();
     FFAppState().messageNull = true;
     FFAppState().filterID = null;
@@ -389,811 +394,763 @@ class _HomePageWidgetState extends State<HomePageWidget> {
           ),
           body: SafeArea(
             top: true,
-            child: Container(
-              width: MediaQuery.sizeOf(context).width,
-              height: MediaQuery.sizeOf(context).height,
-              decoration: BoxDecoration(
-                color: FlutterFlowTheme.of(context).secondaryBackground,
-                borderRadius: BorderRadius.only(
-                  bottomLeft: Radius.circular(0.0),
-                  bottomRight: Radius.circular(0.0),
-                  topLeft: Radius.circular(16.0),
-                  topRight: Radius.circular(16.0),
+            child: IgnorePointer(
+              ignoring: FFAppState().firstInit.value,
+              child: Container(
+                width: MediaQuery.sizeOf(context).width,
+                height: MediaQuery.sizeOf(context).height,
+                decoration: BoxDecoration(
+                  color: FlutterFlowTheme.of(context).secondaryBackground,
+                  borderRadius: BorderRadius.only(
+                    bottomLeft: Radius.circular(0.0),
+                    bottomRight: Radius.circular(0.0),
+                    topLeft: Radius.circular(16.0),
+                    topRight: Radius.circular(16.0),
+                  ),
                 ),
-              ),
-              child: Column(
-                mainAxisSize: MainAxisSize.max,
-                mainAxisAlignment: MainAxisAlignment.start,
-                crossAxisAlignment: CrossAxisAlignment.center,
-                children: [
-                  Padding(
-                    padding: const EdgeInsets.only(top: 20),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Padding(
-                          padding: EdgeInsets.symmetric(horizontal: 24),
-                          child: Text(
-                            'Notifications',
-                            textScaler: TextScaler.noScaling,
-                            style: FlutterFlowTheme.of(context)
-                                .bodyMedium
-                                .override(
-                                  fontFamily: FlutterFlowTheme.of(context)
-                                      .bodyMediumFamily,
-                                  fontSize: 18.0,
-                                  fontWeight: FontWeight.bold,
-                                  useGoogleFonts: GoogleFonts.asMap()
-                                      .containsKey(FlutterFlowTheme.of(context)
-                                          .bodyMediumFamily),
-                                ),
-                          ),
-                        ),
-                        Padding(
-                          padding: EdgeInsets.symmetric(horizontal: 24),
-                          child: InkWell(
-                            onTap: () async {
-                              HapticFeedback.lightImpact();
-                              await showModalBottomSheet(
-                                isScrollControlled: true,
-                                backgroundColor: Colors.transparent,
-                                enableDrag: false,
-                                context: context,
-                                builder: (context) {
-                                  return Container(
-                                    height: MediaQuery.sizeOf(context).height *
-                                        0.85,
-                                    child: FiltersWidget(),
-                                  );
-                                },
-                              ).then((value) => safeSetState(() {}));
-                            },
-                            child: Text(
-                              'Filters',
-                              textScaler: TextScaler.noScaling,
-                              style: TextStyle(
-                                  color: Color(0xFF65C3A2),
-                                  fontSize: 18,
-                                  fontWeight: FontWeight.bold),
-                            ),
-                          ),
-                        )
-                      ],
-                    ),
-                  ),
-                  Container(
-                    margin: EdgeInsets.symmetric(horizontal: 24, vertical: 14),
-                    width: MediaQuery.sizeOf(context).width,
-                    height: 1,
-                    decoration: BoxDecoration(
-                      color: Color(0xFFEDEEEE),
-                      borderRadius: BorderRadius.circular(
-                        100,
-                      ),
-                    ),
-                  ),
-                  // Row(
-                  //   mainAxisSize: MainAxisSize.min,
-                  //   mainAxisAlignment: MediaQuery.sizeOf(context).width > 600
-                  //       ? MainAxisAlignment.start
-                  //       : MainAxisAlignment.spaceBetween,
-                  //   children: [
-                  //     Container(
-                  //       constraints: BoxConstraints(
-                  //         maxWidth: 450,
-                  //       ),
-                  //       width: MediaQuery.sizeOf(context).width * 0.7,
-                  //       height: 45.0,
-                  //       decoration: BoxDecoration(
-                  //         color: Color(0xFFF5F5EF),
-                  //         borderRadius: BorderRadius.circular(8.0),
-                  //       ),
-                  //       child: Row(
-                  //         mainAxisAlignment: MainAxisAlignment.start,
-                  //         crossAxisAlignment: CrossAxisAlignment.center,
-                  //         children: [
-                  //           SizedBox(
-                  //             height: 45,
-                  //             width: 45,
-                  //             child: InkWell(
-                  //               child: SvgPicture.asset(
-                  //                 'assets/icons/Icon_search.svg',
-                  //                 fit: BoxFit.none,
-                  //               ),
-                  //               onTap: () {},
-                  //             ),
-                  //           ),
-                  //           Expanded(
-                  //             child: OverflowBox(
-                  //               maxHeight: 1000,
-                  //               child: Container(
-                  //                 margin: EdgeInsets.only(bottom: 0),
-                  //                 child: TextField(
-                  //                   autocorrect: false,
-                  //                   textAlignVertical: TextAlignVertical.bottom,
-                  //                   onChanged: (value) async {
-                  //                     HapticFeedback.lightImpact();
-                  //                     timer?.cancel();
-                  //                     timer = Timer(Duration(milliseconds: 300),
-                  //                         () {
-                  //                       FFAppState().update(
-                  //                         () {
-                  //                           FFAppState().filterID = value
-                  //                               .replaceAll(RegExp(r'\s'), '');
-                  //                         },
-                  //                       );
-                  //                       FFAppState().streamConroller.value
-                  //                           ? scrollControllerForFilter
-                  //                               .animateTo(
-                  //                               0.0,
-                  //                               duration:
-                  //                                   Duration(milliseconds: 300),
-                  //                               curve: Curves.easeInOut,
-                  //                             )
-                  //                           : scrollController.animateTo(
-                  //                               0.0,
-                  //                               duration:
-                  //                                   Duration(milliseconds: 300),
-                  //                               curve: Curves.easeInOut,
-                  //                             );
-                  //                       if (!(currentUserDocument
-                  //                                   ?.subscriptions ??
-                  //                               [])
-                  //                           .any((e) => e.startsWith(
-                  //                               FFAppState().filterID ?? ''))) {
-                  //                       } else {}
-                  //                       // if (FFAppState().filterData.last !=
-                  //                       //         '' &&
-                  //                       //     FFAppState().filterData.first !=
-                  //                       //         '') {
-                  //                       //   initNotificationsForFilter();
-                  //                       // } else {
-                  //                       //   initNotifications();
-                  //                       // }
-                  //                     });
-                  //                   },
-                  //                   controller: _model.textController,
-                  //                   autofocus: false,
-                  //                   obscureText: false,
-                  //                   decoration: InputDecoration(
-                  //                     hintText: 'Search by Account ID or Name',
-                  //                     hintStyle: FlutterFlowTheme.of(context)
-                  //                         .labelMedium
-                  //                         .override(
-                  //                           fontFamily:
-                  //                               FlutterFlowTheme.of(context)
-                  //                                   .labelMediumFamily,
-                  //                           color: Color(0xFFBDBDBD),
-                  //                           fontSize: 15.0,
-                  //                           useGoogleFonts: GoogleFonts.asMap()
-                  //                               .containsKey(
-                  //                                   FlutterFlowTheme.of(context)
-                  //                                       .labelMediumFamily),
-                  //                         ),
-                  //                     floatingLabelBehavior:
-                  //                         FloatingLabelBehavior.never,
-                  //                     enabledBorder: InputBorder.none,
-                  //                     focusedBorder: InputBorder.none,
-                  //                   ),
-                  //                 ),
-                  //               ),
-                  //             ),
-                  //           ),
-                  //         ],
-                  //       ),
-                  //     ),
-                  //     Padding(
-                  //       padding: EdgeInsets.only(
-                  //           left: (MediaQuery.sizeOf(context).width > 600)
-                  //               ? 24
-                  //               : 0),
-                  //       child: Container(
-                  //         width: 55,
-                  //         height: 55,
-                  //         child: Stack(
-                  //           alignment: AlignmentDirectional(0.0, 0.0),
-                  //           children: [
-                  //             Container(
-                  //               decoration: BoxDecoration(
-                  //                 borderRadius: BorderRadius.circular(8),
-                  //                 color: Colors.black,
-                  //               ),
-                  //               height: 45,
-                  //               width: 45,
-                  //               child: InkWell(
-                  //                 child: SvgPicture.asset(
-                  //                   'assets/icons/Icon_filter.svg',
-                  //                   height: 25,
-                  //                   width: 25,
-                  //                   fit: BoxFit.none,
-                  //                   color: Colors.white,
-                  //                 ),
-                  //                 onTap: () async {
-                  //                   HapticFeedback.lightImpact();
-                  //                   await showModalBottomSheet(
-                  //                     isScrollControlled: true,
-                  //                     backgroundColor: Colors.transparent,
-                  //                     enableDrag: false,
-                  //                     context: context,
-                  //                     builder: (context) {
-                  //                       return Container(
-                  //                         height: MediaQuery.sizeOf(context)
-                  //                                 .height *
-                  //                             0.85,
-                  //                         child: FiltersWidget(),
-                  //                       );
-                  //                     },
-                  //                   ).then((value) => safeSetState(() {}));
-                  //                 },
-                  //               ),
-                  //             ),
-                  //             Opacity(
-                  //               opacity: (FFAppState().filterData.first !=
-                  //                               null &&
-                  //                           FFAppState().filterData.first !=
-                  //                               '') &&
-                  //                       (FFAppState().filterData.last != null &&
-                  //                           FFAppState().filterData.last != '')
-                  //                   ? 1.0
-                  //                   : 0.0,
-                  //               child: Align(
-                  //                 alignment: AlignmentDirectional(1.00, -1.00),
-                  //                 child: Container(
-                  //                   width: 16.0,
-                  //                   height: 16.0,
-                  //                   decoration: BoxDecoration(
-                  //                     color: Color(0xFFFF7966),
-                  //                     shape: BoxShape.circle,
-                  //                   ),
-                  //                   alignment:
-                  //                       AlignmentDirectional(0.00, -1.00),
-                  //                   child: Align(
-                  //                     alignment:
-                  //                         AlignmentDirectional(0.00, -1.00),
-                  //                     child: Text(
-                  //                       '1',
-                  //                       textScaleFactor: 1,
-                  //                       style: FlutterFlowTheme.of(context)
-                  //                           .bodyMedium
-                  //                           .override(
-                  //                             fontFamily:
-                  //                                 FlutterFlowTheme.of(context)
-                  //                                     .bodyMediumFamily,
-                  //                             color: Colors.white,
-                  //                             fontSize: 13.0,
-                  //                             useGoogleFonts: GoogleFonts
-                  //                                     .asMap()
-                  //                                 .containsKey(
-                  //                                     FlutterFlowTheme.of(
-                  //                                             context)
-                  //                                         .bodyMediumFamily),
-                  //                           ),
-                  //                     ),
-                  //                   ),
-                  //                 ),
-                  //               ),
-                  //             ),
-                  //           ],
-                  //         ),
-                  //       ),
-                  //     ),
-                  //   ],
-                  // ),
-                  Visibility(
-                    visible:
-                        (currentUserDocument?.subscriptions.isEmpty ?? true),
-                    child: Padding(
-                      padding: EdgeInsets.only(
-                          top: MediaQuery.sizeOf(context).height < 900
-                              ? 20
-                              : 100),
-                      child: Column(
-                        mainAxisAlignment: MainAxisAlignment.center,
+                child: Column(
+                  mainAxisSize: MainAxisSize.max,
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    Padding(
+                      padding: const EdgeInsets.only(top: 20),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
-                          SvgPicture.asset(
-                            'assets/icons/accounts.svg',
-                            height: MediaQuery.sizeOf(context).height < 900
-                                ? 80
-                                : 120,
-                            color: Color(0xFFC6F5F4),
+                          Padding(
+                            padding: EdgeInsets.symmetric(horizontal: 24),
+                            child: Text(
+                              'Notifications',
+                              textScaler: TextScaler.noScaling,
+                              style: FlutterFlowTheme.of(context)
+                                  .bodyMedium
+                                  .override(
+                                    fontFamily: FlutterFlowTheme.of(context)
+                                        .bodyMediumFamily,
+                                    fontSize: 18.0,
+                                    fontWeight: FontWeight.bold,
+                                    useGoogleFonts: GoogleFonts.asMap()
+                                        .containsKey(
+                                            FlutterFlowTheme.of(context)
+                                                .bodyMediumFamily),
+                                  ),
+                            ),
                           ),
                           Padding(
-                            padding: EdgeInsetsDirectional.fromSTEB(
-                                25.0, 0.0, 25.0, 0.0),
-                            child: RichText(
-                              text: TextSpan(
-                                children: [
-                                  TextSpan(
-                                    text:
-                                        'Oops! It seems you didn’t add any accounts yet. ',
-                                    style: FlutterFlowTheme.of(context)
-                                        .bodyMedium
-                                        .override(
-                                          fontSize: MediaQuery.sizeOf(context)
-                                                      .height <
-                                                  900
-                                              ? 11
-                                              : 14,
-                                          fontFamily:
-                                              FlutterFlowTheme.of(context)
-                                                  .bodyMediumFamily,
-                                          color: Color(0xFFBDBDBD),
-                                          fontWeight: FontWeight.bold,
-                                          useGoogleFonts: GoogleFonts.asMap()
-                                              .containsKey(
-                                                  FlutterFlowTheme.of(context)
-                                                      .bodyMediumFamily),
-                                        ),
-                                  ),
-                                  TextSpan(
-                                    text: 'Add a new Account ',
-                                    style: TextStyle(
-                                      color: Color(0xFF65C3A2),
-                                      fontWeight: FontWeight.w600,
-                                    ),
-                                  ),
-                                  TextSpan(
-                                    text: 'to receive notifications',
-                                    style: TextStyle(
-                                      color: Color(0xFFBDBDBD),
-                                      fontSize:
-                                          MediaQuery.sizeOf(context).height <
-                                                  900
-                                              ? 11
-                                              : 14,
-                                    ),
-                                  )
-                                ],
+                            padding: EdgeInsets.symmetric(horizontal: 24),
+                            child: InkWell(
+                              onTap: () async {
+                                HapticFeedback.lightImpact();
+                                await showModalBottomSheet(
+                                  isScrollControlled: true,
+                                  backgroundColor: Colors.transparent,
+                                  enableDrag: false,
+                                  context: context,
+                                  builder: (context) {
+                                    return Container(
+                                      height:
+                                          MediaQuery.sizeOf(context).height *
+                                              0.85,
+                                      child: FiltersWidget(),
+                                    );
+                                  },
+                                ).then((value) => safeSetState(() {}));
+                              },
+                              child: Text(
+                                'Filters',
+                                textScaler: TextScaler.noScaling,
                                 style: TextStyle(
-                                  fontSize:
-                                      MediaQuery.sizeOf(context).height < 900
-                                          ? 11
-                                          : 14,
-                                ),
+                                    color: Color(0xFF65C3A2),
+                                    fontSize: 18,
+                                    fontWeight: FontWeight.bold),
                               ),
-                              textAlign: TextAlign.center,
                             ),
-                          ),
+                          )
                         ],
                       ),
                     ),
-                  ),
-                  // Visibility(
-                  //   visible: (currentUserDocument?.subscriptions.isNotEmpty ??
-                  //           false) &&
-                  //       FFAppState().messageNull,
-                  //   child: Expanded(
-                  //     child: Center(
-                  //       child: ,
-                  //     ),
-                  //   ),
-                  // ),
-                  Visibility(
-                    visible: !FFAppState().messageNull &&
-                        FFAppState().streamNotifications.value.isEmpty &&
-                        (currentUserDocument?.subscriptions.isNotEmpty ??
-                            false),
-                    child: Expanded(
-                      child: Center(
-                        child: Text(
-                          'No notifications.',
-                          textScaler: TextScaler.noScaling,
-                          style: TextStyle(
-                            color: Color(0xFF65C3A2),
-                            fontSize: 25,
-                            fontWeight: FontWeight.w500,
+                    Container(
+                      margin:
+                          EdgeInsets.symmetric(horizontal: 24, vertical: 14),
+                      width: MediaQuery.sizeOf(context).width,
+                      height: 1,
+                      decoration: BoxDecoration(
+                        color: Color(0xFFEDEEEE),
+                        borderRadius: BorderRadius.circular(
+                          100,
+                        ),
+                      ),
+                    ),
+                    // Row(
+                    //   mainAxisSize: MainAxisSize.min,
+                    //   mainAxisAlignment: MediaQuery.sizeOf(context).width > 600
+                    //       ? MainAxisAlignment.start
+                    //       : MainAxisAlignment.spaceBetween,
+                    //   children: [
+                    //     Container(
+                    //       constraints: BoxConstraints(
+                    //         maxWidth: 450,
+                    //       ),
+                    //       width: MediaQuery.sizeOf(context).width * 0.7,
+                    //       height: 45.0,
+                    //       decoration: BoxDecoration(
+                    //         color: Color(0xFFF5F5EF),
+                    //         borderRadius: BorderRadius.circular(8.0),
+                    //       ),
+                    //       child: Row(
+                    //         mainAxisAlignment: MainAxisAlignment.start,
+                    //         crossAxisAlignment: CrossAxisAlignment.center,
+                    //         children: [
+                    //           SizedBox(
+                    //             height: 45,
+                    //             width: 45,
+                    //             child: InkWell(
+                    //               child: SvgPicture.asset(
+                    //                 'assets/icons/Icon_search.svg',
+                    //                 fit: BoxFit.none,
+                    //               ),
+                    //               onTap: () {},
+                    //             ),
+                    //           ),
+                    //           Expanded(
+                    //             child: OverflowBox(
+                    //               maxHeight: 1000,
+                    //               child: Container(
+                    //                 margin: EdgeInsets.only(bottom: 0),
+                    //                 child: TextField(
+                    //                   autocorrect: false,
+                    //                   textAlignVertical: TextAlignVertical.bottom,
+                    //                   onChanged: (value) async {
+                    //                     HapticFeedback.lightImpact();
+                    //                     timer?.cancel();
+                    //                     timer = Timer(Duration(milliseconds: 300),
+                    //                         () {
+                    //                       FFAppState().update(
+                    //                         () {
+                    //                           FFAppState().filterID = value
+                    //                               .replaceAll(RegExp(r'\s'), '');
+                    //                         },
+                    //                       );
+                    //                       FFAppState().streamConroller.value
+                    //                           ? scrollControllerForFilter
+                    //                               .animateTo(
+                    //                               0.0,
+                    //                               duration:
+                    //                                   Duration(milliseconds: 300),
+                    //                               curve: Curves.easeInOut,
+                    //                             )
+                    //                           : scrollController.animateTo(
+                    //                               0.0,
+                    //                               duration:
+                    //                                   Duration(milliseconds: 300),
+                    //                               curve: Curves.easeInOut,
+                    //                             );
+                    //                       if (!(currentUserDocument
+                    //                                   ?.subscriptions ??
+                    //                               [])
+                    //                           .any((e) => e.startsWith(
+                    //                               FFAppState().filterID ?? ''))) {
+                    //                       } else {}
+                    //                       // if (FFAppState().filterData.last !=
+                    //                       //         '' &&
+                    //                       //     FFAppState().filterData.first !=
+                    //                       //         '') {
+                    //                       //   initNotificationsForFilter();
+                    //                       // } else {
+                    //                       //   initNotifications();
+                    //                       // }
+                    //                     });
+                    //                   },
+                    //                   controller: _model.textController,
+                    //                   autofocus: false,
+                    //                   obscureText: false,
+                    //                   decoration: InputDecoration(
+                    //                     hintText: 'Search by Account ID or Name',
+                    //                     hintStyle: FlutterFlowTheme.of(context)
+                    //                         .labelMedium
+                    //                         .override(
+                    //                           fontFamily:
+                    //                               FlutterFlowTheme.of(context)
+                    //                                   .labelMediumFamily,
+                    //                           color: Color(0xFFBDBDBD),
+                    //                           fontSize: 15.0,
+                    //                           useGoogleFonts: GoogleFonts.asMap()
+                    //                               .containsKey(
+                    //                                   FlutterFlowTheme.of(context)
+                    //                                       .labelMediumFamily),
+                    //                         ),
+                    //                     floatingLabelBehavior:
+                    //                         FloatingLabelBehavior.never,
+                    //                     enabledBorder: InputBorder.none,
+                    //                     focusedBorder: InputBorder.none,
+                    //                   ),
+                    //                 ),
+                    //               ),
+                    //             ),
+                    //           ),
+                    //         ],
+                    //       ),
+                    //     ),
+                    //     Padding(
+                    //       padding: EdgeInsets.only(
+                    //           left: (MediaQuery.sizeOf(context).width > 600)
+                    //               ? 24
+                    //               : 0),
+                    //       child: Container(
+                    //         width: 55,
+                    //         height: 55,
+                    //         child: Stack(
+                    //           alignment: AlignmentDirectional(0.0, 0.0),
+                    //           children: [
+                    //             Container(
+                    //               decoration: BoxDecoration(
+                    //                 borderRadius: BorderRadius.circular(8),
+                    //                 color: Colors.black,
+                    //               ),
+                    //               height: 45,
+                    //               width: 45,
+                    //               child: InkWell(
+                    //                 child: SvgPicture.asset(
+                    //                   'assets/icons/Icon_filter.svg',
+                    //                   height: 25,
+                    //                   width: 25,
+                    //                   fit: BoxFit.none,
+                    //                   color: Colors.white,
+                    //                 ),
+                    //                 onTap: () async {
+                    //                   HapticFeedback.lightImpact();
+                    //                   await showModalBottomSheet(
+                    //                     isScrollControlled: true,
+                    //                     backgroundColor: Colors.transparent,
+                    //                     enableDrag: false,
+                    //                     context: context,
+                    //                     builder: (context) {
+                    //                       return Container(
+                    //                         height: MediaQuery.sizeOf(context)
+                    //                                 .height *
+                    //                             0.85,
+                    //                         child: FiltersWidget(),
+                    //                       );
+                    //                     },
+                    //                   ).then((value) => safeSetState(() {}));
+                    //                 },
+                    //               ),
+                    //             ),
+                    //             Opacity(
+                    //               opacity: (FFAppState().filterData.first !=
+                    //                               null &&
+                    //                           FFAppState().filterData.first !=
+                    //                               '') &&
+                    //                       (FFAppState().filterData.last != null &&
+                    //                           FFAppState().filterData.last != '')
+                    //                   ? 1.0
+                    //                   : 0.0,
+                    //               child: Align(
+                    //                 alignment: AlignmentDirectional(1.00, -1.00),
+                    //                 child: Container(
+                    //                   width: 16.0,
+                    //                   height: 16.0,
+                    //                   decoration: BoxDecoration(
+                    //                     color: Color(0xFFFF7966),
+                    //                     shape: BoxShape.circle,
+                    //                   ),
+                    //                   alignment:
+                    //                       AlignmentDirectional(0.00, -1.00),
+                    //                   child: Align(
+                    //                     alignment:
+                    //                         AlignmentDirectional(0.00, -1.00),
+                    //                     child: Text(
+                    //                       '1',
+                    //                       textScaleFactor: 1,
+                    //                       style: FlutterFlowTheme.of(context)
+                    //                           .bodyMedium
+                    //                           .override(
+                    //                             fontFamily:
+                    //                                 FlutterFlowTheme.of(context)
+                    //                                     .bodyMediumFamily,
+                    //                             color: Colors.white,
+                    //                             fontSize: 13.0,
+                    //                             useGoogleFonts: GoogleFonts
+                    //                                     .asMap()
+                    //                                 .containsKey(
+                    //                                     FlutterFlowTheme.of(
+                    //                                             context)
+                    //                                         .bodyMediumFamily),
+                    //                           ),
+                    //                     ),
+                    //                   ),
+                    //                 ),
+                    //               ),
+                    //             ),
+                    //           ],
+                    //         ),
+                    //       ),
+                    //     ),
+                    //   ],
+                    // ),
+                    Visibility(
+                      visible:
+                          (currentUserDocument?.subscriptions.isEmpty ?? true),
+                      child: Padding(
+                        padding: EdgeInsets.only(
+                            top: MediaQuery.sizeOf(context).height < 900
+                                ? 20
+                                : 100),
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            SvgPicture.asset(
+                              'assets/icons/accounts.svg',
+                              height: MediaQuery.sizeOf(context).height < 900
+                                  ? 80
+                                  : 120,
+                              color: Color(0xFFC6F5F4),
+                            ),
+                            Padding(
+                              padding: EdgeInsetsDirectional.fromSTEB(
+                                  25.0, 0.0, 25.0, 0.0),
+                              child: RichText(
+                                text: TextSpan(
+                                  children: [
+                                    TextSpan(
+                                      text:
+                                          'Oops! It seems you didn’t add any accounts yet. ',
+                                      style: FlutterFlowTheme.of(context)
+                                          .bodyMedium
+                                          .override(
+                                            fontSize: MediaQuery.sizeOf(context)
+                                                        .height <
+                                                    900
+                                                ? 11
+                                                : 14,
+                                            fontFamily:
+                                                FlutterFlowTheme.of(context)
+                                                    .bodyMediumFamily,
+                                            color: Color(0xFFBDBDBD),
+                                            fontWeight: FontWeight.bold,
+                                            useGoogleFonts: GoogleFonts.asMap()
+                                                .containsKey(
+                                                    FlutterFlowTheme.of(context)
+                                                        .bodyMediumFamily),
+                                          ),
+                                    ),
+                                    TextSpan(
+                                      text: 'Add a new Account ',
+                                      style: TextStyle(
+                                        color: Color(0xFF65C3A2),
+                                        fontWeight: FontWeight.w600,
+                                      ),
+                                    ),
+                                    TextSpan(
+                                      text: 'to receive notifications',
+                                      style: TextStyle(
+                                        color: Color(0xFFBDBDBD),
+                                        fontSize:
+                                            MediaQuery.sizeOf(context).height <
+                                                    900
+                                                ? 11
+                                                : 14,
+                                      ),
+                                    )
+                                  ],
+                                  style: TextStyle(
+                                    fontSize:
+                                        MediaQuery.sizeOf(context).height < 900
+                                            ? 11
+                                            : 14,
+                                  ),
+                                ),
+                                textAlign: TextAlign.center,
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ),
+                    // Visibility(
+                    //   visible: (currentUserDocument?.subscriptions.isNotEmpty ??
+                    //           false) &&
+                    //       FFAppState().messageNull,
+                    //   child: Expanded(
+                    //     child: Center(
+                    //       child: ,
+                    //     ),
+                    //   ),
+                    // ),
+                    Visibility(
+                      visible: !FFAppState().messageNull &&
+                          FFAppState().streamNotifications.value.isEmpty &&
+                          (currentUserDocument?.subscriptions.isNotEmpty ??
+                              false),
+                      child: Expanded(
+                        child: Center(
+                          child: Text(
+                            'No notifications.',
+                            textScaler: TextScaler.noScaling,
+                            style: TextStyle(
+                              color: Color(0xFF65C3A2),
+                              fontSize: 25,
+                              fontWeight: FontWeight.w500,
+                            ),
                           ),
                         ),
                       ),
                     ),
-                  ),
-                  Visibility(
-                    visible:
-                        !(currentUserDocument?.subscriptions.isEmpty ?? false),
-                    child: Expanded(
-                      child: StreamBuilder(
-                          stream: FFAppState().streamNotifications,
-                          builder: (context, snapshot) {
-                            if (snapshot.hasData && snapshot.data!.isNotEmpty) {
-                              return Padding(
-                                padding:
-                                    const EdgeInsets.symmetric(horizontal: 25),
-                                child: Container(
-                                  height: MediaQuery.sizeOf(context).height,
-                                  constraints: BoxConstraints(
-                                      minWidth: 400, maxWidth: 524),
-                                  width: MediaQuery.sizeOf(context).width * 0.7,
-                                  child: ListView.builder(
-                                    controller:
-                                        FFAppState().streamConroller.value
-                                            ? scrollControllerForFilter
-                                            : scrollController,
-                                    itemCount: snapshot.data?.length ?? 0,
-                                    itemBuilder: (context, index) {
-                                      return snapshot.data!.isEmpty
-                                          ? CircularProgressIndicator(
-                                              backgroundColor: Colors.white,
-                                              color: Colors.green,
-                                            )
-                                          : Column(
-                                              children: [
-                                                Visibility(
-                                                  visible: (FFAppState()
-                                                          .filterCategories
-                                                          .contains(snapshot.data![index]
-                                                                  [0]['value']
-                                                              ['type']) ||
-                                                      (snapshot.data![index][0]['value']['type'] != null &&
-                                                          snapshot.data![index]
-                                                                  [0]['value']
-                                                                  ['type']
-                                                              .startsWith(
-                                                                  'devgovgigs') &&
-                                                          FFAppState()
-                                                              .filterCategories
-                                                              .contains('devgovgigs'))),
-                                                  // (FFAppState()
-                                                  //             .filterID ==
-                                                  //         null) ||
-                                                  //     (snapshot.data?[index]
-                                                  //                 [2] ??
-                                                  //             '')
-                                                  //         .toString()
-                                                  //         .startsWith(FFAppState()
-                                                  //                 .filterID ??
-                                                  //             ''),
-                                                  child: Padding(
-                                                    padding: EdgeInsets.symmetric(
-                                                        vertical: (MediaQuery.sizeOf(
-                                                                            context)
-                                                                        .height *
-                                                                    0.01) >
-                                                                12
-                                                            ? 12
-                                                            : (MediaQuery.sizeOf(
-                                                                        context)
-                                                                    .height *
-                                                                0.008)),
-                                                    child: InkWell(
-                                                      onTap: () async {
-                                                        HapticFeedback
-                                                            .mediumImpact();
-                                                        FFAppState().update(
-                                                          () {
-                                                            FFAppState()
-                                                                .listTapNotifications
-                                                                .value
-                                                                .add(index);
-                                                          },
-                                                        );
+                    Visibility(
+                      visible: !(currentUserDocument?.subscriptions.isEmpty ??
+                          false),
+                      child: Expanded(
+                        child: StreamBuilder(
+                            stream: FFAppState().streamNotifications,
+                            builder: (context, snapshot) {
+                              if (snapshot.hasData &&
+                                  snapshot.data!.isNotEmpty) {
+                                return Padding(
+                                  padding: const EdgeInsets.symmetric(
+                                      horizontal: 25),
+                                  child: Container(
+                                    height: MediaQuery.sizeOf(context).height,
+                                    constraints: BoxConstraints(
+                                        minWidth: 400, maxWidth: 524),
+                                    width:
+                                        MediaQuery.sizeOf(context).width * 0.7,
+                                    child: ListView.builder(
+                                      controller:
+                                          FFAppState().streamConroller.value
+                                              ? scrollControllerForFilter
+                                              : scrollController,
+                                      itemCount: snapshot.data?.length ?? 0,
+                                      itemBuilder: (context, index) {
+                                        return snapshot.data!.isEmpty
+                                            ? CircularProgressIndicator(
+                                                backgroundColor: Colors.white,
+                                                color: Colors.green,
+                                              )
+                                            : Column(
+                                                children: [
+                                                  StreamBuilder<Object>(
+                                                      stream: FFAppState()
+                                                          .filterCategories,
+                                                      builder: (context,
+                                                          filterData) {
+                                                        return Visibility(
+                                                          visible: (FFAppState()
+                                                                  .filterCategories
+                                                                  .value
+                                                                  .contains(snapshot.data![index][0]['value'][
+                                                                      'type']) ||
+                                                              (snapshot.data![index][0]['value']['type'] !=
+                                                                      null &&
+                                                                  snapshot.data![index][0]['value']['type']
+                                                                      .startsWith(
+                                                                          'devgovgigs') &&
+                                                                  FFAppState()
+                                                                      .filterCategories
+                                                                      .value
+                                                                      .contains('devgovgigs'))),
+                                                          // (FFAppState()
+                                                          //             .filterID ==
+                                                          //         null) ||
+                                                          //     (snapshot.data?[index]
+                                                          //                 [2] ??
+                                                          //             '')
+                                                          //         .toString()
+                                                          //         .startsWith(FFAppState()
+                                                          //                 .filterID ??
+                                                          //             ''),
+                                                          child: InkWell(
+                                                            onTap: () async {
+                                                              HapticFeedback
+                                                                  .mediumImpact();
+                                                              FFAppState()
+                                                                  .update(
+                                                                () {
+                                                                  FFAppState()
+                                                                      .listTapNotifications
+                                                                      .value
+                                                                      .add(
+                                                                          index);
+                                                                },
+                                                              );
 
-                                                        Timer(
-                                                            Duration(
-                                                                seconds: 2),
-                                                            () {
-                                                          FFAppState()
-                                                              .update(() {
-                                                            FFAppState()
-                                                                .listTapNotifications
-                                                                .value
-                                                                .remove(index);
-                                                          });
-                                                        });
-                                                        String url;
-                                                        if (snapshot
-                                                            .data![index][0]
-                                                                ['value']
-                                                                ['type']
-                                                            .toString()
-                                                            .startsWith(
-                                                                'devgovgigs')) {
-                                                          String idPost =
-                                                              snapshot
+                                                              Timer(
+                                                                  Duration(
+                                                                      seconds:
+                                                                          2),
+                                                                  () {
+                                                                FFAppState()
+                                                                    .update(() {
+                                                                  FFAppState()
+                                                                      .listTapNotifications
+                                                                      .value
+                                                                      .remove(
+                                                                          index);
+                                                                });
+                                                              });
+                                                              String url;
+                                                              if (snapshot
                                                                   .data![index]
                                                                       [0]
                                                                       ['value']
-                                                                      ['post']
-                                                                  .toString();
-                                                          url =
-                                                              'https://near.social/devhub.near/widget/app?page=post&id=$idPost';
-                                                        } else if (snapshot
-                                                                .data![index][0]
-                                                                    ['value']
-                                                                    ['type']
-                                                                .toString() ==
-                                                            'mention') {
-                                                          String id = snapshot
-                                                              .data![index][0]
-                                                                  ['accountId']
-                                                              .toString();
-                                                          String block = snapshot
-                                                              .data![index][0][
-                                                                  'blockHeight']
-                                                              .toString();
-                                                          url =
-                                                              'https://near.social/mob.near/widget/MainPage.N.Post.Page?accountId=$id&blockHeight=$block';
-                                                        } else {
-                                                          if (snapshot.data![index]
-                                                                          [0]
-                                                                          ['value']
+                                                                      ['type']
+                                                                  .toString()
+                                                                  .startsWith(
+                                                                      'devgovgigs')) {
+                                                                String idPost = snapshot
+                                                                    .data![
+                                                                        index]
+                                                                        [0][
+                                                                        'value']
+                                                                        ['post']
+                                                                    .toString();
+                                                                url =
+                                                                    'https://near.social/devhub.near/widget/app?page=post&id=$idPost';
+                                                              } else if (snapshot
+                                                                      .data![
+                                                                          index]
+                                                                          [0][
+                                                                          'value']
                                                                           [
                                                                           'type']
-                                                                      .toString() !=
-                                                                  'like' &&
-                                                              snapshot.data![index]
-                                                                          [0]
-                                                                          ['value']
-                                                                          [
-                                                                          'type']
-                                                                      .toString() !=
-                                                                  'repost' &&
-                                                              snapshot.data![index]
-                                                                          [0]
-                                                                          ['value']
-                                                                          ['type']
-                                                                      .toString() !=
-                                                                  'comment') {
-                                                            return;
-                                                          }
-                                                          String id = snapshot
-                                                              .data![index][2]
-                                                              .toString();
+                                                                      .toString() ==
+                                                                  'mention') {
+                                                                String id = snapshot
+                                                                    .data![
+                                                                        index]
+                                                                        [0][
+                                                                        'accountId']
+                                                                    .toString();
+                                                                String block = snapshot
+                                                                    .data![
+                                                                        index]
+                                                                        [0][
+                                                                        'blockHeight']
+                                                                    .toString();
+                                                                url =
+                                                                    'https://near.social/mob.near/widget/MainPage.N.Post.Page?accountId=$id&blockHeight=$block';
+                                                              } else {
+                                                                if (snapshot.data![index][0]['value']['type'].toString() != 'like' &&
+                                                                    snapshot.data![index][0]['value']['type']
+                                                                            .toString() !=
+                                                                        'repost' &&
+                                                                    snapshot.data![index][0]['value']['type']
+                                                                            .toString() !=
+                                                                        'comment') {
+                                                                  return;
+                                                                }
+                                                                String id = snapshot
+                                                                    .data![
+                                                                        index]
+                                                                        [2]
+                                                                    .toString();
 
-                                                          String block = snapshot
-                                                              .data![index][0]
-                                                                  ['value']
-                                                                  ['item'][
-                                                                  'blockHeight']
-                                                              .toString();
-                                                          url =
-                                                              'https://near.social/mob.near/widget/MainPage.N.Post.Page?accountId=$id&blockHeight=$block';
-                                                        }
+                                                                String block = snapshot
+                                                                    .data![
+                                                                        index]
+                                                                        [0][
+                                                                        'value']
+                                                                        ['item']
+                                                                        [
+                                                                        'blockHeight']
+                                                                    .toString();
+                                                                url =
+                                                                    'https://near.social/mob.near/widget/MainPage.N.Post.Page?accountId=$id&blockHeight=$block';
+                                                              }
 
-                                                        await launchUrlString(
-                                                            url);
-                                                      },
-                                                      child: AnimatedContainer(
-                                                        duration: Duration(
-                                                            milliseconds: 100),
-                                                        constraints:
-                                                            BoxConstraints(
-                                                          minHeight: 50,
-                                                          maxHeight: 100,
-                                                        ),
-                                                        decoration:
-                                                            BoxDecoration(
-                                                          color: FFAppState()
-                                                                  .listTapNotifications
-                                                                  .value
-                                                                  .contains(
-                                                                      index)
-                                                              ? Color.fromARGB(
-                                                                  255,
-                                                                  232,
-                                                                  249,
-                                                                  230)
-                                                              : Color(
-                                                                  0xFFFAF9F8),
-                                                          borderRadius:
-                                                              BorderRadius
-                                                                  .circular(
-                                                            8,
-                                                          ),
-                                                        ),
-                                                        height:
-                                                            MediaQuery.sizeOf(
-                                                                        context)
-                                                                    .height *
-                                                                0.065,
-                                                        child: Padding(
-                                                          padding: EdgeInsets.all(
-                                                              MediaQuery.sizeOf(
-                                                                              context)
-                                                                          .width >
-                                                                      600
-                                                                  ? 8
-                                                                  : 2),
-                                                          child: Row(
-                                                            mainAxisAlignment:
-                                                                MainAxisAlignment
-                                                                    .spaceBetween,
-                                                            children: [
-                                                              Row(
-                                                                children: [
-                                                                  Container(
-                                                                    constraints:
-                                                                        BoxConstraints(
-                                                                      minWidth:
-                                                                          45,
-                                                                      minHeight:
-                                                                          45,
-                                                                      maxHeight:
-                                                                          65,
-                                                                      maxWidth:
-                                                                          65,
-                                                                    ),
-                                                                    clipBehavior:
-                                                                        Clip.antiAliasWithSaveLayer,
-                                                                    width: MediaQuery.sizeOf(context)
-                                                                            .height *
-                                                                        0.05,
-                                                                    height: MediaQuery.sizeOf(context)
-                                                                            .height *
-                                                                        0.05,
-                                                                    decoration: BoxDecoration(
-                                                                        color: Colors
-                                                                            .white,
-                                                                        borderRadius:
-                                                                            BorderRadius.circular(100)),
-                                                                    child: snapshot
-                                                                            .data!
-                                                                            .isEmpty
-                                                                        ? SizedBox()
-                                                                        : CachedNetworkImage(
-                                                                            imageUrl:
-                                                                                'https://i.near.social/magic/large/https://near.social/magic/img/account/${snapshot.data![index][0]['accountId']}',
-                                                                            errorWidget: (context,
-                                                                                url,
-                                                                                error) {
-                                                                              return SvgPicture.network(url);
-                                                                            },
-                                                                            fit:
-                                                                                BoxFit.cover,
-                                                                          ),
+                                                              await launchUrlString(
+                                                                  url);
+                                                            },
+                                                            child: Padding(
+                                                              padding: EdgeInsets.symmetric(
+                                                                  vertical: (MediaQuery.sizeOf(context).height *
+                                                                              0.01) >
+                                                                          12
+                                                                      ? 12
+                                                                      : (MediaQuery.sizeOf(context)
+                                                                              .height *
+                                                                          0.008)),
+                                                              child:
+                                                                  AnimatedContainer(
+                                                                duration: Duration(
+                                                                    milliseconds:
+                                                                        100),
+                                                                constraints:
+                                                                    BoxConstraints(
+                                                                  minHeight: 50,
+                                                                  maxHeight:
+                                                                      100,
+                                                                ),
+                                                                decoration:
+                                                                    BoxDecoration(
+                                                                  color: FFAppState()
+                                                                          .listTapNotifications
+                                                                          .value
+                                                                          .contains(
+                                                                              index)
+                                                                      ? Color.fromARGB(
+                                                                          255,
+                                                                          232,
+                                                                          249,
+                                                                          230)
+                                                                      : Color(
+                                                                          0xFFFAF9F8),
+                                                                  borderRadius:
+                                                                      BorderRadius
+                                                                          .circular(
+                                                                    8,
                                                                   ),
-                                                                  Padding(
-                                                                    padding: EdgeInsets.symmetric(
-                                                                        horizontal:
-                                                                            10),
-                                                                    child:
-                                                                        SizedBox(
-                                                                      width:
-                                                                          130,
-                                                                      child:
-                                                                          Column(
-                                                                        mainAxisAlignment:
-                                                                            MainAxisAlignment.spaceBetween,
-                                                                        crossAxisAlignment:
-                                                                            CrossAxisAlignment.start,
+                                                                ),
+                                                                height: MediaQuery.sizeOf(
+                                                                            context)
+                                                                        .height *
+                                                                    0.065,
+                                                                child: Padding(
+                                                                  padding: EdgeInsets.all(
+                                                                      MediaQuery.sizeOf(context).width >
+                                                                              600
+                                                                          ? 8
+                                                                          : 2),
+                                                                  child: Row(
+                                                                    mainAxisAlignment:
+                                                                        MainAxisAlignment
+                                                                            .spaceBetween,
+                                                                    children: [
+                                                                      Row(
                                                                         children: [
-                                                                          Text(
-                                                                            (snapshot.data?[index][3] != '')
-                                                                                ? snapshot.data![index][3]
-                                                                                : snapshot.data![index][0]['accountId'] ?? '',
-                                                                            textScaler:
-                                                                                TextScaler.noScaling,
-                                                                            style:
-                                                                                TextStyle(
-                                                                              color: Color(0xFF000000),
-                                                                              fontWeight: FontWeight.w500,
+                                                                          Container(
+                                                                            constraints:
+                                                                                BoxConstraints(
+                                                                              minWidth: 45,
+                                                                              minHeight: 45,
+                                                                              maxHeight: 65,
+                                                                              maxWidth: 65,
                                                                             ),
-                                                                            maxLines:
-                                                                                1,
-                                                                            overflow:
-                                                                                TextOverflow.ellipsis,
+                                                                            clipBehavior:
+                                                                                Clip.antiAliasWithSaveLayer,
+                                                                            width:
+                                                                                MediaQuery.sizeOf(context).height * 0.05,
+                                                                            height:
+                                                                                MediaQuery.sizeOf(context).height * 0.05,
+                                                                            decoration:
+                                                                                BoxDecoration(color: Colors.white, borderRadius: BorderRadius.circular(100)),
+                                                                            child: snapshot.data!.isEmpty
+                                                                                ? SizedBox()
+                                                                                : CachedNetworkImage(
+                                                                                    imageUrl: 'https://i.near.social/magic/large/https://near.social/magic/img/account/${snapshot.data![index][0]['accountId']}',
+                                                                                    errorWidget: (context, url, error) {
+                                                                                      return SvgPicture.network(url);
+                                                                                    },
+                                                                                    fit: BoxFit.cover,
+                                                                                  ),
                                                                           ),
-                                                                          Text(
-                                                                            snapshot.data?[index][0]['value']['type'] ??
-                                                                                '',
-                                                                            maxLines:
-                                                                                1,
-                                                                            textScaler:
-                                                                                TextScaler.noScaling,
-                                                                            overflow:
-                                                                                TextOverflow.ellipsis,
-                                                                            style:
-                                                                                TextStyle(color: Color(0xFF7E7E7E)),
+                                                                          Padding(
+                                                                            padding:
+                                                                                EdgeInsets.symmetric(horizontal: 10),
+                                                                            child:
+                                                                                SizedBox(
+                                                                              width: 130,
+                                                                              child: Column(
+                                                                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                                                                crossAxisAlignment: CrossAxisAlignment.start,
+                                                                                children: [
+                                                                                  Text(
+                                                                                    (snapshot.data?[index][3] != '') ? snapshot.data![index][3] : snapshot.data![index][0]['accountId'] ?? '',
+                                                                                    textScaler: TextScaler.noScaling,
+                                                                                    style: TextStyle(
+                                                                                      color: Color(0xFF000000),
+                                                                                      fontWeight: FontWeight.w500,
+                                                                                    ),
+                                                                                    maxLines: 1,
+                                                                                    overflow: TextOverflow.ellipsis,
+                                                                                  ),
+                                                                                  Text(
+                                                                                    snapshot.data?[index][0]['value']['type'] ?? '',
+                                                                                    maxLines: 1,
+                                                                                    textScaler: TextScaler.noScaling,
+                                                                                    overflow: TextOverflow.ellipsis,
+                                                                                    style: TextStyle(color: Color(0xFF7E7E7E)),
+                                                                                  ),
+                                                                                ],
+                                                                              ),
+                                                                            ),
                                                                           ),
                                                                         ],
                                                                       ),
-                                                                    ),
+                                                                      Column(
+                                                                        crossAxisAlignment:
+                                                                            CrossAxisAlignment.end,
+                                                                        mainAxisAlignment:
+                                                                            MainAxisAlignment.spaceBetween,
+                                                                        children: [
+                                                                          SizedBox(
+                                                                            width:
+                                                                                65,
+                                                                            height:
+                                                                                20,
+                                                                            child:
+                                                                                Text(
+                                                                              snapshot.data?[index][2].toString() ?? '',
+                                                                              textAlign: TextAlign.end,
+                                                                              overflow: TextOverflow.ellipsis,
+                                                                              textScaleFactor: 1,
+                                                                              style: TextStyle(fontSize: MediaQuery.sizeOf(context).height < 900 ? 11 : 14, color: Color(0xFF7E7E7E)),
+                                                                            ),
+                                                                          ),
+                                                                          Text(
+                                                                            DateFormat('MMM dd').format(snapshot.data?[index][1]).toString(),
+                                                                            textScaleFactor:
+                                                                                1,
+                                                                            style:
+                                                                                TextStyle(fontSize: MediaQuery.sizeOf(context).height < 900 ? 11 : 14, color: Color(0xFFBDBDBD)),
+                                                                          ),
+                                                                        ],
+                                                                      ),
+                                                                    ],
                                                                   ),
-                                                                ],
+                                                                ),
                                                               ),
-                                                              Column(
-                                                                crossAxisAlignment:
-                                                                    CrossAxisAlignment
-                                                                        .end,
-                                                                mainAxisAlignment:
-                                                                    MainAxisAlignment
-                                                                        .spaceBetween,
-                                                                children: [
-                                                                  SizedBox(
-                                                                    width: 65,
-                                                                    height: 20,
-                                                                    child: Text(
-                                                                      snapshot.data?[index][2]
-                                                                              .toString() ??
-                                                                          '',
-                                                                      textAlign:
-                                                                          TextAlign
-                                                                              .end,
-                                                                      overflow:
-                                                                          TextOverflow
-                                                                              .ellipsis,
-                                                                      textScaleFactor:
-                                                                          1,
-                                                                      style: TextStyle(
-                                                                          fontSize: MediaQuery.sizeOf(context).height < 900
-                                                                              ? 11
-                                                                              : 14,
-                                                                          color:
-                                                                              Color(0xFF7E7E7E)),
-                                                                    ),
-                                                                  ),
-                                                                  Text(
-                                                                    DateFormat(
-                                                                            'MMM dd')
-                                                                        .format(
-                                                                            snapshot.data?[index][1])
-                                                                        .toString(),
-                                                                    textScaleFactor:
-                                                                        1,
-                                                                    style: TextStyle(
-                                                                        fontSize: MediaQuery.sizeOf(context).height <
-                                                                                900
-                                                                            ? 11
-                                                                            : 14,
-                                                                        color: Color(
-                                                                            0xFFBDBDBD)),
-                                                                  ),
-                                                                ],
-                                                              ),
-                                                            ],
+                                                            ),
                                                           ),
-                                                        ),
-                                                      ),
+                                                        );
+                                                      }),
+                                                  Visibility(
+                                                    visible: index ==
+                                                            snapshot.data!
+                                                                    .length -
+                                                                1 &&
+                                                        FFAppState()
+                                                            .filterCategories
+                                                            .value
+                                                            .isNotEmpty &&
+                                                        FFAppState()
+                                                            .listAccountForNotifications
+                                                            .value
+                                                            .isNotEmpty,
+                                                    child:
+                                                        CircularProgressIndicator(
+                                                      backgroundColor:
+                                                          Colors.white,
+                                                      color: Colors.green,
                                                     ),
-                                                  ),
-                                                ),
-                                                Visibility(
-                                                  visible: index ==
-                                                          snapshot.data!
-                                                                  .length -
-                                                              1 &&
-                                                      FFAppState()
-                                                          .filterCategories
-                                                          .isNotEmpty &&
-                                                      FFAppState()
-                                                          .listAccountForNotifications
-                                                          .value
-                                                          .isNotEmpty,
-                                                  child:
-                                                      CircularProgressIndicator(
-                                                    backgroundColor:
-                                                        Colors.white,
-                                                    color: Colors.green,
-                                                  ),
-                                                )
-                                              ],
-                                            );
-                                    },
+                                                  )
+                                                ],
+                                              );
+                                      },
+                                    ),
                                   ),
-                                ),
-                              );
-                            } else {
-                              return SizedBox();
-                            }
-                          }),
+                                );
+                              } else {
+                                return SizedBox();
+                              }
+                            }),
+                      ),
                     ),
-                  ),
-                ],
+                  ],
+                ),
               ),
             ),
           ),
         ));
-  }
-
-  Future<void> checkFirstTimeUser() async {
-    await Future.delayed(Duration(seconds: 1));
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-    bool isFirstTime = prefs.getBool('isFirstTime') ?? true;
-
-    if (isFirstTime && (currentUserDocument?.subscriptions.isEmpty ?? true)) {
-      // Выполните действия для первого входа
-      print('Пользователь открывает приложение впервые');
-
-      context.pushNamed('AccountPage');
-    }
   }
 }
