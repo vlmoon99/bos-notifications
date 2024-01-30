@@ -27,13 +27,13 @@ class FFAppState extends ChangeNotifier {
   bool newMessage = false;
   bool messageNull = true;
   bool initStateForSwitch = true;
-  bool help = false;
 
   static FFAppState _instance = FFAppState._internal();
 
   factory FFAppState() {
     return _instance;
   }
+  final BehaviorSubject<bool> help = BehaviorSubject<bool>()..add(false);
   final BehaviorSubject<bool> firstInit = BehaviorSubject<bool>()..add(false);
   final BehaviorSubject<List<String>> filterCategories =
       BehaviorSubject<List<String>>()

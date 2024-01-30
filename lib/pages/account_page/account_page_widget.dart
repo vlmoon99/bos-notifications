@@ -641,142 +641,151 @@ class _AccountPageWidgetState extends State<AccountPageWidget> {
                                                                       0.0,
                                                                       3.0,
                                                                       0.0),
-                                                          child: Stack(
-                                                            children: [
-                                                              if (FFAppState()
-                                                                      .selectAccounts &&
-                                                                  FFAppState()
-                                                                      .deletionAccountList
-                                                                      .value
-                                                                      .contains(
-                                                                          accountsItem))
-                                                                InkWell(
-                                                                  splashColor:
-                                                                      Colors
-                                                                          .transparent,
-                                                                  focusColor: Colors
-                                                                      .transparent,
-                                                                  hoverColor: Colors
-                                                                      .transparent,
-                                                                  highlightColor:
-                                                                      Colors
-                                                                          .transparent,
-                                                                  onTap:
-                                                                      () async {
-                                                                    HapticFeedback
-                                                                        .mediumImpact();
-                                                                    if (FFAppState()
-                                                                        .deletionAccountList
-                                                                        .value
+                                                          child: StreamBuilder<
+                                                                  List>(
+                                                              stream: FFAppState()
+                                                                  .deletionAccountList,
+                                                              builder: (context,
+                                                                  snapshot) {
+                                                                if (snapshot
+                                                                        .data ==
+                                                                    null) {
+                                                                  return SizedBox();
+                                                                }
+                                                                if (FFAppState()
+                                                                        .selectAccounts &&
+                                                                    snapshot
+                                                                        .data!
                                                                         .contains(
                                                                             accountsItem)) {
-                                                                      setState(
-                                                                          () {
-                                                                        FFAppState()
-                                                                            .deletionAccountList
-                                                                            .value
-                                                                            .remove(accountsItem);
-                                                                        FFAppState()
-                                                                            .deletionAccountList
-                                                                            .add(FFAppState().deletionAccountList.value);
-                                                                        FFAppState()
-                                                                            .removeFromAccountSelected(accountsItem);
-                                                                        FFAppState()
-                                                                            .removeFromAccountSelected(accountsItem);
-                                                                      });
-                                                                    } else {
-                                                                      setState(
-                                                                          () {
-                                                                        FFAppState()
-                                                                            .deletionAccountList
-                                                                            .value
-                                                                            .add(accountsItem);
-                                                                        FFAppState()
-                                                                            .deletionAccountList
-                                                                            .add(FFAppState().deletionAccountList.value);
-                                                                        FFAppState()
-                                                                            .addToAccountSelected(accountsItem);
-                                                                      });
-                                                                    }
-                                                                  },
-                                                                  child:
-                                                                      Padding(
-                                                                    padding: const EdgeInsets
-                                                                        .only(
-                                                                        right:
-                                                                            10),
-                                                                    child: SvgPicture
-                                                                        .asset(
-                                                                            'assets/icons/boxon.svg'),
-                                                                  ),
-                                                                ),
-                                                              if (FFAppState()
-                                                                      .selectAccounts &&
-                                                                  !FFAppState()
-                                                                      .accountSelected
-                                                                      .contains(
-                                                                          accountsItem))
-                                                                InkWell(
-                                                                  splashColor:
-                                                                      Colors
-                                                                          .transparent,
-                                                                  focusColor: Colors
-                                                                      .transparent,
-                                                                  hoverColor: Colors
-                                                                      .transparent,
-                                                                  highlightColor:
-                                                                      Colors
-                                                                          .transparent,
-                                                                  onTap:
-                                                                      () async {
-                                                                    HapticFeedback
-                                                                        .mediumImpact();
-                                                                    if (FFAppState()
-                                                                        .accountSelected
+                                                                  return InkWell(
+                                                                    splashColor:
+                                                                        Colors
+                                                                            .transparent,
+                                                                    focusColor:
+                                                                        Colors
+                                                                            .transparent,
+                                                                    hoverColor:
+                                                                        Colors
+                                                                            .transparent,
+                                                                    highlightColor:
+                                                                        Colors
+                                                                            .transparent,
+                                                                    onTap:
+                                                                        () async {
+                                                                      HapticFeedback
+                                                                          .mediumImpact();
+                                                                      if (FFAppState()
+                                                                          .deletionAccountList
+                                                                          .value
+                                                                          .contains(
+                                                                              accountsItem)) {
+                                                                        setState(
+                                                                            () {
+                                                                          FFAppState()
+                                                                              .deletionAccountList
+                                                                              .value
+                                                                              .remove(accountsItem);
+                                                                          FFAppState()
+                                                                              .deletionAccountList
+                                                                              .add(FFAppState().deletionAccountList.value);
+                                                                          FFAppState()
+                                                                              .removeFromAccountSelected(accountsItem);
+                                                                        });
+                                                                      } else {
+                                                                        setState(
+                                                                            () {
+                                                                          FFAppState()
+                                                                              .deletionAccountList
+                                                                              .value
+                                                                              .add(accountsItem);
+                                                                          FFAppState()
+                                                                              .deletionAccountList
+                                                                              .add(FFAppState().deletionAccountList.value);
+                                                                          FFAppState()
+                                                                              .addToAccountSelected(accountsItem);
+                                                                        });
+                                                                      }
+                                                                    },
+                                                                    child:
+                                                                        Padding(
+                                                                      padding: const EdgeInsets
+                                                                          .only(
+                                                                          right:
+                                                                              10),
+                                                                      child: SvgPicture
+                                                                          .asset(
+                                                                              'assets/icons/boxon.svg'),
+                                                                    ),
+                                                                  );
+                                                                } else if (FFAppState()
+                                                                        .selectAccounts &&
+                                                                    !snapshot
+                                                                        .data!
                                                                         .contains(
                                                                             accountsItem)) {
-                                                                      FFAppState()
-                                                                          .update(
-                                                                              () {
+                                                                  return InkWell(
+                                                                    splashColor:
+                                                                        Colors
+                                                                            .transparent,
+                                                                    focusColor:
+                                                                        Colors
+                                                                            .transparent,
+                                                                    hoverColor:
+                                                                        Colors
+                                                                            .transparent,
+                                                                    highlightColor:
+                                                                        Colors
+                                                                            .transparent,
+                                                                    onTap:
+                                                                        () async {
+                                                                      HapticFeedback
+                                                                          .mediumImpact();
+                                                                      if (FFAppState()
+                                                                          .accountSelected
+                                                                          .contains(
+                                                                              accountsItem)) {
                                                                         FFAppState()
-                                                                            .deletionAccountList
-                                                                            .value
-                                                                            .remove(accountsItem);
+                                                                            .update(() {
+                                                                          FFAppState()
+                                                                              .deletionAccountList
+                                                                              .value
+                                                                              .remove(accountsItem);
+                                                                          FFAppState()
+                                                                              .deletionAccountList
+                                                                              .add(FFAppState().deletionAccountList.value);
+                                                                          FFAppState()
+                                                                              .removeFromAccountSelected(accountsItem);
+                                                                        });
+                                                                      } else {
                                                                         FFAppState()
-                                                                            .deletionAccountList
-                                                                            .add(FFAppState().deletionAccountList.value);
-                                                                        FFAppState()
-                                                                            .removeFromAccountSelected(accountsItem);
-                                                                      });
-                                                                    } else {
-                                                                      FFAppState()
-                                                                          .update(
-                                                                              () {
-                                                                        FFAppState()
-                                                                            .deletionAccountList
-                                                                            .value
-                                                                            .add(accountsItem);
-                                                                        FFAppState()
-                                                                            .deletionAccountList
-                                                                            .add(FFAppState().deletionAccountList.value);
-                                                                        FFAppState()
-                                                                            .addToAccountSelected(accountsItem);
-                                                                      });
-                                                                    }
-                                                                  },
-                                                                  child:
-                                                                      Padding(
-                                                                    padding: const EdgeInsets
-                                                                        .only(
-                                                                        right:
-                                                                            10),
-                                                                    child: SvgPicture
-                                                                        .asset(
-                                                                            'assets/icons/boxoff.svg'),
-                                                                  ),
-                                                                ),
-                                                            ],
-                                                          ),
+                                                                            .update(() {
+                                                                          FFAppState()
+                                                                              .deletionAccountList
+                                                                              .value
+                                                                              .add(accountsItem);
+                                                                          FFAppState()
+                                                                              .deletionAccountList
+                                                                              .add(FFAppState().deletionAccountList.value);
+                                                                          FFAppState()
+                                                                              .addToAccountSelected(accountsItem);
+                                                                        });
+                                                                      }
+                                                                    },
+                                                                    child:
+                                                                        Padding(
+                                                                      padding: const EdgeInsets
+                                                                          .only(
+                                                                          right:
+                                                                              10),
+                                                                      child: SvgPicture
+                                                                          .asset(
+                                                                              'assets/icons/boxoff.svg'),
+                                                                    ),
+                                                                  );
+                                                                } else
+                                                                  return SizedBox();
+                                                              }),
                                                         ),
                                                       ),
                                                     ),
