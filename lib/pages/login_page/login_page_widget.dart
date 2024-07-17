@@ -57,13 +57,13 @@ class _LoginPageWidgetState extends State<LoginPageWidget> {
           if (MediaQuery.sizeOf(context).width >
               MediaQuery.sizeOf(context).height) {
             print('dek');
-            return 'asss/Dekstop.png';
+            return 'assets/images/Dekstop.png';
           } else if (MediaQuery.sizeOf(context).height > 3000) {
             print('table');
-            return 'asg';
+            return 'assets/images/Table.png';
           } else {
             print('phone');
-            return '.png';
+            return 'assets/images/Loading2.png';
           }
         }(),
         fit: BoxFit.cover,
